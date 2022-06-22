@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Notebook1",
+				"name": "Load Demo Table",
 				"type": "SynapseNotebook",
 				"dependsOn": [],
 				"policy": {
@@ -21,7 +21,11 @@
 					},
 					"parameters": {
 						"TargetLayer": {
-							"value": "dfhsjgh",
+							"value": "gold",
+							"type": "string"
+						},
+						"TargetTable": {
+							"value": "demo_gold_table",
 							"type": "string"
 						}
 					},
