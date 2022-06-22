@@ -1,0 +1,490 @@
+{
+	"name": "Demo Notebook 1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "e5e2f424-8505-48ad-af02-61c4985d0aec"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"synapse_widget": {
+				"version": "0.1",
+				"state": {
+					"a90d7785-d008-4ae2-a3e9-066d9d8ad1ae": {
+						"type": "Synapse.DataFrame",
+						"sync_state": {
+							"table": {
+								"rows": [
+									{
+										"0": "80465329",
+										"1": "2020-10-30",
+										"2": "148",
+										"3": "1",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "80795986",
+										"1": "2020-10-31",
+										"2": "151",
+										"3": "3",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "81093332",
+										"1": "2020-11-01",
+										"2": "154",
+										"3": "3",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "81378849",
+										"1": "2020-11-02",
+										"2": "155",
+										"3": "1",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "81700533",
+										"1": "2020-11-03",
+										"2": "157",
+										"3": "2",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "82033704",
+										"1": "2020-11-04",
+										"2": "159",
+										"3": "2",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "82363330",
+										"1": "2020-11-05",
+										"2": "160",
+										"3": "1",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "82702228",
+										"1": "2020-11-06",
+										"2": "161",
+										"3": "1",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "83016638",
+										"1": "2020-11-07",
+										"2": "168",
+										"3": "7",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									},
+									{
+										"0": "83333501",
+										"1": "2020-11-08",
+										"2": "170",
+										"3": "2",
+										"4": "7",
+										"5": "0",
+										"8": "38.95003",
+										"9": "-84.96518",
+										"10": "US",
+										"11": "USA",
+										"12": "United States",
+										"13": "Indiana",
+										"14": "US-IN",
+										"15": "Ohio County",
+										"16": "2022-06-16 00:05:06.811"
+									}
+								],
+								"schema": [
+									{
+										"key": "0",
+										"name": "id",
+										"type": "int"
+									},
+									{
+										"key": "1",
+										"name": "updated",
+										"type": "date"
+									},
+									{
+										"key": "2",
+										"name": "confirmed",
+										"type": "int"
+									},
+									{
+										"key": "3",
+										"name": "confirmed_change",
+										"type": "int"
+									},
+									{
+										"key": "4",
+										"name": "deaths",
+										"type": "int"
+									},
+									{
+										"key": "5",
+										"name": "deaths_change",
+										"type": "smallint"
+									},
+									{
+										"key": "6",
+										"name": "recovered",
+										"type": "int"
+									},
+									{
+										"key": "7",
+										"name": "recovered_change",
+										"type": "int"
+									},
+									{
+										"key": "8",
+										"name": "latitude",
+										"type": "double"
+									},
+									{
+										"key": "9",
+										"name": "longitude",
+										"type": "double"
+									},
+									{
+										"key": "10",
+										"name": "iso2",
+										"type": "string"
+									},
+									{
+										"key": "11",
+										"name": "iso3",
+										"type": "string"
+									},
+									{
+										"key": "12",
+										"name": "country_region",
+										"type": "string"
+									},
+									{
+										"key": "13",
+										"name": "admin_region_1",
+										"type": "string"
+									},
+									{
+										"key": "14",
+										"name": "iso_subdivision",
+										"type": "string"
+									},
+									{
+										"key": "15",
+										"name": "admin_region_2",
+										"type": "string"
+									},
+									{
+										"key": "16",
+										"name": "load_time",
+										"type": "timestamp"
+									}
+								],
+								"truncated": false
+							},
+							"isSummary": false,
+							"language": "scala"
+						},
+						"persist_state": {
+							"view": {
+								"type": "details",
+								"chartOptions": {
+									"chartType": "bar",
+									"aggregationType": "sum",
+									"categoryFieldKeys": [
+										"1"
+									],
+									"seriesFieldKeys": [
+										"0"
+									],
+									"isStacked": false
+								}
+							}
+						}
+					}
+				}
+			},
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/287ea8d5-e1da-4e3d-83e6-552c74157c17/resourceGroups/nm_synapse/providers/Microsoft.Synapse/workspaces/nmsynapse/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://nmsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"extraHeader": null
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"**This is a Demo Notebook**"
+				],
+				"attachments": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"blob_account_name = \"pandemicdatalake\"\r\n",
+					"blob_container_name = \"public\"\r\n",
+					"blob_relative_path = \"curated/covid-19/bing_covid-19_data/latest/bing_covid-19_data.parquet\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"\r\n",
+					"spark.conf.set(\r\n",
+					"    'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"    blob_sas_token)\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"display(df.limit(10))"
+				],
+				"attachments": null,
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"### write the table in delta format\r\n",
+					"\r\n",
+					"df.write \\\r\n",
+					"  .format('delta') \\\r\n",
+					"  .save('/delta/bing-covid-19-data')"
+				],
+				"attachments": null,
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"CREATE DATABASE demo_db"
+				],
+				"attachments": null,
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"CREATE TABLE demo_db.bing_covid_19_data USING DELTA LOCATION '/delta/bing-covid-19-data'"
+				],
+				"attachments": null,
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"SELECT * FROM  demo_db.bing_covid_19_data"
+				],
+				"attachments": null,
+				"execution_count": 30
+			}
+		]
+	}
+}
