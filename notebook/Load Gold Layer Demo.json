@@ -1,5 +1,5 @@
 {
-	"name": "Demo Notebook 1",
+	"name": "Load Gold Layer Demo",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,301 +17,11 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e5e2f424-8505-48ad-af02-61c4985d0aec"
+				"spark.autotune.trackingId": "38ecfc3e-0d91-470c-8fdc-041c945b0681"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"synapse_widget": {
-				"version": "0.1",
-				"state": {
-					"a90d7785-d008-4ae2-a3e9-066d9d8ad1ae": {
-						"type": "Synapse.DataFrame",
-						"sync_state": {
-							"table": {
-								"rows": [
-									{
-										"0": "80465329",
-										"1": "2020-10-30",
-										"2": "148",
-										"3": "1",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "80795986",
-										"1": "2020-10-31",
-										"2": "151",
-										"3": "3",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "81093332",
-										"1": "2020-11-01",
-										"2": "154",
-										"3": "3",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "81378849",
-										"1": "2020-11-02",
-										"2": "155",
-										"3": "1",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "81700533",
-										"1": "2020-11-03",
-										"2": "157",
-										"3": "2",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "82033704",
-										"1": "2020-11-04",
-										"2": "159",
-										"3": "2",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "82363330",
-										"1": "2020-11-05",
-										"2": "160",
-										"3": "1",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "82702228",
-										"1": "2020-11-06",
-										"2": "161",
-										"3": "1",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "83016638",
-										"1": "2020-11-07",
-										"2": "168",
-										"3": "7",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									},
-									{
-										"0": "83333501",
-										"1": "2020-11-08",
-										"2": "170",
-										"3": "2",
-										"4": "7",
-										"5": "0",
-										"8": "38.95003",
-										"9": "-84.96518",
-										"10": "US",
-										"11": "USA",
-										"12": "United States",
-										"13": "Indiana",
-										"14": "US-IN",
-										"15": "Ohio County",
-										"16": "2022-06-16 00:05:06.811"
-									}
-								],
-								"schema": [
-									{
-										"key": "0",
-										"name": "id",
-										"type": "int"
-									},
-									{
-										"key": "1",
-										"name": "updated",
-										"type": "date"
-									},
-									{
-										"key": "2",
-										"name": "confirmed",
-										"type": "int"
-									},
-									{
-										"key": "3",
-										"name": "confirmed_change",
-										"type": "int"
-									},
-									{
-										"key": "4",
-										"name": "deaths",
-										"type": "int"
-									},
-									{
-										"key": "5",
-										"name": "deaths_change",
-										"type": "smallint"
-									},
-									{
-										"key": "6",
-										"name": "recovered",
-										"type": "int"
-									},
-									{
-										"key": "7",
-										"name": "recovered_change",
-										"type": "int"
-									},
-									{
-										"key": "8",
-										"name": "latitude",
-										"type": "double"
-									},
-									{
-										"key": "9",
-										"name": "longitude",
-										"type": "double"
-									},
-									{
-										"key": "10",
-										"name": "iso2",
-										"type": "string"
-									},
-									{
-										"key": "11",
-										"name": "iso3",
-										"type": "string"
-									},
-									{
-										"key": "12",
-										"name": "country_region",
-										"type": "string"
-									},
-									{
-										"key": "13",
-										"name": "admin_region_1",
-										"type": "string"
-									},
-									{
-										"key": "14",
-										"name": "iso_subdivision",
-										"type": "string"
-									},
-									{
-										"key": "15",
-										"name": "admin_region_2",
-										"type": "string"
-									},
-									{
-										"key": "16",
-										"name": "load_time",
-										"type": "timestamp"
-									}
-								],
-								"truncated": false
-							},
-							"isSummary": false,
-							"language": "scala"
-						},
-						"persist_state": {
-							"view": {
-								"type": "details",
-								"chartOptions": {
-									"chartType": "bar",
-									"aggregationType": "sum",
-									"categoryFieldKeys": [
-										"1"
-									],
-									"seriesFieldKeys": [
-										"0"
-									],
-									"isStacked": false
-								}
-							}
-						}
-					}
-				}
-			},
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
@@ -333,7 +43,7 @@
 				"nodeCount": 3,
 				"cores": 4,
 				"memory": 28,
-				"extraHeader": null
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -349,8 +59,7 @@
 				},
 				"source": [
 					"**This is a Demo Notebook**"
-				],
-				"attachments": null
+				]
 			},
 			{
 				"cell_type": "code",
@@ -384,7 +93,6 @@
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"display(df.limit(10))"
 				],
-				"attachments": null,
 				"execution_count": 9
 			},
 			{
@@ -408,7 +116,6 @@
 					"  .format('delta') \\\r\n",
 					"  .save('/delta/bing-covid-19-data')"
 				],
-				"attachments": null,
 				"execution_count": 13
 			},
 			{
@@ -432,7 +139,6 @@
 					"%%sql\r\n",
 					"CREATE DATABASE demo_db"
 				],
-				"attachments": null,
 				"execution_count": 21
 			},
 			{
@@ -457,7 +163,6 @@
 					"\r\n",
 					"CREATE TABLE demo_db.bing_covid_19_data USING DELTA LOCATION '/delta/bing-covid-19-data'"
 				],
-				"attachments": null,
 				"execution_count": 22
 			},
 			{
@@ -482,7 +187,6 @@
 					"\r\n",
 					"SELECT * FROM  demo_db.bing_covid_19_data"
 				],
-				"attachments": null,
 				"execution_count": 30
 			}
 		]
