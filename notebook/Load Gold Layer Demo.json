@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "5e60aaf1-e04e-474d-a43c-de75e9f1f411"
+				"spark.autotune.trackingId": "68bf6597-43c2-4c9c-a5f0-0b3a0c88366f"
 			}
 		},
 		"metadata": {
@@ -113,7 +113,7 @@
 					"TargetTable = 'demo_gold_table'\r\n",
 					"SchemaChange = 'n'"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -129,10 +129,22 @@
 					}
 				},
 				"source": [
-					"print('Loading ')\r\n",
-					""
+					"print('Loading ' + TargetTable)"
 				],
-				"execution_count": 9
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Get Logic"
+				]
 			},
 			{
 				"cell_type": "code",
@@ -148,7 +160,105 @@
 					}
 				},
 				"source": [
-					"mssparkutils.notebook.exit('a' + TargetLayer)  "
+					"## get path var\r\n",
+					"logic_path = '/logic' + '/' + TargetLayer + '/' + TargetTable + '.sql'\r\n",
+					"print('Path to transformation logic is ' + logic_path)"
+				],
+				"execution_count": 14
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"logic_df = spark.read.text(logic_path, wholetext=True)\r\n",
+					"logic_df.show()"
+				],
+				"execution_count": 33
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"logic_string = logic_df.first()['value']\r\n",
+					"print(logic_string)"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"transformed_df = spark.sql(\"\"\"{0}\"\"\".format(logic_string))\r\n",
+					"transformed_df.show()"
+				],
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"transformed_df.write \\\r\n",
+					"  .mode('overwrite') \\\r\n",
+					"  .format('parquet') \\\r\n",
+					"  .save('/' + TargetLayer + '/' + TargetTable) "
+				],
+				"execution_count": 43
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.notebook.exit('Successfully loaded ' + TargetTable)  "
 				],
 				"execution_count": 10
 			}
