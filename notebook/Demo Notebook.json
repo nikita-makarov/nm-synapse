@@ -1,5 +1,5 @@
 {
-	"name": "Load Gold Layer Demo",
+	"name": "Demo Notebook",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "38ecfc3e-0d91-470c-8fdc-041c945b0681"
+				"spark.autotune.trackingId": "19e962db-5609-4641-b3ee-7935c8fe1f76"
 			}
 		},
 		"metadata": {

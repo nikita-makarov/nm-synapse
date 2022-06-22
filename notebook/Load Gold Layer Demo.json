@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 1",
+	"name": "Load Gold Layer Demo",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "47c96360-9afd-43f9-a2c3-52d00762c65f"
+				"spark.autotune.trackingId": "79d97a63-7148-49ac-aa85-fbf1bc40f52b"
 			}
 		},
 		"metadata": {
@@ -85,16 +85,34 @@
 						"transient": {
 							"deleting": false
 						}
+					}
+				},
+				"source": [
+					"from notebookutils import mssparkutils"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
 					},
 					"tags": [
 						"parameters"
 					]
 				},
 				"source": [
-					"TargetLayer = ''\r\n",
-					"SchemaChange = ''"
+					"TargetLayer = 'gold'\r\n",
+					"SchemaChange = 'n'"
 				],
-				"execution_count": 4
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -110,10 +128,10 @@
 					}
 				},
 				"source": [
-					"from notebookutils import mssparkutils\r\n",
+					"print('a' + TargetLayer)\r\n",
 					""
 				],
-				"execution_count": 5
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -129,9 +147,9 @@
 					}
 				},
 				"source": [
-					""
+					"mssparkutils.notebook.exit('a' + TargetLayer)  "
 				],
-				"execution_count": null
+				"execution_count": 10
 			}
 		]
 	}
