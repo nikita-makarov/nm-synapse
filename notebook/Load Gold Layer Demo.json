@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "68bf6597-43c2-4c9c-a5f0-0b3a0c88366f"
+				"spark.autotune.trackingId": "65b5520a-9456-424c-882d-af037cd0e371"
 			}
 		},
 		"metadata": {
@@ -58,8 +58,44 @@
 					}
 				},
 				"source": [
-					"**Load Gold Layer to Parquet**"
+					"## **Load Gold Layer to Parquet**"
 				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Create ephemeral gold lake DB"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"CREATE DATABASE gold"
+				],
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -205,6 +241,21 @@
 				"execution_count": 34
 			},
 			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"For this logic to work, the silver layer has to be registered in the Lake DB, should be straight-forward to amend existing code. The registration does not incur any extra cost\r\n",
+					"\r\n",
+					"Alternatively, instead of getting the transformation logic from a .sql physical file, you could store it in a Azure SQL Server table, spin up the lowest cost instance, then populate the table with metadata, and parse the transformation logic as a parameter in ADF using Lookup activity"
+				]
+			},
+			{
 				"cell_type": "code",
 				"metadata": {
 					"jupyter": {
@@ -237,12 +288,54 @@
 					}
 				},
 				"source": [
+					"table_path = '/' + TargetLayer + '/' + TargetTable\r\n",
+					"table_name = TargetLayer + '.' + TargetTable\r\n",
+					"print('Table Path is ' + table_path)\r\n",
+					"print('Table Name is ' + table_name)"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"transformed_df.write \\\r\n",
 					"  .mode('overwrite') \\\r\n",
 					"  .format('parquet') \\\r\n",
 					"  .save('/' + TargetLayer + '/' + TargetTable) "
 				],
 				"execution_count": 43
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Register gold table\r\n",
+					"spark.sql(\"\"\"\r\n",
+					"     CREATE TABLE IF NOT EXISTS {0} USING PARQUET LOCATION '{1}'\r\n",
+					"    \"\"\".format(table_name,table_path))"
+				],
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
