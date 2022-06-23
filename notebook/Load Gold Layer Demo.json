@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "65b5520a-9456-424c-882d-af037cd0e371"
+				"spark.autotune.trackingId": "6b003ffa-e984-4f79-8c9f-4e3a97835ebe"
 			}
 		},
 		"metadata": {
@@ -93,9 +93,9 @@
 				},
 				"source": [
 					"%%sql\r\n",
-					"CREATE DATABASE gold"
+					"CREATE DATABASE IF NOT EXISTS gold"
 				],
-				"execution_count": 2
+				"execution_count": 11
 			},
 			{
 				"cell_type": "markdown",
