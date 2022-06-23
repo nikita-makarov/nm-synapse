@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f3f481fd-dc64-4d57-9785-3ef490bf7df2"
+				"spark.autotune.trackingId": "40e2a27b-f1ba-477e-b576-bf0d253ebdbe"
 			}
 		},
 		"metadata": {
@@ -126,7 +126,7 @@
 				"source": [
 					"from notebookutils import mssparkutils"
 				],
-				"execution_count": 1
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -149,7 +149,7 @@
 					"TargetTable = 'demo_gold_table'\r\n",
 					"SchemaChange = 'n'"
 				],
-				"execution_count": 3
+				"execution_count": 16
 			},
 			{
 				"cell_type": "code",
@@ -167,7 +167,7 @@
 				"source": [
 					"print('Loading ' + TargetTable)"
 				],
-				"execution_count": 4
+				"execution_count": 17
 			},
 			{
 				"cell_type": "markdown",
@@ -200,7 +200,7 @@
 					"logic_path = '/logic' + '/' + TargetLayer + '/' + TargetTable + '.sql'\r\n",
 					"print('Path to transformation logic is ' + logic_path)"
 				],
-				"execution_count": 14
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -219,7 +219,7 @@
 					"logic_df = spark.read.text(logic_path, wholetext=True)\r\n",
 					"logic_df.show()"
 				],
-				"execution_count": 33
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -238,7 +238,7 @@
 					"logic_string = logic_df.first()['value']\r\n",
 					"print(logic_string)"
 				],
-				"execution_count": 34
+				"execution_count": 20
 			},
 			{
 				"cell_type": "markdown",
@@ -272,7 +272,7 @@
 					"transformed_df = spark.sql(\"\"\"{0}\"\"\".format(logic_string))\r\n",
 					"transformed_df.show()"
 				],
-				"execution_count": 37
+				"execution_count": 21
 			},
 			{
 				"cell_type": "markdown",
@@ -306,7 +306,7 @@
 					"print('Table Path is ' + table_path)\r\n",
 					"print('Table Name is ' + table_name)"
 				],
-				"execution_count": 7
+				"execution_count": 22
 			},
 			{
 				"cell_type": "code",
@@ -327,7 +327,7 @@
 					"  .format('parquet') \\\r\n",
 					"  .save('/' + TargetLayer + '/' + TargetTable) "
 				],
-				"execution_count": 43
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
