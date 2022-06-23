@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6b003ffa-e984-4f79-8c9f-4e3a97835ebe"
+				"spark.autotune.trackingId": "246ebc5b-4467-4361-94be-1b160a8bbe13"
 			}
 		},
 		"metadata": {
@@ -252,7 +252,7 @@
 				"source": [
 					"For this logic to work, the silver layer has to be registered in the Lake DB, should be straight-forward to amend existing code. The registration does not incur any extra cost\r\n",
 					"\r\n",
-					"Alternatively, instead of getting the transformation logic from a .sql physical file, you could store it in a Azure SQL Server table, spin up the lowest cost instance, then populate the table with metadata, and parse the transformation logic as a parameter in ADF using Lookup activity"
+					"Alternatively, instead of getting the transformation logic from a .sql physical file, you could store it in a Azure SQL Server table or physical file, and parse the transformation logic as a parameter in ADF using Lookup activity"
 				]
 			},
 			{
@@ -273,6 +273,19 @@
 					"transformed_df.show()"
 				],
 				"execution_count": 37
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Could potentially have multiple steps to the logic, by putting multiple statements in the sql file, then breaking those up in spark. You could make temp sql tables between each step and then reference them in the next"
+				]
 			},
 			{
 				"cell_type": "code",
