@@ -4,7 +4,7 @@
 		"nbformat": 4,
 		"nbformat_minor": 2,
 		"bigDataPool": {
-			"referenceName": "sparkpool1",
+			"referenceName": "sparkpool2",
 			"type": "BigDataPoolReference"
 		},
 		"sessionProperties": {
@@ -12,12 +12,12 @@
 			"driverCores": 4,
 			"executorMemory": "28g",
 			"executorCores": 4,
-			"numExecutors": 2,
+			"numExecutors": 1,
 			"conf": {
 				"spark.dynamicAllocation.enabled": "false",
-				"spark.dynamicAllocation.minExecutors": "2",
-				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "19e962db-5609-4641-b3ee-7935c8fe1f76"
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "1",
+				"spark.autotune.trackingId": "d439271c-7f74-4ca3-8141-ffde89e0ecb7"
 			}
 		},
 		"metadata": {
@@ -31,16 +31,16 @@
 				"name": "python"
 			},
 			"a365ComputeOptions": {
-				"id": "/subscriptions/287ea8d5-e1da-4e3d-83e6-552c74157c17/resourceGroups/nm_synapse/providers/Microsoft.Synapse/workspaces/nmsynapse/bigDataPools/sparkpool1",
-				"name": "sparkpool1",
+				"id": "/subscriptions/287ea8d5-e1da-4e3d-83e6-552c74157c17/resourceGroups/nm_synapse/providers/Microsoft.Synapse/workspaces/nmsynapse/bigDataPools/sparkpool2",
+				"name": "sparkpool2",
 				"type": "Spark",
-				"endpoint": "https://nmsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"endpoint": "https://nmsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool2",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
 				},
 				"sparkVersion": "3.1",
-				"nodeCount": 3,
+				"nodeCount": 4,
 				"cores": 4,
 				"memory": 28,
 				"automaticScaleJobs": false
@@ -60,6 +60,24 @@
 				"source": [
 					"**This is a Demo Notebook**"
 				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print('a')"
+				],
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
