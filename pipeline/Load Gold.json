@@ -29,14 +29,16 @@
 							"type": "string"
 						}
 					},
-					"snapshot": true,
-					"sparkPool": {
-						"referenceName": "sparkpool1",
-						"type": "BigDataPoolReference"
-					}
+					"snapshot": true
 				}
 			}
 		],
+		"parameters": {
+			"sp_name": {
+				"type": "string",
+				"defaultValue": "sparkpool1"
+			}
+		},
 		"annotations": []
 	}
 }
