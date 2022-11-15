@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 4",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [ID]\n,[Updated]\n,[Confirmed]\n,[ConfirmedChange]\n,[CountryRegion]\n FROM [gold].[dbo].[demo_gold_table]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "gold",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
