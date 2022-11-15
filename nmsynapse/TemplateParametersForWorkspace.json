@@ -6,6 +6,9 @@
 			"value": "nmsynapse"
 		},
 		"nmsynapse-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:nmsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"nmdatalakestore_accountKey": {
 			"value": ""
 		},
 		"bing-covid-19-data_sasUri": {
@@ -16,6 +19,9 @@
 		},
 		"nyc_tlc_yellow_sasUri": {
 			"value": ""
+		},
+		"nmdatalakestore_properties_typeProperties_url": {
+			"value": "https://nmdatalakestore.dfs.core.windows.net/"
 		}
 	}
 }
