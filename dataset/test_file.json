@@ -10,8 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "test_file.parquet",
-				"folderPath": "staging",
+				"folderPath": "staging/test_file.parquet",
 				"fileSystem": "nmdeltalake"
 			},
 			"compressionCodec": "snappy"
