@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "Notebook 1",
+						"referenceName": "exit value",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,
