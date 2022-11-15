@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "da11fc2c-88d0-4295-8ac2-eb643f31d9ec"
+				"spark.autotune.trackingId": "0157904b-30be-4ac3-b6bd-57a468dea9c8"
 			}
 		},
 		"metadata": {
@@ -113,7 +113,25 @@
 					}
 				},
 				"source": [
-					"df2.write.format(\"csv\").mode(\"overwrite).save(outputPath/file.csv)"
+					"df2.write.format(\"parquet\").mode(\"overwrite\").save('abfss://nmdeltalake@nmdatalakestore.dfs.core.windows.net/staging/test_file.parquet')"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"('abfss://nmdeltalake@nmdatalakestore.dfs.core.windows.net/bronze/customers/part-00000-512f1ccd-ef68-4f0e-9026-228e6c6d1030-c000.snappy.parquet', format='parquet')"
 				],
 				"execution_count": null
 			}
