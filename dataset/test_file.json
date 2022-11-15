@@ -1,0 +1,21 @@
+{
+	"name": "test_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "nmdatalakestore",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "test_file.parquet",
+				"folderPath": "staging",
+				"fileSystem": "nmdeltalake"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
