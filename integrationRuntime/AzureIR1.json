@@ -12,6 +12,10 @@
 					"timeToLive": 30,
 					"cleanup": false
 				},
+				"copyComputeScaleProperties": {
+					"dataIntegrationUnit": 4,
+					"timeToLive": 15
+				},
 				"pipelineExternalComputeScaleProperties": {
 					"timeToLive": 60
 				}
