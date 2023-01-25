@@ -1,0 +1,10 @@
+{
+	"name": "synapse-ws-custstgacct--nmdemosynapse-nmdemostorage1",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_storage/providers/Microsoft.Storage/storageAccounts/nmdemostorage1",
+		"groupId": "dfs",
+		"fqdns": [
+			"nmdemostorage1.dfs.core.windows.net"
+		]
+	}
+}
