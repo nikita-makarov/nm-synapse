@@ -1,0 +1,292 @@
+{
+	"name": "PGP Example",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 1,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "1",
+				"spark.dynamicAllocation.maxExecutors": "1",
+				"spark.autotune.trackingId": "efb1122a-b3c7-47aa-aecf-82d2813e963d"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"pip install pgpy"
+				],
+				"execution_count": 24
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"mssparkutils.fs.mount( \r\n",
+					"    \"abfss://datalake@nmdemostorage1.dfs.core.windows.net\", \r\n",
+					"    \"/mnt\", \r\n",
+					"    {\"linkedService\":\"nmdemosynapse-WorkspaceDefaultStorage\"} \r\n",
+					") "
+				],
+				"execution_count": 15
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"job_id = mssparkutils.env.getJobId()"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"raw_file_path = '/synfs/' + job_id + '/mnt/financial_filings/csv/1000045_10K_2016_0001193125-16-620952.csv'\r\n",
+					"pub_key_path = '/synfs/' + job_id + '/mnt/pgp_demo/keys/0xB3B14BF1-pub.asc'\r\n",
+					"private_key_path = '/synfs/' + job_id + '/mnt/pgp_demo/keys/0xB3B14BF1-sec.asc'"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import io\r\n",
+					"with io.open(raw_file_path) as f:\r\n",
+					"    input_data = f.read()\r\n",
+					"# print(input_data)"
+				],
+				"execution_count": 27
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#import public key for encryption\r\n",
+					"import pgpy as pg\r\n",
+					"pubkey, _ = pg.PGPKey.from_file(pub_key_path)"
+				],
+				"execution_count": 31
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#encrypt file and write it to data lake\r\n",
+					"message = pg.PGPMessage.new(input_data)\r\n",
+					"encrypted_message = pubkey.encrypt(message)"
+				],
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#Encrypting a file using public key\r\n",
+					"import pgpy\r\n",
+					"from pgpy.constants import PubKeyAlgorithm, KeyFlags, HashAlgorithm, SymmetricKeyAlgorithm, CompressionAlgorithm\r\n",
+					"from timeit import default_timer as timer\r\n",
+					"import base64 \r\n",
+					"import io\r\n",
+					" \r\n",
+					"KEY_PUB = base64.b64decode(publicb64).decode(\"ascii\").lstrip()  \r\n",
+					"#print(KEY_PUB)\r\n",
+					" \r\n",
+					"pub_key = pgpy.PGPKey()\r\n",
+					"pub_key.parse(KEY_PUB)\r\n",
+					"pass\r\n",
+					"# -READ THE FILE FROM MOUNT POINT-----------------\r\n",
+					"with io.open('/dbfs/mnt/sample_data/california_housing_test.csv', \"r\",newline='') as csv_file:\r\n",
+					"    input_data = csv_file.read()                   # The io and newline retains the CRLF\r\n",
+					"    \r\n",
+					"t0 = timer()\r\n",
+					"#PGP Encryption start\r\n",
+					"msg = pgpy.PGPMessage.new(input_data)\r\n",
+					"###### this returns a new PGPMessage that contains an encrypted form of the original message\r\n",
+					"encrypted_message = pub_key.encrypt(msg)\r\n",
+					"pgpstr = str(encrypted_message)\r\n",
+					"with open('/dbfs/mnt/sample_data/california_housing_test.csv.pgp', \"w\") as text_file:\r\n",
+					"    text_file.write(pgpstr)\r\n",
+					"print(\"Encryption Complete :\" + str(timer()-t0))"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"location_var = 'abfss://datalake@nmdemostorage1.dfs.core.windows.net/financial_filings/csv/1000045_10K_2016_0001193125-16-620952.csv'"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"import pandas as pd \r\n",
+					"df = pd.read_csv(location_var)"
+				],
+				"execution_count": 10
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"with io.open(location_var) as csv_file:\r\n",
+					"    input_data = csv_file.read()\r\n",
+					""
+				],
+				"execution_count": 11
+			}
+		]
+	}
+}
