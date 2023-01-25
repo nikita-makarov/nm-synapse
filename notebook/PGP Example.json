@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "efb1122a-b3c7-47aa-aecf-82d2813e963d"
+				"spark.autotune.trackingId": "7c16f50e-b7e4-4fe1-9bf4-973fd396a47b"
 			}
 		},
 		"metadata": {
@@ -86,7 +86,7 @@
 					"    {\"linkedService\":\"nmdemosynapse-WorkspaceDefaultStorage\"} \r\n",
 					") "
 				],
-				"execution_count": 15
+				"execution_count": 57
 			},
 			{
 				"cell_type": "code",
@@ -104,7 +104,7 @@
 				"source": [
 					"job_id = mssparkutils.env.getJobId()"
 				],
-				"execution_count": 17
+				"execution_count": 104
 			},
 			{
 				"cell_type": "code",
@@ -122,9 +122,12 @@
 				"source": [
 					"raw_file_path = '/synfs/' + job_id + '/mnt/financial_filings/csv/1000045_10K_2016_0001193125-16-620952.csv'\r\n",
 					"pub_key_path = '/synfs/' + job_id + '/mnt/pgp_demo/keys/0xB3B14BF1-pub.asc'\r\n",
-					"private_key_path = '/synfs/' + job_id + '/mnt/pgp_demo/keys/0xB3B14BF1-sec.asc'"
+					"private_key_path = '/synfs/' + job_id + '/mnt/pgp_demo/keys/0xB3B14BF1-sec.asc'\r\n",
+					"encrypted_file_path = '/synfs/' + job_id + '/mnt/pgp_demo/messages/encrypted_message.txt'\r\n",
+					"encrypted_file_path_fs_format = 'synfs:/' + job_id + '/mnt/pgp_demo/messages/encrypted_message.txt'\r\n",
+					"private_key_passphrase = 'testing'"
 				],
-				"execution_count": 22
+				"execution_count": 105
 			},
 			{
 				"cell_type": "code",
@@ -145,7 +148,7 @@
 					"    input_data = f.read()\r\n",
 					"# print(input_data)"
 				],
-				"execution_count": 27
+				"execution_count": 106
 			},
 			{
 				"cell_type": "code",
@@ -165,7 +168,7 @@
 					"import pgpy as pg\r\n",
 					"pubkey, _ = pg.PGPKey.from_file(pub_key_path)"
 				],
-				"execution_count": 31
+				"execution_count": 107
 			},
 			{
 				"cell_type": "code",
@@ -185,7 +188,7 @@
 					"message = pg.PGPMessage.new(input_data)\r\n",
 					"encrypted_message = pubkey.encrypt(message)"
 				],
-				"execution_count": 34
+				"execution_count": 108
 			},
 			{
 				"cell_type": "code",
@@ -201,34 +204,13 @@
 					}
 				},
 				"source": [
-					"#Encrypting a file using public key\r\n",
-					"import pgpy\r\n",
-					"from pgpy.constants import PubKeyAlgorithm, KeyFlags, HashAlgorithm, SymmetricKeyAlgorithm, CompressionAlgorithm\r\n",
-					"from timeit import default_timer as timer\r\n",
-					"import base64 \r\n",
-					"import io\r\n",
-					" \r\n",
-					"KEY_PUB = base64.b64decode(publicb64).decode(\"ascii\").lstrip()  \r\n",
-					"#print(KEY_PUB)\r\n",
-					" \r\n",
-					"pub_key = pgpy.PGPKey()\r\n",
-					"pub_key.parse(KEY_PUB)\r\n",
-					"pass\r\n",
-					"# -READ THE FILE FROM MOUNT POINT-----------------\r\n",
-					"with io.open('/dbfs/mnt/sample_data/california_housing_test.csv', \"r\",newline='') as csv_file:\r\n",
-					"    input_data = csv_file.read()                   # The io and newline retains the CRLF\r\n",
-					"    \r\n",
-					"t0 = timer()\r\n",
-					"#PGP Encryption start\r\n",
-					"msg = pgpy.PGPMessage.new(input_data)\r\n",
-					"###### this returns a new PGPMessage that contains an encrypted form of the original message\r\n",
-					"encrypted_message = pub_key.encrypt(msg)\r\n",
-					"pgpstr = str(encrypted_message)\r\n",
-					"with open('/dbfs/mnt/sample_data/california_housing_test.csv.pgp', \"w\") as text_file:\r\n",
-					"    text_file.write(pgpstr)\r\n",
-					"print(\"Encryption Complete :\" + str(timer()-t0))"
+					"# This works in both Python 2.x and 3.x\r\n",
+					"# ASCII-armored format\r\n",
+					"# cleartext PGPMessages will also have properly canonicalized and dash-escaped\r\n",
+					"# message text\r\n",
+					"to_export = str(encrypted_message)"
 				],
-				"execution_count": null
+				"execution_count": 109
 			},
 			{
 				"cell_type": "code",
@@ -244,9 +226,9 @@
 					}
 				},
 				"source": [
-					"location_var = 'abfss://datalake@nmdemostorage1.dfs.core.windows.net/financial_filings/csv/1000045_10K_2016_0001193125-16-620952.csv'"
+					"# mssparkutils.fs.help()"
 				],
-				"execution_count": 9
+				"execution_count": 110
 			},
 			{
 				"cell_type": "code",
@@ -262,10 +244,10 @@
 					}
 				},
 				"source": [
-					"import pandas as pd \r\n",
-					"df = pd.read_csv(location_var)"
+					"###write out the file\r\n",
+					"mssparkutils.fs.put(encrypted_file_path_fs_format, to_export, overwrite=True)"
 				],
-				"execution_count": 10
+				"execution_count": 111
 			},
 			{
 				"cell_type": "code",
@@ -281,11 +263,186 @@
 					}
 				},
 				"source": [
-					"with io.open(location_var) as csv_file:\r\n",
-					"    input_data = csv_file.read()\r\n",
-					""
+					"#check if it's there\r\n",
+					"mssparkutils.fs.ls(encrypted_file_path_fs_format)"
 				],
-				"execution_count": 11
+				"execution_count": 112
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### weird bug - need to unmount and remount to read it in again\r\n",
+					"print('unmounting...')\r\n",
+					"mssparkutils.fs.unmount('/mnt')\r\n",
+					"\r\n",
+					"print('mounting...')\r\n",
+					"mssparkutils.fs.mount( \r\n",
+					"    \"abfss://datalake@nmdemostorage1.dfs.core.windows.net\", \r\n",
+					"    \"/mnt\", \r\n",
+					"    {\"linkedService\":\"nmdemosynapse-WorkspaceDefaultStorage\"} \r\n",
+					") \r\n",
+					"\r\n",
+					"print('mounting complete')"
+				],
+				"execution_count": 113
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# re-create the variables with new job id (in case it changed)\r\n",
+					"job_id = mssparkutils.env.getJobId()\r\n",
+					"raw_file_path = '/synfs/' + job_id + '/mnt/financial_filings/csv/1000045_10K_2016_0001193125-16-620952.csv'\r\n",
+					"pub_key_path = '/synfs/' + job_id + '/mnt/pgp_demo/keys/0xB3B14BF1-pub.asc'\r\n",
+					"private_key_path = '/synfs/' + job_id + '/mnt/pgp_demo/keys/0xB3B14BF1-sec.asc'\r\n",
+					"encrypted_file_path = '/synfs/' + job_id + '/mnt/pgp_demo/messages/encrypted_message.txt'\r\n",
+					"encrypted_file_path_fs_format = 'synfs:/' + job_id + '/mnt/pgp_demo/messages/encrypted_message.txt'\r\n",
+					"private_key_passphrase = 'testing'"
+				],
+				"execution_count": 119
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## there is a weird bug here, it cannot read the file even though it exists\r\n",
+					"\r\n",
+					"with io.open(encrypted_file_path) as f:\r\n",
+					"    ecnrypted_file = f.read()\r\n",
+					"\r\n",
+					"# print(input_data)"
+				],
+				"execution_count": 115
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## load in private key\r\n",
+					"# Recipient loads the private key\r\n",
+					"private_key, _ = pg.PGPKey.from_file(private_key_path)\r\n",
+					"\r\n",
+					"## unlock the key with a passphrase\r\n",
+					"# private_key.unlock(private_key_passphrase)"
+				],
+				"execution_count": 116
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# the key is locked, need to unlock with passphrase, has to be used with \"with\" command\r\n",
+					"print(private_key.is_unlocked)"
+				],
+				"execution_count": 120
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#convert to pgp formtat\r\n",
+					"encrypted_message = pg.PGPMessage.from_blob(ecnrypted_file)"
+				],
+				"execution_count": 121
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"with private_key.unlock(\"testing\"):\r\n",
+					"    print(private_key.is_unlocked)\r\n",
+					"    decrypted_text = private_key.decrypt(encrypted_message).message"
+				],
+				"execution_count": 125
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# print(decrypted_text)"
+				],
+				"execution_count": 127
 			}
 		]
 	}
