@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "37ee9f33-c65e-4da8-8d9f-010a4ecdc318"
+				"spark.autotune.trackingId": "8dd4b9da-6a0c-4de5-94fb-1fca840157f3"
 			}
 		},
 		"metadata": {
@@ -78,25 +78,6 @@
 					"# pip install pgpy"
 				],
 				"execution_count": 14
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"#install pgpy if not installed\r\n",
-					"# pip install pgpy"
-				],
-				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
