@@ -1,0 +1,15 @@
+{
+	"name": "kalt_tire",
+	"properties": {
+		"description": "test config",
+		"configs": {
+			"spark.rpc.message.maxSize": "1024"
+		},
+		"created": "2023-01-26T14:58:20.8590000-06:00",
+		"createdBy": "nmakarov@microsoft.com",
+		"annotations": [],
+		"configMergeRule": {
+			"artifact.currentOperation.spark.rpc.message.maxSize": "replace"
+		}
+	}
+}
