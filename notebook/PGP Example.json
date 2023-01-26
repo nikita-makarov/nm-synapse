@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "1",
 				"spark.dynamicAllocation.maxExecutors": "1",
-				"spark.autotune.trackingId": "8dd4b9da-6a0c-4de5-94fb-1fca840157f3"
+				"spark.autotune.trackingId": "b06bc449-4521-4753-b93c-993019d32e2f"
 			}
 		},
 		"metadata": {
@@ -75,9 +75,51 @@
 					}
 				},
 				"source": [
+					"## test key vault"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# # spark.conf.get(\"spark.rpc.message.maxSize\")\r\n",
+					"# import os\r\n",
+					"# os.getcwd()\r\n",
+					"# raw_file_path = 'synfs:/11/mnt/financial_filings/csv/1000045_10K_2016_0001193125-16-620952.csv'\r\n",
+					"# mssparkutils.fs.cp(raw_file_path, 'file:/mnt/newfolder2/file.csv', recurse=True)\r\n",
+					"# mssparkutils.fs.ls('/mnt/newfolder/')\r\n",
+					"# os.listdir('/mnt/newfolder2')"
+				],
+				"execution_count": 89
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"# pip install pgpy"
 				],
-				"execution_count": 14
+				"execution_count": 55
 			},
 			{
 				"cell_type": "code",
@@ -99,7 +141,7 @@
 					"    {\"linkedService\":\"nmdemosynapse-WorkspaceDefaultStorage\"} \r\n",
 					") "
 				],
-				"execution_count": 2
+				"execution_count": 61
 			},
 			{
 				"cell_type": "code",
@@ -117,7 +159,7 @@
 				"source": [
 					"job_id = mssparkutils.env.getJobId()"
 				],
-				"execution_count": 3
+				"execution_count": 62
 			},
 			{
 				"cell_type": "code",
@@ -140,7 +182,7 @@
 					"encrypted_file_path_fs_format = 'synfs:/' + job_id + '/mnt/pgp_demo/messages/encrypted_message.csv.pgp'\r\n",
 					"private_key_passphrase = 'testing'"
 				],
-				"execution_count": 23
+				"execution_count": 63
 			},
 			{
 				"cell_type": "code",
