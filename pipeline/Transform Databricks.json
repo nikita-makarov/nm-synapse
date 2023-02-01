@@ -56,7 +56,7 @@
 			},
 			"transformation_logic": {
 				"type": "string",
-				"defaultValue": "SELECT    `Customer Key` AS CustomerKey   ,`WWI Customer ID` AS WWICustomerID   ,`Customer` AS Customer   ,`Bill To Customer` AS BIllToCustomer   ,`Category` AS Category   ,`Buying Group` AS BuyingGroup   ,`Primary Contact` AS PrimaryContact   ,`Postal Code` AS PostalCode   ,`Valid From` AS ValidFrom   ,`Valid To` AS ValidTo FROM file_sql_view"
+				"defaultValue": "SELECT    `Customer Key` AS CustomerKey   ,`WWI Customer ID` AS WWICustomerID   ,`Customer` AS Customer   ,`Bill To Customer` AS BIllToCustomer   ,`Category` AS Category   ,`Buying Group` AS BuyingGroup   ,`Primary Contact` AS PrimaryContact   ,`Postal Code` AS PostalCode   ,`Valid From` AS ValidFrom   ,`Valid To` AS ValidTo   , current_timestamp() AS ELT_Timestamp FROM file_sql_view"
 			},
 			"destination_file_path": {
 				"type": "string",
