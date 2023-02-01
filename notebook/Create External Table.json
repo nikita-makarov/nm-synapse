@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6ca6ada9-b7ea-40bc-bf2f-0dadc3b96627"
+				"spark.autotune.trackingId": "dbb0c742-03bb-40eb-8d55-e98ed7fdb125"
 			}
 		},
 		"metadata": {
@@ -61,10 +61,10 @@
 					"table = 'dim_customer'\r\n",
 					"transformation_logic = ''\r\n",
 					"raw_file_path = ''\r\n",
-					"destination_file_path = ''\r\n",
+					"destination_file_path = '/silver/wwi-dimcustomer.parquet'\r\n",
 					"destination_container = 'curateddata'"
 				],
-				"execution_count": 1
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -80,13 +80,10 @@
 					}
 				},
 				"source": [
-					"mssparkutils.fs.mount( \r\n",
-					"    f\"abfss://{curateddata}@nmdemostorage1.dfs.core.windows.net\", \r\n",
-					"    \"/mnt\", \r\n",
-					"    {\"linkedService\":\"nmdemosynapse-WorkspaceDefaultStorage\"} \r\n",
-					") "
+					"# create database if not exists\r\n",
+					"spark.sql(f\"\"\" CREATE DATABASE IF NOT EXISTS {db} \"\"\")"
 				],
-				"execution_count": 2
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -102,9 +99,10 @@
 					}
 				},
 				"source": [
-					"job_id = mssparkutils.env.getJobId()"
+					"target_file_path = f'abfss://{destination_container}@nmdemostorage1.dfs.core.windows.net/{destination_file_path}'\r\n",
+					"print(target_file_path)"
 				],
-				"execution_count": null
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -120,9 +118,13 @@
 					}
 				},
 				"source": [
-					"target_file_path = '/synfs/' + job_id + '/mnt/financial_filings/csv/1000045_10K_2016_0001193125-16-620952.csv'"
+					"## Register table in Synapse\r\n",
+					"spark.sql(\r\n",
+					"    f\"\"\"\r\n",
+					"    CREATE TABLE IF NOT EXISTS {db}.{table} USING PARQUET LOCATION '{target_file_path}'\r\n",
+					"    \"\"\")"
 				],
-				"execution_count": null
+				"execution_count": 22
 			}
 		]
 	}
