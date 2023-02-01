@@ -3,10 +3,12 @@
 	"properties": {
 		"parameters": {
 			"db": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "silver"
 			},
 			"table": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "dim_customer"
 			},
 			"transformation_logic": {
 				"type": "string"
