@@ -1,0 +1,17 @@
+{
+	"name": "nmdemoaml1",
+	"properties": {
+		"annotations": [],
+		"type": "AzureMLService",
+		"typeProperties": {
+			"subscriptionId": "8a936955-932a-425a-8c07-f6035412c4a1",
+			"resourceGroupName": "rg_aml",
+			"mlWorkspaceName": "nmdemoaml1",
+			"authentication": "MSI"
+		},
+		"connectVia": {
+			"referenceName": "AzureIR1",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
