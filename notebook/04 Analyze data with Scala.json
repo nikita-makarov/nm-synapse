@@ -16,7 +16,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3a99719a-c76e-40fe-b7a7-bf5be3ab9b64"
+				"spark.autotune.trackingId": "0604e3f2-43cf-40aa-a3fe-fcd9dcec934c"
 			}
 		},
 		"metadata": {
@@ -80,6 +80,9 @@
 			{
 				"cell_type": "code",
 				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					},
 					"diagram": {
 						"activateDiagramType": 1,
 						"chartConfig": {
