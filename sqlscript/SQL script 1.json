@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 1",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [TransactionKey]\n,[DateKey]\n,[CustomerKey]\n,[BillToCustomerKey]\n,[SupplierKey]\n,[TransactionTypeKey]\n,[PaymentMethodKey]\n,[WWICustomerTransaction ID]\n,[WWISupplierTransaction ID]\n,[WWIInvoiceID]\n,[WWIPurchaseOrderID]\n,[SupplierInvoiceNumber]\n,[TotalExcludingTax]\n,[TaxAmount]\n,[TotalIncludingTax]\n,[OutstandingBalance]\n,[IsFinalized]\n,[LineageKey]\n FROM [wwi].[FactTransaction]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SQLPool1",
+				"poolName": "SQLPool1"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
