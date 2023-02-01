@@ -1,6 +1,17 @@
 {
 	"name": "Load Silver",
 	"properties": {
+		"parameters": {
+			"silver_db": {
+				"type": "string"
+			},
+			"silver_table": {
+				"type": "string"
+			},
+			"transformation_logic": {
+				"type": "string"
+			}
+		},
 		"annotations": []
 	}
 }
