@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 4",
+	"name": "Repartition with Driver IO",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2df32a63-f18f-445f-8fce-3891e5dc17c5"
+				"spark.autotune.trackingId": "1597e04c-38bb-45bf-8d26-7ed011619b55"
 			}
 		},
 		"metadata": {
@@ -33,17 +33,10 @@
 			"a365ComputeOptions": {
 				"id": "/subscriptions/287ea8d5-e1da-4e3d-83e6-552c74157c17/resourceGroups/nm_synapse/providers/Microsoft.Synapse/workspaces/nmsynapse/bigDataPools/sparkpoolmain",
 				"name": "sparkpoolmain",
-				"type": "Spark",
-				"endpoint": "https://nmsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpoolmain",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
-				},
-				"sparkVersion": "3.2",
-				"nodeCount": 3,
-				"cores": 4,
-				"memory": 28,
-				"automaticScaleJobs": false
+				}
 			},
 			"sessionKeepAliveTimeout": 30
 		},

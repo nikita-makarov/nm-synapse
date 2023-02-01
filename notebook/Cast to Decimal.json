@@ -1,5 +1,5 @@
 {
-	"name": "Notebook 2",
+	"name": "Cast to Decimal",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0157904b-30be-4ac3-b6bd-57a468dea9c8"
+				"spark.autotune.trackingId": "ad3fb008-7492-46eb-a0f8-d662fe07c588"
 			}
 		},
 		"metadata": {
@@ -33,17 +33,10 @@
 			"a365ComputeOptions": {
 				"id": "/subscriptions/287ea8d5-e1da-4e3d-83e6-552c74157c17/resourceGroups/nm_synapse/providers/Microsoft.Synapse/workspaces/nmsynapse/bigDataPools/sparkpool4",
 				"name": "sparkpool4",
-				"type": "Spark",
-				"endpoint": "https://nmsynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool4",
 				"auth": {
 					"type": "AAD",
 					"authResource": "https://dev.azuresynapse.net"
-				},
-				"sparkVersion": "3.2",
-				"nodeCount": 3,
-				"cores": 4,
-				"memory": 28,
-				"automaticScaleJobs": false
+				}
 			},
 			"sessionKeepAliveTimeout": 30
 		},
