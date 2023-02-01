@@ -1,6 +1,50 @@
 {
 	"name": "Transform Databricks",
 	"properties": {
+		"activities": [
+			{
+				"name": "Execute Databricks Notebook",
+				"type": "DatabricksNotebook",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebookPath": "/ELT/Transform",
+					"baseParameters": {
+						"db": {
+							"value": "@pipeline().parameters.db",
+							"type": "Expression"
+						},
+						"destination_file_path": {
+							"value": "@pipeline().parameters.destination_file_path",
+							"type": "Expression"
+						},
+						"raw_file_path": {
+							"value": "@pipeline().parameters.raw_file_path",
+							"type": "Expression"
+						},
+						"table": {
+							"value": "@pipeline().parameters.table",
+							"type": "Expression"
+						},
+						"transformation_logic": {
+							"value": "@pipeline().parameters.transformation_logic",
+							"type": "Expression"
+						}
+					}
+				},
+				"linkedServiceName": {
+					"referenceName": "AzureDatabricks1",
+					"type": "LinkedServiceReference"
+				}
+			}
+		],
 		"parameters": {
 			"db": {
 				"type": "string",
@@ -13,6 +57,14 @@
 			"transformation_logic": {
 				"type": "string",
 				"defaultValue": "SELECT    `Customer Key` AS CustomerKey   ,`WWI Customer ID` AS WWICustomerID   ,`Customer` AS Customer   ,`Bill To Customer` AS BIllToCustomer   ,`Category` AS Category   ,`Buying Group` AS BuyingGroup   ,`Primary Contact` AS PrimaryContact   ,`Postal Code` AS PostalCode   ,`Valid From` AS ValidFrom   ,`Valid To` AS ValidTo FROM file_sql_view"
+			},
+			"destination_file_path": {
+				"type": "string",
+				"defaultValue": "/mnt/curateddata/silver/wwi-dimcustomer.parquet"
+			},
+			"raw_file_path": {
+				"type": "string",
+				"defaultValue": "/mnt/rawdata/WWI/wwi-dimcustomer.csv"
 			}
 		},
 		"annotations": []
