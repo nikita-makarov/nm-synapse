@@ -36,6 +36,10 @@
 						"transformation_logic": {
 							"value": "@pipeline().parameters.transformation_logic",
 							"type": "Expression"
+						},
+						"destination_container": {
+							"value": "@pipeline().parameters.destination_container",
+							"type": "Expression"
 						}
 					}
 				},
@@ -60,11 +64,15 @@
 			},
 			"destination_file_path": {
 				"type": "string",
-				"defaultValue": "/mnt/curateddata/silver/wwi-dimcustomer.parquet"
+				"defaultValue": "/curateddata/silver/wwi-dimcustomer.parquet"
 			},
 			"raw_file_path": {
 				"type": "string",
 				"defaultValue": "/mnt/rawdata/WWI/wwi-dimcustomer.csv"
+			},
+			"destination_container": {
+				"type": "string",
+				"defaultValue": "curateddata"
 			}
 		},
 		"annotations": []
