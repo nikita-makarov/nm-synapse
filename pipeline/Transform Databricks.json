@@ -11,7 +11,8 @@
 				"defaultValue": "dim_customer"
 			},
 			"transformation_logic": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "SELECT    `Customer Key` AS CustomerKey   ,`WWI Customer ID` AS WWICustomerID   ,`Customer` AS Customer   ,`Bill To Customer` AS BIllToCustomer   ,`Category` AS Category   ,`Buying Group` AS BuyingGroup   ,`Primary Contact` AS PrimaryContact   ,`Postal Code` AS PostalCode   ,`Valid From` AS ValidFrom   ,`Valid To` AS ValidTo FROM file_sql_view"
 			}
 		},
 		"annotations": []
