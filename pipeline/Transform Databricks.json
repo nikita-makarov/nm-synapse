@@ -2,10 +2,10 @@
 	"name": "Transform Databricks",
 	"properties": {
 		"parameters": {
-			"silver_db": {
+			"db": {
 				"type": "string"
 			},
-			"silver_table": {
+			"table": {
 				"type": "string"
 			},
 			"transformation_logic": {
