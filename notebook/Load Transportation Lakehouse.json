@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b494375e-9d5d-4f90-a455-8d335a4c9744"
+				"spark.autotune.trackingId": "80ceaef6-5564-4540-a0dc-92bbacc47138"
 			}
 		},
 		"metadata": {
@@ -102,7 +102,7 @@
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"df.write.format(\"delta\").saveAsTable(\"green_taxi\")"
 				],
-				"execution_count": null
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -136,7 +136,7 @@
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"df.write.format(\"delta\").saveAsTable(\"for_hire_vehicle\")"
 				],
-				"execution_count": null
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
