@@ -1,0 +1,438 @@
+{
+	"name": "Load Lakehouse",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "56g",
+			"driverCores": 8,
+			"executorMemory": "56g",
+			"executorCores": 8,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "9e2975a6-3f59-4a1b-b20d-742f4baab21c"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 8,
+				"memory": 56,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"nyctlc\"\r\n",
+					"blob_relative_path = \"yellow\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"# SPARK read parquet, note that it won't load any data yet by now\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"yellow_taxi\")"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"nyctlc\"\r\n",
+					"blob_relative_path = \"green\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"# SPARK read parquet, note that it won't load any data yet by now\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"green_taxi\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"nyctlc\"\r\n",
+					"blob_relative_path = \"fhv\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"# SPARK read parquet, note that it won't load any data yet by now\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"for_hire_vehicle\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"citydatacontainer\"\r\n",
+					"blob_relative_path = \"Safety/Release/city=Chicago\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"chicago_safety_data\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"citydatacontainer\"\r\n",
+					"blob_relative_path = \"Safety/Release/city=SanFrancisco\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"san_francisco_safety_data\")\r\n",
+					"     "
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"citydatacontainer\"\r\n",
+					"blob_relative_path = \"Safety/Release/city=Seattle\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"seattle_safety_data\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"citydatacontainer\"\r\n",
+					"blob_relative_path = \"Safety/Release/city=Boston\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"boston_safety_data\")\r\n",
+					"     "
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"censusdatacontainer\"\r\n",
+					"blob_relative_path = \"release/us_population_zip/\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"us_population_zip\")\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"censusdatacontainer\"\r\n",
+					"blob_relative_path = \"release/us_population_county/\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"us_population_county\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"holidaydatacontainer\"\r\n",
+					"blob_relative_path = \"Processed\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"public_holidays\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"censusdatacontainer\"\r\n",
+					"blob_relative_path = \"release/us_population_county/\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"us_population_county\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Azure storage access info\r\n",
+					"blob_account_name = \"azureopendatastorage\"\r\n",
+					"blob_container_name = \"censusdatacontainer\"\r\n",
+					"blob_relative_path = \"release/us_population_zip/\"\r\n",
+					"blob_sas_token = r\"\"\r\n",
+					"\r\n",
+					"# Allow SPARK to read from Blob remotely\r\n",
+					"wasbs_path = 'wasbs://%s@%s.blob.core.windows.net/%s' % (blob_container_name, blob_account_name, blob_relative_path)\r\n",
+					"spark.conf.set(\r\n",
+					"  'fs.azure.sas.%s.%s.blob.core.windows.net' % (blob_container_name, blob_account_name),\r\n",
+					"  blob_sas_token)\r\n",
+					"print('Remote blob path: ' + wasbs_path)\r\n",
+					"\r\n",
+					"df = spark.read.parquet(wasbs_path)\r\n",
+					"df.write.format(\"delta\").saveAsTable(\"us_population_zip\")"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}
