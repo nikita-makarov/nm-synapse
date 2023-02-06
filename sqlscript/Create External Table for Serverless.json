@@ -1,0 +1,17 @@
+{
+	"name": "Create External Table for Serverless",
+	"properties": {
+		"content": {
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDeltaFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseDeltaFormat] \n\tWITH ( FORMAT_TYPE = DELTA)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'datalake_nmdemostorage1_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [datalake_nmdemostorage1_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://datalake@nmdemostorage1.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE dbo.yellow_taxi (\n\t[vendorID] nvarchar(4000),\n\t[tpepPickupDateTime] datetime2(7),\n\t[tpepDropoffDateTime] datetime2(7),\n\t[passengerCount] int,\n\t[tripDistance] float,\n\t[puLocationId] nvarchar(4000),\n\t[doLocationId] nvarchar(4000),\n\t[startLon] float,\n\t[startLat] float,\n\t[endLon] float,\n\t[endLat] float,\n\t[rateCodeId] int,\n\t[storeAndFwdFlag] nvarchar(4000),\n\t[paymentType] nvarchar(4000),\n\t[fareAmount] float,\n\t[extra] float,\n\t[mtaTax] float,\n\t[improvementSurcharge] nvarchar(4000),\n\t[tipAmount] float,\n\t[tollsAmount] float,\n\t[totalAmount] float,\n\t[puYear] int,\n\t[puMonth] int\n\t)\n\tWITH (\n\tLOCATION = 'synapse/workspaces/nmdemosynapse/warehouse/yellow_taxi/',\n\tDATA_SOURCE = [datalake_nmdemostorage1_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDeltaFormat]\n\t)\nGO\n\nDROP EXTERNAL TABLE dbo.yellow_taxi\n\nSELECT TOP 100 * FROM dbo.yellow_taxi\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "ServerlesssDB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
