@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2cdfc236-bcd6-44fa-a548-5e5640498411"
+				"spark.autotune.trackingId": "b494375e-9d5d-4f90-a455-8d335a4c9744"
 			}
 		},
 		"metadata": {
@@ -430,6 +430,24 @@
 					"\r\n",
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"df.write.format(\"delta\").saveAsTable(\"us_population_zip\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
 				],
 				"execution_count": null
 			}
