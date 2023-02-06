@@ -5,7 +5,7 @@
 			"name": "WWI Demo"
 		},
 		"content": {
-			"query": "--Returns records for CA state\nEXECUTE AS USER ='someone@domain.com'\nSELECT \n    Count(*) as EmployeeCount\nFROM \n    wwi.EmployeePIIData;\n\nSELECT \n    [FirstName]\n    ,[LastName]\n    ,[State]\n    ,[Phone]\n    ,[Email]\nFROM \n    wwi.EmployeePIIData ;\nrevert\n\n\n\n--Returns records for PA and NY state\nEXECUTE AS USER ='youralias@domain.com'\nSELECT \n    Count(*) as EmployeeCount\nFROM \n    wwi.EmployeePIIData;\n\nSELECT \n    [FirstName]\n    ,[LastName]\n    ,[State]\n    ,[Phone]\n    ,[Email]    \nFROM \n    wwi.EmployeePIIData;\nrevert",
+			"query": "--Returns records for CA state\nEXECUTE AS USER ='pouyafattahi@microsoft.com'\nSELECT \n    Count(*) as EmployeeCount\nFROM \n    wwi.EmployeePIIData;\n\nSELECT \n    [FirstName]\n    ,[LastName]\n    ,[State]\n    ,[Phone]\n    ,[Email]\nFROM \n    wwi.EmployeePIIData ;\nrevert\n\n\n\n--Returns records for PA and NY state\nEXECUTE AS USER ='youralias@domain.com'\nSELECT \n    Count(*) as EmployeeCount\nFROM \n    wwi.EmployeePIIData;\n\nSELECT \n    [FirstName]\n    ,[LastName]\n    ,[State]\n    ,[Phone]\n    ,[Email]    \nFROM \n    wwi.EmployeePIIData;\nrevert",
 			"metadata": {
 				"language": "sql"
 			},
