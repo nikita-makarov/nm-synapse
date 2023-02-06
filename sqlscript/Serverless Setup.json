@@ -1,8 +1,8 @@
 {
-	"name": "SQL script 1",
+	"name": "Serverless Setup",
 	"properties": {
 		"content": {
-			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://nmdemostorage1.dfs.core.windows.net/curateddata/silver/wwi-dimcustomer.parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+			"query": "CREATE DATABASE ServerlesssDB;",
 			"metadata": {
 				"language": "sql"
 			},

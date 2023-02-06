@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "80ceaef6-5564-4540-a0dc-92bbacc47138"
+				"spark.autotune.trackingId": "59d14283-c53e-446e-85c1-40270453df16"
 			}
 		},
 		"metadata": {
@@ -169,7 +169,7 @@
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"df.write.format(\"delta\").saveAsTable(\"chicago_safety_data\")"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -202,7 +202,7 @@
 					"df.write.format(\"delta\").saveAsTable(\"san_francisco_safety_data\")\r\n",
 					"     "
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -235,7 +235,7 @@
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"df.write.format(\"delta\").saveAsTable(\"seattle_safety_data\")"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -268,7 +268,7 @@
 					"df.write.format(\"delta\").saveAsTable(\"boston_safety_data\")\r\n",
 					"     "
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -302,7 +302,7 @@
 					"df.write.format(\"delta\").saveAsTable(\"us_population_zip\")\r\n",
 					""
 				],
-				"execution_count": null
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -335,7 +335,7 @@
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"df.write.format(\"delta\").saveAsTable(\"us_population_county\")"
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -367,7 +367,7 @@
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"df.write.format(\"delta\").saveAsTable(\"public_holidays\")"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -399,7 +399,7 @@
 					"df = spark.read.parquet(wasbs_path)\r\n",
 					"df.write.format(\"delta\").saveAsTable(\"us_population_county\")"
 				],
-				"execution_count": null
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
