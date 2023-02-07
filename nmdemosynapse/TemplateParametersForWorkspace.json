@@ -1,0 +1,51 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "nmdemosynapse"
+		},
+		"AzureDatabricks1_accessToken": {
+			"value": ""
+		},
+		"demodb4_connectionString": {
+			"value": ""
+		},
+		"nmdatalakestore_accountKey": {
+			"value": ""
+		},
+		"nmdemosynapse-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:nmdemosynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"nmsynapse-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:nmsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"CognitiveService1_properties_typeProperties_subscriptionId": {
+			"value": "8a936955-932a-425a-8c07-f6035412c4a1"
+		},
+		"bing-covid-19-data_sasUri": {
+			"value": ""
+		},
+		"city_safety_chicago_sasUri": {
+			"value": ""
+		},
+		"nmdatalakestore_properties_typeProperties_url": {
+			"value": "@{linkedService().param1}"
+		},
+		"nmdemoaml1_properties_typeProperties_subscriptionId": {
+			"value": "8a936955-932a-425a-8c07-f6035412c4a1"
+		},
+		"nmdemoaml1_properties_typeProperties_resourceGroupName": {
+			"value": "rg_aml"
+		},
+		"nmdemokv1_properties_typeProperties_baseUrl": {
+			"value": "https://nmdemokv1.vault.azure.net/"
+		},
+		"nmdemosynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://nmdemostorage1.dfs.core.windows.net"
+		},
+		"nyc_tlc_fhv_sasUri": {
+			"value": ""
+		}
+	}
+}
