@@ -1,0 +1,27 @@
+{
+	"name": "nmdemolangcs",
+	"properties": {
+		"annotations": [],
+		"type": "CognitiveService",
+		"typeProperties": {
+			"subscriptionId": "8a936955-932a-425a-8c07-f6035412c4a1",
+			"resourceGroup": "rg_cognitive_svcs",
+			"csName": "nmdemolangcs",
+			"csKind": "TextAnalytics",
+			"csLocation": "southcentralus",
+			"endPoint": "https://nmdemolangcs.cognitiveservices.azure.com/",
+			"csKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "nmdemokv1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "cognitivelanguage"
+			}
+		},
+		"connectVia": {
+			"referenceName": "AutoResolveIntegrationRuntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
