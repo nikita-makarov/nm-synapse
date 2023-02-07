@@ -2,7 +2,7 @@
 	"name": "Explore Taxi",
 	"properties": {
 		"content": {
-			"query": "SELECT\n    YEAR(tpepPickupDateTime) AS current_year,\n    COUNT(*) AS rides_per_year\nFROM\n[dbo].[nyc_taxi] AS [nyc]\nWHERE YEAR(tpepPickupDateTime) >= '2009' AND YEAR(tpepPickupDateTime) <= '2019'\nGROUP BY YEAR(tpepPickupDateTime)\nORDER BY 1 ASC",
+			"query": "SELECT\n    YEAR(tpepPickupDateTime) AS current_year,\n    COUNT(*) AS rides_per_year\nFROM\n[dbo].[yellow_taxi] AS [nyc]\nWHERE YEAR(tpepPickupDateTime) >= '2009' AND YEAR(tpepPickupDateTime) <= '2019'\nGROUP BY YEAR(tpepPickupDateTime)\nORDER BY 1 ASC",
 			"metadata": {
 				"language": "sql"
 			},
