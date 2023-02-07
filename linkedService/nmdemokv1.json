@@ -1,0 +1,10 @@
+{
+	"name": "nmdemokv1",
+	"properties": {
+		"annotations": [],
+		"type": "AzureKeyVault",
+		"typeProperties": {
+			"baseUrl": "https://nmdemokv1.vault.azure.net/"
+		}
+	}
+}
