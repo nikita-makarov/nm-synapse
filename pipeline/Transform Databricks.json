@@ -68,6 +68,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"notebook": {
+						"referenceName": "Create External Table New",
+						"type": "NotebookReference"
+					},
 					"parameters": {
 						"db": {
 							"value": {
