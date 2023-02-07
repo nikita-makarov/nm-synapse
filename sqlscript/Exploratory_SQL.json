@@ -1,8 +1,8 @@
 {
-	"name": "SQL script 3",
+	"name": "Exploratory_SQL",
 	"properties": {
 		"content": {
-			"query": "SELECT\n    YEAR(tpepPickupDateTime) AS current_year,\n    COUNT(*) AS rides_per_year\nFROM\n    OPENROWSET(\n        BULK 'https://azureopendatastorage.blob.core.windows.net/nyctlc/yellow/puYear=*/puMonth=*/*.parquet',\n        FORMAT='PARQUET'\n    ) AS [nyc]\nWHERE nyc.filepath(1) >= '2009' AND nyc.filepath(1) <= '2019'\nGROUP BY YEAR(tpepPickupDateTime)\nORDER BY 1 ASC",
+			"query": "SELECT\n    YEAR(tpepPickupDateTime) AS current_year,\n    COUNT(*) AS rides_per_year\nFROM dbo.yellow_taxi as [nyc]\nGROUP BY YEAR(tpepPickupDateTime)\nHAVING YEAR(tpepPickupDateTime) >= 2009 AND YEAR(tpepPickupDateTime) <= 2019\nORDER BY 1 ASC\n",
 			"metadata": {
 				"language": "sql"
 			},
