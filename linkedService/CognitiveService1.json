@@ -1,0 +1,27 @@
+{
+	"name": "CognitiveService1",
+	"properties": {
+		"annotations": [],
+		"type": "CognitiveService",
+		"typeProperties": {
+			"subscriptionId": "8a936955-932a-425a-8c07-f6035412c4a1",
+			"resourceGroup": "rg_cognitive_svcs",
+			"csName": "nmdemocs",
+			"csKind": "CognitiveServices",
+			"csLocation": "southcentralus",
+			"endPoint": "https://nmdemocs.cognitiveservices.azure.com/",
+			"csKey": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "nmdemokv1",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "cognitive"
+			}
+		},
+		"connectVia": {
+			"referenceName": "AzureIR1",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
