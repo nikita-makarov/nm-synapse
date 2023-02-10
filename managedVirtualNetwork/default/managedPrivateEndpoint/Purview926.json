@@ -1,7 +1,0 @@
-{
-	"name": "Purview926",
-	"properties": {
-		"privateLinkResourceId": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/purview/providers/Microsoft.Purview/accounts/nmpurviewdemo1",
-		"groupId": "account"
-	}
-}
