@@ -41,6 +41,9 @@
 		"nmdemokv1_properties_typeProperties_baseUrl": {
 			"value": "https://nmdemokv1.vault.azure.net/"
 		},
+		"nmdemolangcs_properties_typeProperties_subscriptionId": {
+			"value": "8a936955-932a-425a-8c07-f6035412c4a1"
+		},
 		"nmdemosynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://nmdemostorage1.dfs.core.windows.net"
 		},

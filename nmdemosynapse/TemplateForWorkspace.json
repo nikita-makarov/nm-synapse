@@ -57,6 +57,10 @@
 			"type": "string",
 			"defaultValue": "https://nmdemokv1.vault.azure.net/"
 		},
+		"nmdemolangcs_properties_typeProperties_subscriptionId": {
+			"type": "string",
+			"defaultValue": "8a936955-932a-425a-8c07-f6035412c4a1"
+		},
 		"nmdemosynapse-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://nmdemostorage1.dfs.core.windows.net"
@@ -70,6 +74,169 @@
 		"workspaceId": "[concat('Microsoft.Synapse/workspaces/', parameters('workspaceName'))]"
 	},
 	"resources": [
+		{
+			"name": "[concat(parameters('workspaceName'), '/Copy Data Pipeline')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy from Azure SQL to Data Lake",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"sqlReaderQuery": "SELECT * FROM salesLT.Customer",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "customer",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data Lake to Dedicated Pool",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy from Azure SQL to Data Lake",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlPoolSink",
+								"allowCopyCommand": true,
+								"copyCommandSettings": {},
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "customer",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Customer2",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/AzureSqlTable1')]",
+				"[concat(variables('workspaceId'), '/datasets/customer')]",
+				"[concat(variables('workspaceId'), '/datasets/Customer2')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Dataflowdemo')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Dataflow1",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"source1": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"integrationRuntime": {
+								"referenceName": "AzureIR1",
+								"type": "IntegrationRuntimeReference"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/dataflows/Dataflow1')]",
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AzureIR1')]"
+			]
+		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/Exit Value')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
@@ -642,6 +809,74 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/AzureSqlTable1')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "demodb4",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "taxis"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/demodb4')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Customer2')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "SalesLT",
+					"table": "Customer"
+				},
+				"sqlPool": {
+					"referenceName": "SQLPool1",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/SQLPool1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/customer')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "customer.parquet",
+						"folderPath": "landing",
+						"fileSystem": "rawdata"
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/nmdemosynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/test_file')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -863,6 +1098,39 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/nmdemolangcs')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "CognitiveService",
+				"typeProperties": {
+					"subscriptionId": "[parameters('nmdemolangcs_properties_typeProperties_subscriptionId')]",
+					"resourceGroup": "rg_cognitive_svcs",
+					"csName": "nmdemolangcs",
+					"csKind": "TextAnalytics",
+					"csLocation": "southcentralus",
+					"endPoint": "https://nmdemolangcs.cognitiveservices.azure.com/",
+					"csKey": {
+						"type": "AzureKeyVaultSecret",
+						"store": {
+							"referenceName": "nmdemokv1",
+							"type": "LinkedServiceReference"
+						},
+						"secretName": "cognitivelanguage"
+					}
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]",
+				"[concat(variables('workspaceId'), '/linkedServices/nmdemokv1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/nmdemosynapse-WorkspaceDefaultSqlServer')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -1012,6 +1280,96 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Dataflow1')]",
+			"type": "Microsoft.Synapse/workspaces/dataflows",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"name": "source1"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "AzureSqlTable1",
+								"type": "DatasetReference"
+							},
+							"name": "sink1"
+						}
+					],
+					"transformations": [
+						{
+							"name": "select1"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          vendorID as string,",
+						"          tpepPickupDateTime as timestamp,",
+						"          tpepDropoffDateTime as timestamp,",
+						"          passengerCount as integer,",
+						"          tripDistance as double,",
+						"          puLocationId as string,",
+						"          doLocationId as string,",
+						"          startLon as double,",
+						"          startLat as double,",
+						"          endLon as double,",
+						"          endLat as double,",
+						"          rateCodeId as integer,",
+						"          storeAndFwdFlag as string,",
+						"          paymentType as string,",
+						"          fareAmount as double,",
+						"          extra as double,",
+						"          mtaTax as double,",
+						"          improvementSurcharge as string,",
+						"          tipAmount as double,",
+						"          tollsAmount as double,",
+						"          totalAmount as double,",
+						"          puYear as integer,",
+						"          puMonth as integer",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     limit: 100,",
+						"     store: 'synapse',",
+						"     databaseType: 'spark',",
+						"     format: 'table',",
+						"     database: 'default',",
+						"     tableName: 'yellow_taxi') ~> source1",
+						"source1 select(mapColumn(",
+						"          VENDOR_ID = vendorID,",
+						"          tpepPickupDateTime,",
+						"          tpepDropoffDateTime,",
+						"          passengerCount,",
+						"          tripDistance,",
+						"          fareAmount,",
+						"          tipAmount,",
+						"          puYear,",
+						"          puMonth",
+						"     ),",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> select1",
+						"select1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     format: 'table',",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/AzureSqlTable1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/WorkspaceSystemIdentity')]",
 			"type": "Microsoft.Synapse/workspaces/credentials",
 			"apiVersion": "2019-06-01-preview",
@@ -1157,6 +1515,66 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Exploratory_SQL')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT\n    YEAR(tpepPickupDateTime) AS current_year,\n    COUNT(*) AS rides_per_year\nFROM dbo.yellow_taxi as [nyc]\nGROUP BY YEAR(tpepPickupDateTime)\nHAVING YEAR(tpepPickupDateTime) >= 2009 AND YEAR(tpepPickupDateTime) <= 2019\nORDER BY 1 ASC\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "default",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Explore Taxi')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT\n    YEAR(tpepPickupDateTime) AS current_year,\n    COUNT(*) AS rides_per_year\nFROM\n[dbo].[yellow_taxi] AS [nyc]\nWHERE YEAR(tpepPickupDateTime) >= '2009' AND YEAR(tpepPickupDateTime) <= '2019'\nGROUP BY YEAR(tpepPickupDateTime)\nORDER BY 1 ASC",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "default",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Grant Permissions to Purview')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- CREATE USER PurviewUser\nCREATE USER [nmpurviewdemo1] FROM EXTERNAL PROVIDER;\n\nEXEC sp_addrolemember 'db_datareader', [nmpurviewdemo1]\nGO",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "SQLPool1",
+						"poolName": "SQLPool1"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Load Test Data')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1172,46 +1590,6 @@
 					"currentConnection": {
 						"databaseName": "SQLPool1",
 						"poolName": "SQLPool1"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT TOP (100) [tipped]\n,[fareAmount]\n,[paymentType]\n,[passengerCount]\n,[tripDistance]\n,[tripTimeSecs]\n,[pickupTimeBin]\n FROM [dbo].[nyc_taxi]",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "SQLPool1",
-						"poolName": "SQLPool1"
-					},
-					"resultLimit": 5000
-				},
-				"type": "SqlQuery"
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/SQL script 3')]",
-			"type": "Microsoft.Synapse/workspaces/sqlscripts",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"content": {
-					"query": "SELECT\n    YEAR(tpepPickupDateTime) AS current_year,\n    COUNT(*) AS rides_per_year\nFROM\n    OPENROWSET(\n        BULK 'https://azureopendatastorage.blob.core.windows.net/nyctlc/yellow/puYear=*/puMonth=*/*.parquet',\n        FORMAT='PARQUET'\n    ) AS [nyc]\nWHERE nyc.filepath(1) >= '2009' AND nyc.filepath(1) <= '2019'\nGROUP BY YEAR(tpepPickupDateTime)\nORDER BY 1 ASC",
-					"metadata": {
-						"language": "sql"
-					},
-					"currentConnection": {
-						"databaseName": "default",
-						"poolName": "Built-in"
 					},
 					"resultLimit": 5000
 				},
@@ -7728,6 +8106,73 @@
 						],
 						"outputs": [],
 						"execution_count": null
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Mount Linked Service New')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "sparkpool1",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "56g",
+					"driverCores": 8,
+					"executorMemory": "56g",
+					"executorCores": 8,
+					"numExecutors": 1,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "1",
+						"spark.dynamicAllocation.maxExecutors": "1",
+						"spark.autotune.trackingId": "74b1a5ca-01ea-493b-8a11-fe895798737b"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+						"name": "sparkpool1",
+						"type": "Spark",
+						"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.3",
+						"nodeCount": 3,
+						"cores": 8,
+						"memory": 56
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"source": [
+							"mssparkutils.fs.mount( \r\n",
+							"    \"abfss://datalake@nmdemostorage1.dfs.core.windows.net\", \r\n",
+							"    \"/mnt\", \r\n",
+							"    {\"linkedService\":\"nmdemosynapse-WorkspaceDefaultStorage\"} \r\n",
+							") "
+						],
+						"outputs": [],
+						"execution_count": 1
 					}
 				]
 			},
@@ -19174,18 +19619,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/SQLPool1')]",
-			"type": "Microsoft.Synapse/workspaces/sqlPools",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"collation": "SQL_Latin1_General_CP1_CI_AS",
-				"maxSizeBytes": 263882790666240,
-				"annotations": []
-			},
-			"dependsOn": [],
-			"location": "southcentralus"
-		},
-		{
 			"name": "[concat(parameters('workspaceName'), '/sparkpool1')]",
 			"type": "Microsoft.Synapse/workspaces/bigDataPools",
 			"apiVersion": "2019-06-01-preview",
@@ -19217,11 +19650,35 @@
 			"location": "southcentralus"
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/SQLPool1')]",
+			"type": "Microsoft.Synapse/workspaces/sqlPools",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"collation": "SQL_Latin1_General_CP1_CI_AS",
+				"maxSizeBytes": 263882790666240,
+				"annotations": []
+			},
+			"dependsOn": [],
+			"location": "southcentralus"
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/default')]",
 			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/default/cogsvclang')]",
+			"type": "Microsoft.Synapse/workspaces/managedVirtualNetworks/managedPrivateEndpoints",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"privateLinkResourceId": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_cognitive_svcs/providers/Microsoft.CognitiveServices/accounts/nmdemolangcs",
+				"groupId": "account"
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
+			]
 		},
 		{
 			"name": "[concat(parameters('workspaceName'), '/default/nmdemocs')]",
@@ -19303,75 +19760,6 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/managedVirtualNetworks/default')]"
 			]
-		},
-		{
-			"name": "[concat(parameters('workspaceName'), '/Mount Linked Service New')]",
-			"type": "Microsoft.Synapse/workspaces/notebooks",
-			"apiVersion": "2019-06-01-preview",
-			"properties": {
-				"nbformat": 4,
-				"nbformat_minor": 2,
-				"bigDataPool": {
-					"referenceName": "sparkpool1",
-					"type": "BigDataPoolReference"
-				},
-				"sessionProperties": {
-					"driverMemory": "56g",
-					"driverCores": 8,
-					"executorMemory": "56g",
-					"executorCores": 8,
-					"numExecutors": 1,
-					"conf": {
-						"spark.dynamicAllocation.enabled": "false",
-						"spark.dynamicAllocation.minExecutors": "1",
-						"spark.dynamicAllocation.maxExecutors": "1",
-						"spark.autotune.trackingId": "281e0e33-93ff-4dd2-a2f2-f1d54d7fa46a"
-					}
-				},
-				"metadata": {
-					"saveOutput": true,
-					"enableDebugMode": false,
-					"kernelspec": {
-						"name": "synapse_pyspark",
-						"display_name": "Synapse PySpark"
-					},
-					"language_info": {
-						"name": "python"
-					},
-					"a365ComputeOptions": {
-						"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
-						"name": "sparkpool1",
-						"type": "Spark",
-						"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
-						"auth": {
-							"type": "AAD",
-							"authResource": "https://dev.azuresynapse.net"
-						},
-						"sparkVersion": "3.3",
-						"nodeCount": 3,
-						"cores": 8,
-						"memory": 56,
-						"automaticScaleJobs": false
-					},
-					"sessionKeepAliveTimeout": 30
-				},
-				"cells": [
-					{
-						"cell_type": "code",
-						"metadata": {},
-						"source": [
-							"mssparkutils.fs.mount( \r\n",
-							"    \"abfss://datalake@nmdemostorage1.dfs.core.windows.net\", \r\n",
-							"    \"/mnt\", \r\n",
-							"    {\"linkedService\":\"nmdemosynapse-WorkspaceDefaultStorage\"} \r\n",
-							") "
-						],
-						"outputs": [],
-						"execution_count": 1
-					}
-				]
-			},
-			"dependsOn": []
 		}
 	]
 }
