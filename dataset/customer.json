@@ -1,0 +1,21 @@
+{
+	"name": "customer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "customer.parquet",
+				"folderPath": "landing",
+				"fileSystem": "rawdata"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
