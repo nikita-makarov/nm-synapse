@@ -1,0 +1,17 @@
+{
+	"name": "Grant Permissions to Purview",
+	"properties": {
+		"content": {
+			"query": "-- CREATE USER PurviewUser\nCREATE USER [nmpurviewdemo1] FROM EXTERNAL PROVIDER;\n\nEXEC sp_addrolemember 'db_datareader', [nmpurviewdemo1]\nGO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SQLPool1",
+				"poolName": "SQLPool1"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
