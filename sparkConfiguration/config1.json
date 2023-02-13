@@ -1,0 +1,15 @@
+{
+	"name": "config1",
+	"properties": {
+		"description": "test config",
+		"configs": {
+			"spark.rpc.message.maxSize": "1024"
+		},
+		"created": "2023-02-13T11:17:07.6920000-06:00",
+		"createdBy": "nmakarov@microsoft.com",
+		"annotations": [],
+		"configMergeRule": {
+			"artifact.currentOperation.spark.rpc.message.maxSize": "replace"
+		}
+	}
+}
