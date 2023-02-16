@@ -1,0 +1,16 @@
+{
+	"name": "OnPremServerTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OnPremSqlServer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "HumanResources",
+			"table": "Department"
+		}
+	}
+}
