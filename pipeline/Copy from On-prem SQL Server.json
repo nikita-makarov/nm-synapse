@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "Extract and Load to Datalake",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -17,19 +17,49 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT * FROM Production.TransactionHistory",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "OnPremServerTable",
 						"type": "DatasetReference"
 					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetOut",
+						"type": "DatasetReference"
+					}
 				]
 			}
 		],
+		"parameters": {
+			"SourceSQLQuery": {
+				"type": "string",
+				"defaultValue": "SELECT * FROM Production.TransactionHistory"
+			}
+		},
 		"annotations": []
 	}
 }
