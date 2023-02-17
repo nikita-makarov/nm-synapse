@@ -8,11 +8,11 @@
 		"parameters": {
 			"Schema": {
 				"type": "string",
-				"defaultValue": "HumanResources"
+				"defaultValue": "Production"
 			},
 			"TableName": {
 				"type": "string",
-				"defaultValue": "Department"
+				"defaultValue": "TransactionHistory"
 			}
 		},
 		"annotations": [],
