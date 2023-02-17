@@ -137,11 +137,11 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"SqlPoolSchema": {
-								"value": "@pipeline().parameters.SqlPoolSchema",
+								"value": "@pipeline().parameters.StgSqlPoolSchema",
 								"type": "Expression"
 							},
 							"SqlPoolTableName": {
-								"value": "@pipeline().parameters.SqlPoolTableName",
+								"value": "@pipeline().parameters.StgSqlPoolTableName",
 								"type": "Expression"
 							}
 						}
@@ -173,6 +173,13 @@
 			"SourceSchema": {
 				"type": "string",
 				"defaultValue": "Production"
+			},
+			"StgSqlPoolSchema": {
+				"type": "string",
+				"defaultValue": "staging"
+			},
+			"StgSqlPoolTableName": {
+				"type": "string"
 			},
 			"SqlPoolSchema": {
 				"type": "string"
