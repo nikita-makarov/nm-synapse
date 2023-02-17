@@ -58,7 +58,21 @@
 				"outputs": [
 					{
 						"referenceName": "ParquetOut",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FileSystem": {
+								"value": "@pipeline().parameters.TgtFileSystem",
+								"type": "Expression"
+							},
+							"Directory": {
+								"value": "@pipeline().parameters.TgtDirectory",
+								"type": "Expression"
+							},
+							"FileName": {
+								"value": "@pipeline().parameters.TgtFilename",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
@@ -74,10 +88,11 @@
 			},
 			"TgtDirectory": {
 				"type": "string",
-				"defaultValue": "landing"
+				"defaultValue": "landing/SQLServer1/Production"
 			},
 			"TgtFilename": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "transaction_history.parquet"
 			},
 			"SourceTableName": {
 				"type": "string",
