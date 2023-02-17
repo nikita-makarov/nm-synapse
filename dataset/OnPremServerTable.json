@@ -5,12 +5,28 @@
 			"referenceName": "OnPremSqlServer",
 			"type": "LinkedServiceReference"
 		},
+		"parameters": {
+			"Schema": {
+				"type": "string",
+				"defaultValue": "HumanResources"
+			},
+			"TableName": {
+				"type": "string",
+				"defaultValue": "Department"
+			}
+		},
 		"annotations": [],
 		"type": "SqlServerTable",
 		"schema": [],
 		"typeProperties": {
-			"schema": "HumanResources",
-			"table": "Department"
+			"schema": {
+				"value": "@dataset().Schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().TableName",
+				"type": "Expression"
+			}
 		}
 	}
 }

@@ -58,6 +58,20 @@
 			"SourceSQLQuery": {
 				"type": "string",
 				"defaultValue": "SELECT * FROM Production.TransactionHistory"
+			},
+			"TgtFileSystem": {
+				"type": "string",
+				"defaultValue": "rawdata"
+			},
+			"TgtDirectory": {
+				"type": "string",
+				"defaultValue": "landing"
+			},
+			"TgtFilename": {
+				"type": "string"
+			},
+			"SourceTableName": {
+				"type": "string"
 			}
 		},
 		"annotations": []
