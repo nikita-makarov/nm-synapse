@@ -134,7 +134,17 @@
 				"outputs": [
 					{
 						"referenceName": "SqlPoolTable",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"SqlPoolSchema": {
+								"value": "@pipeline().parameters.SqlPoolSchema",
+								"type": "Expression"
+							},
+							"SqlPoolTableName": {
+								"value": "@pipeline().parameters.SqlPoolTableName",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			}
@@ -163,6 +173,12 @@
 			"SourceSchema": {
 				"type": "string",
 				"defaultValue": "Production"
+			},
+			"SqlPoolSchema": {
+				"type": "string"
+			},
+			"SqlPoolTableName": {
+				"type": "string"
 			}
 		},
 		"annotations": []
