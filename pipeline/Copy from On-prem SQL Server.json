@@ -179,7 +179,8 @@
 				"defaultValue": "staging"
 			},
 			"StgSqlPoolTableName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Production_TransactionHistory"
 			},
 			"SqlPoolSchema": {
 				"type": "string"
