@@ -1,0 +1,30 @@
+{
+	"name": "SqlPoolTable",
+	"properties": {
+		"parameters": {
+			"SqlPoolSchema": {
+				"type": "string"
+			},
+			"SqlPoolTable": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().SqlPoolSchema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().SqlPoolTable",
+				"type": "Expression"
+			}
+		},
+		"sqlPool": {
+			"referenceName": "SQLPool1",
+			"type": "SqlPoolReference"
+		}
+	}
+}
