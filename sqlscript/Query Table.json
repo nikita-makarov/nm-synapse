@@ -1,8 +1,8 @@
 {
-	"name": "SQL script 2",
+	"name": "Query Table",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP (100) [TransactionID]\n,[ProductID]\n,[ReferenceOrderID]\n,[ReferenceOrderLineID]\n,[TransactionDate]\n,[TransactionType]\n,[Quantity]\n,[ActualCost]\n,[CostPerUnit]\n,[ModifiedDate]\n FROM [Production].[TransactionHistory]",
+			"query": "SELECT TOP (100) [TransactionID]\n,[ProductID]\n,[ReferenceOrderID]\n,[ReferenceOrderLineID]\n,[TransactionDate]\n,[TransactionType]\n,[Quantity]\n,[ActualCost]\n,[CostPerUnit]\n,[ModifiedDate]\n FROM [Production].[TransactionHistory];\n\n\n SELECT COUNT(*) FROM staging.Production_TransactionHistory;",
 			"metadata": {
 				"language": "sql"
 			},

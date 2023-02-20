@@ -42,7 +42,11 @@
 				"inputs": [
 					{
 						"referenceName": "OnPremServerTable",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"Schema": "Production",
+							"TableName": "TransactionHistory"
+						}
 					}
 				],
 				"outputs": [
