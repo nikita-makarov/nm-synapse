@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 2",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [TransactionID]\n,[ProductID]\n,[ReferenceOrderID]\n,[ReferenceOrderLineID]\n,[TransactionDate]\n,[TransactionType]\n,[Quantity]\n,[ActualCost]\n,[CostPerUnit]\n,[ModifiedDate]\n FROM [Production].[TransactionHistory]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SQLPool1",
+				"poolName": "SQLPool1"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
