@@ -151,6 +151,36 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Transform and load from staging",
+				"type": "SqlPoolStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Load Parquet to Staging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"sqlPool": {
+					"referenceName": "SQLPool1",
+					"type": "SqlPoolReference"
+				},
+				"typeProperties": {
+					"storedProcedureName": {
+						"value": "@pipeline().parameters.FinalStoredProcedureName",
+						"type": "Expression"
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -191,6 +221,10 @@
 			},
 			"SqlPoolTableName": {
 				"type": "string"
+			},
+			"FinalStoredProcedureName": {
+				"type": "string",
+				"defaultValue": "[Production].[load_transaction_history]"
 			}
 		},
 		"annotations": []
