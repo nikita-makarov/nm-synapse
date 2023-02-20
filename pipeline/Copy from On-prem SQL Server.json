@@ -106,6 +106,10 @@
 					},
 					"sink": {
 						"type": "SqlPoolSink",
+						"preCopyScript": {
+							"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.StgSqlPoolSchema, '.', pipeline().parameters.StgSqlPoolTableName)}",
+							"type": "Expression"
+						},
 						"allowCopyCommand": true,
 						"tableOption": "autoCreate"
 					},
