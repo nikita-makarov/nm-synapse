@@ -7,8 +7,7 @@
 		},
 		"parameters": {
 			"FileSystem": {
-				"type": "string",
-				"defaultValue": "rawdata"
+				"type": "string"
 			},
 			"Directory": {
 				"type": "string"

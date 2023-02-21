@@ -85,11 +85,11 @@
 			},
 			"TgtDirectory": {
 				"type": "string",
-				"defaultValue": "landing/SQLServer1/Person"
+				"defaultValue": "landing/SQLServer1/Production"
 			},
 			"TgtFilename": {
 				"type": "string",
-				"defaultValue": "person.parquet"
+				"defaultValue": "test.parquet"
 			},
 			"SourceTableName": {
 				"type": "string",
