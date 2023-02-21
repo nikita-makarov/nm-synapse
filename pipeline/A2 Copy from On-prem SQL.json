@@ -89,7 +89,7 @@
 			},
 			"TgtFilename": {
 				"type": "string",
-				"defaultValue": "Person.parquet"
+				"defaultValue": "person.parquet"
 			},
 			"SourceTableName": {
 				"type": "string",
