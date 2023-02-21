@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 3",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) \n[BusinessEntityID]\n,[PersonType]\n,[NameStyle]\n,[Title]\n,[FirstName]\n,[MiddleName]\n,[LastName]\n,[Suffix]\n,[EmailPromotion]\n,[AdditionalContactInfo]\n,[Demographics]\n,[rowguid]\n,[ModifiedDate]\n FROM [Person].[Person]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "ServerlesssDB",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
