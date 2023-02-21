@@ -76,6 +76,52 @@
 						}
 					}
 				]
+			},
+			{
+				"name": "Delete1",
+				"type": "Delete",
+				"dependsOn": [
+					{
+						"activity": "Extract and Load to Datalake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataset": {
+						"referenceName": "ParquetOut",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileSystem": {
+								"value": "@pipeline().parameters.CuratedFileSystem",
+								"type": "Expression"
+							},
+							"Directory": {
+								"value": "@pipeline().parameters.CuratedDirectory",
+								"type": "Expression"
+							},
+							"FileName": {
+								"value": "@pipeline().parameters.CuratedFilename",
+								"type": "Expression"
+							}
+						}
+					},
+					"enableLogging": true,
+					"storeSettings": {
+						"type": "AzureBlobFSReadSettings",
+						"recursive": true,
+						"enablePartitionDiscovery": false
+					}
+				}
 			}
 		],
 		"parameters": {
@@ -108,6 +154,18 @@
 			"FinalStoredProcedureName": {
 				"type": "string",
 				"defaultValue": "[Production].[load_transaction_history]"
+			},
+			"CuratedFileSystem": {
+				"type": "string",
+				"defaultValue": "curateddata"
+			},
+			"CuratedDirectory": {
+				"type": "string",
+				"defaultValue": "enriched/Person"
+			},
+			"CuratedFilename": {
+				"type": "string",
+				"defaultValue": "person_transformed.parquet"
 			}
 		},
 		"annotations": []
