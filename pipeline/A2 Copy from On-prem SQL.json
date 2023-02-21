@@ -1,0 +1,115 @@
+{
+	"name": "A2 Copy from On-prem SQL",
+	"properties": {
+		"description": "Using Dedicated SQL Pool stored procedure",
+		"activities": [
+			{
+				"name": "Extract and Load to Datalake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "OnPremServerTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"Schema": {
+								"value": "@pipeline().parameters.SourceSchema",
+								"type": "Expression"
+							},
+							"TableName": {
+								"value": "@pipeline().parameters.SourceTableName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetOut",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileSystem": {
+								"value": "@pipeline().parameters.TgtFileSystem",
+								"type": "Expression"
+							},
+							"Directory": {
+								"value": "@pipeline().parameters.TgtDirectory",
+								"type": "Expression"
+							},
+							"FileName": {
+								"value": "@pipeline().parameters.TgtFilename",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"TgtFileSystem": {
+				"type": "string",
+				"defaultValue": "rawdata"
+			},
+			"TgtDirectory": {
+				"type": "string",
+				"defaultValue": "landing/SQLServer1/Person"
+			},
+			"TgtFilename": {
+				"type": "string",
+				"defaultValue": "Person.parquet"
+			},
+			"SourceTableName": {
+				"type": "string",
+				"defaultValue": "Person"
+			},
+			"SourceSchema": {
+				"type": "string",
+				"defaultValue": "Person"
+			},
+			"SqlPoolSchema": {
+				"type": "string"
+			},
+			"SqlPoolTableName": {
+				"type": "string"
+			},
+			"FinalStoredProcedureName": {
+				"type": "string",
+				"defaultValue": "[Production].[load_transaction_history]"
+			}
+		},
+		"annotations": []
+	}
+}
