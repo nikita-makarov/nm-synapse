@@ -80,14 +80,7 @@
 			{
 				"name": "Delete1",
 				"type": "Delete",
-				"dependsOn": [
-					{
-						"activity": "Extract and Load to Datalake",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
