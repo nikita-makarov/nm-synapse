@@ -1,6 +1,7 @@
 {
-	"name": "Copy from On-prem SQL Server",
+	"name": "A1 Copy from On-prem SQL Server",
 	"properties": {
+		"description": "Using Dedicated SQL Pool stored procedure",
 		"activities": [
 			{
 				"name": "Extract and Load to Datalake",
