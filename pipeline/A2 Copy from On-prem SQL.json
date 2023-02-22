@@ -1,7 +1,7 @@
 {
 	"name": "A2 Copy from On-prem SQL",
 	"properties": {
-		"description": "Using Dedicated SQL Pool stored procedure",
+		"description": "Using the SQL Serverless Stored Procedure",
 		"activities": [
 			{
 				"name": "Extract and Load to Datalake",
