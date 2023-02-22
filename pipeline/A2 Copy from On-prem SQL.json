@@ -128,7 +128,7 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"storedProcedureName": "[Person].[transform_person]"
+					"storedProcedureName": "[dbo].[transform_person]"
 				},
 				"linkedServiceName": {
 					"referenceName": "nmsynapseserverless",
