@@ -150,7 +150,7 @@
 			},
 			"TgtFilename": {
 				"type": "string",
-				"defaultValue": "person_transformed.parquet"
+				"defaultValue": "person.parquet"
 			},
 			"SourceTableName": {
 				"type": "string",
