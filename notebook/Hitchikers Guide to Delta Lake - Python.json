@@ -6,6 +6,10 @@
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
 		"sessionProperties": {
 			"driverMemory": "28g",
 			"driverCores": 4,
@@ -16,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3682b39b-99cd-4a2c-8098-7613e922ebac"
+				"spark.autotune.trackingId": "ca5287d5-4298-4dd6-955a-cadb716cc001"
 			}
 		},
 		"metadata": {
@@ -24,10 +28,25 @@
 			"enableDebugMode": false,
 			"kernelspec": {
 				"name": "synapse_pyspark",
-				"display_name": "python"
+				"display_name": "Synapse PySpark"
 			},
 			"language_info": {
 				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
 			},
 			"sessionKeepAliveTimeout": 30
 		},
@@ -68,7 +87,7 @@
 					"\n",
 					"delta_table_path"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -86,7 +105,7 @@
 					"data.show()\n",
 					"data.write.format(\"delta\").save(delta_table_path)"
 				],
-				"execution_count": 2
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -101,7 +120,7 @@
 				"source": [
 					"[log_line.value for log_line in spark.read.text(delta_table_path + \"/_delta_log/\").collect()]"
 				],
-				"execution_count": 3
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -117,7 +136,7 @@
 					"df = spark.read.format(\"delta\").load(delta_table_path)\n",
 					"df.show()"
 				],
-				"execution_count": 4
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -135,7 +154,7 @@
 					"data.write.format(\"delta\").mode(\"overwrite\").save(delta_table_path)\n",
 					"df.show()"
 				],
-				"execution_count": 5
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -148,7 +167,7 @@
 				"source": [
 					"[log_line.value for log_line in spark.read.text(delta_table_path + \"/_delta_log/\").collect()]"
 				],
-				"execution_count": 6
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -164,7 +183,7 @@
 					"# Write data to a new managed catalog table.\n",
 					"data.write.format(\"delta\").saveAsTable(\"ManagedDeltaTable\")"
 				],
-				"execution_count": 7
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -172,7 +191,7 @@
 					"# Define an external catalog table that points to the existing Delta Lake data in storage.\n",
 					"spark.sql(\"CREATE TABLE ExternalDeltaTable USING DELTA LOCATION '{0}'\".format(delta_table_path))"
 				],
-				"execution_count": 8
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -184,7 +203,7 @@
 					"spark.sql(\"DESCRIBE EXTENDED ManagedDeltaTable\").show(truncate=False)\n",
 					"spark.sql(\"DESCRIBE EXTENDED ExternalDeltaTable\").show(truncate=False)"
 				],
-				"execution_count": 9
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -202,7 +221,7 @@
 					"\n",
 					"delta_table = DeltaTable.forPath(spark, delta_table_path)"
 				],
-				"execution_count": 10
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -213,7 +232,7 @@
 					"  set = { \"id\": expr(\"id + 100\") })\n",
 					"delta_table.toDF().show()"
 				],
-				"execution_count": 11
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -222,7 +241,7 @@
 					"delta_table.delete(\"id % 2 == 0\")\n",
 					"delta_table.toDF().show()"
 				],
-				"execution_count": 12
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -238,7 +257,7 @@
 					"\n",
 					"delta_table.toDF().show(100)"
 				],
-				"execution_count": 13
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -252,7 +271,7 @@
 				"source": [
 					"delta_table.history().show(20, 1000, False)"
 				],
-				"execution_count": 14
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -270,7 +289,7 @@
 					"df = spark.read.format(\"delta\").option(\"versionAsOf\", 0).load(delta_table_path)\n",
 					"df.show()"
 				],
-				"execution_count": 15
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -301,7 +320,7 @@
 					"    .option(\"checkpointLocation\", \"/tmp/checkpoint-{0}\".format(session_id))\\\n",
 					"    .start(delta_table_path)"
 				],
-				"execution_count": 16
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -316,28 +335,28 @@
 				"source": [
 					"delta_table.toDF().sort(col(\"id\").desc()).show(100)"
 				],
-				"execution_count": 17
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"delta_table.history().drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").show(20, 1000, False)"
 				],
-				"execution_count": 18
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"stream.stop()"
 				],
-				"execution_count": 19
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"delta_table.history().drop(\"userId\", \"userName\", \"job\", \"notebook\", \"clusterId\", \"isolationLevel\", \"isBlindAppend\").show(100, 1000, False)"
 				],
-				"execution_count": 20
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -364,7 +383,7 @@
 					"    .mode(\"overwrite\")\\\n",
 					"    .save(delta_table_path)    "
 				],
-				"execution_count": 21
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -384,7 +403,7 @@
 					"# Confirm that the data isn't in the Delta format\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 22
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -394,7 +413,7 @@
 					"# Confirm that the converted data is now in the Delta format\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 23
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -412,14 +431,14 @@
 				"source": [
 					"spark.sql(\"DESCRIBE HISTORY delta.`{0}`\".format(delta_table_path)).show()"
 				],
-				"execution_count": 24
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"spark.sql(\"VACUUM delta.`{0}`\".format(delta_table_path)).show()"
 				],
-				"execution_count": 25
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -438,7 +457,7 @@
 					"\n",
 					"DeltaTable.isDeltaTable(spark, parquet_path)"
 				],
-				"execution_count": 26
+				"execution_count": null
 			}
 		]
 	}
