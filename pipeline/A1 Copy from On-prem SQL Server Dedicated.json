@@ -218,10 +218,12 @@
 				"defaultValue": "Production_TransactionHistory"
 			},
 			"SqlPoolSchema": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "Production"
 			},
 			"SqlPoolTableName": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "TransactionHistory"
 			},
 			"FinalStoredProcedureName": {
 				"type": "string",
