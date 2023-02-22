@@ -127,8 +127,11 @@
 					"secureInput": false
 				},
 				"userProperties": [],
+				"typeProperties": {
+					"storedProcedureName": "[Person].[transform_person]"
+				},
 				"linkedServiceName": {
-					"referenceName": "nmdemosynapse-WorkspaceDefaultSqlServer",
+					"referenceName": "nmsynapseserverless",
 					"type": "LinkedServiceReference",
 					"parameters": {
 						"DBName": "ServerlesssDB"
