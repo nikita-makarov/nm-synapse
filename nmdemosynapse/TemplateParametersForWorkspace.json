@@ -8,6 +8,9 @@
 		"AzureDatabricks1_accessToken": {
 			"value": ""
 		},
+		"OnPremSqlServer_connectionString": {
+			"value": ""
+		},
 		"demodb4_connectionString": {
 			"value": ""
 		},
@@ -19,6 +22,9 @@
 		},
 		"nmsynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:nmsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"nmsynapseserverless_connectionString": {
+			"value": ""
 		},
 		"CognitiveService1_properties_typeProperties_subscriptionId": {
 			"value": "8a936955-932a-425a-8c07-f6035412c4a1"

@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accessToken' of 'AzureDatabricks1'"
 		},
+		"OnPremSqlServer_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'OnPremSqlServer'"
+		},
 		"demodb4_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'demodb4'"
@@ -28,6 +32,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'nmsynapse-WorkspaceDefaultSqlServer'",
 			"defaultValue": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:nmsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"nmsynapseserverless_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'nmsynapseserverless'"
 		},
 		"CognitiveService1_properties_typeProperties_subscriptionId": {
 			"type": "string",
@@ -75,6 +83,453 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('workspaceName'), '/A1 Copy from On-prem SQL Server')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Using Dedicated SQL Pool stored procedure",
+				"activities": [
+					{
+						"name": "Extract and Load to Datalake",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "OnPremServerTable",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema": {
+										"value": "@pipeline().parameters.SourceSchema",
+										"type": "Expression"
+									},
+									"TableName": {
+										"value": "@pipeline().parameters.SourceTableName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ParquetOut",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileSystem": {
+										"value": "@pipeline().parameters.TgtFileSystem",
+										"type": "Expression"
+									},
+									"Directory": {
+										"value": "@pipeline().parameters.TgtDirectory",
+										"type": "Expression"
+									},
+									"FileName": {
+										"value": "@pipeline().parameters.TgtFilename",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Load Parquet to Staging",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Extract and Load to Datalake",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "ParquetSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								}
+							},
+							"sink": {
+								"type": "SqlPoolSink",
+								"preCopyScript": {
+									"value": "@{concat('TRUNCATE TABLE ', pipeline().parameters.StgSqlPoolSchema, '.', pipeline().parameters.StgSqlPoolTableName)}",
+									"type": "Expression"
+								},
+								"allowCopyCommand": true,
+								"copyCommandSettings": {},
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "ParquetOut",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileSystem": {
+										"value": "@pipeline().parameters.TgtFileSystem",
+										"type": "Expression"
+									},
+									"Directory": {
+										"value": "@pipeline().parameters.TgtDirectory",
+										"type": "Expression"
+									},
+									"FileName": {
+										"value": "@pipeline().parameters.TgtFilename",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SqlPoolTable",
+								"type": "DatasetReference",
+								"parameters": {
+									"SqlPoolSchema": {
+										"value": "@pipeline().parameters.StgSqlPoolSchema",
+										"type": "Expression"
+									},
+									"SqlPoolTableName": {
+										"value": "@pipeline().parameters.StgSqlPoolTableName",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Transform and load from staging",
+						"type": "SqlPoolStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Load Parquet to Staging",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"sqlPool": {
+							"referenceName": "SQLPool1",
+							"type": "SqlPoolReference"
+						},
+						"typeProperties": {
+							"storedProcedureName": {
+								"value": "@pipeline().parameters.FinalStoredProcedureName",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"SourceSQLQuery": {
+						"type": "string",
+						"defaultValue": "SELECT * FROM Production.TransactionHistory"
+					},
+					"TgtFileSystem": {
+						"type": "string",
+						"defaultValue": "rawdata"
+					},
+					"TgtDirectory": {
+						"type": "string",
+						"defaultValue": "landing/SQLServer1/Production"
+					},
+					"TgtFilename": {
+						"type": "string",
+						"defaultValue": "transaction_history.parquet"
+					},
+					"SourceTableName": {
+						"type": "string",
+						"defaultValue": "TransactionHistory"
+					},
+					"SourceSchema": {
+						"type": "string",
+						"defaultValue": "Production"
+					},
+					"StgSqlPoolSchema": {
+						"type": "string",
+						"defaultValue": "staging"
+					},
+					"StgSqlPoolTableName": {
+						"type": "string",
+						"defaultValue": "Production_TransactionHistory"
+					},
+					"SqlPoolSchema": {
+						"type": "string"
+					},
+					"SqlPoolTableName": {
+						"type": "string"
+					},
+					"FinalStoredProcedureName": {
+						"type": "string",
+						"defaultValue": "[Production].[load_transaction_history]"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/OnPremServerTable')]",
+				"[concat(variables('workspaceId'), '/datasets/ParquetOut')]",
+				"[concat(variables('workspaceId'), '/datasets/SqlPoolTable')]",
+				"[concat(variables('workspaceId'), '/sqlPools/SQLPool1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/A2 Copy from On-prem SQL')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "Using Dedicated SQL Pool stored procedure",
+				"activities": [
+					{
+						"name": "Extract and Load to Datalake",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "OnPremServerTable",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema": {
+										"value": "@pipeline().parameters.SourceSchema",
+										"type": "Expression"
+									},
+									"TableName": {
+										"value": "@pipeline().parameters.SourceTableName",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ParquetOut",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileSystem": {
+										"value": "@pipeline().parameters.TgtFileSystem",
+										"type": "Expression"
+									},
+									"Directory": {
+										"value": "@pipeline().parameters.TgtDirectory",
+										"type": "Expression"
+									},
+									"FileName": {
+										"value": "@pipeline().parameters.TgtFilename",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "Delete Old File",
+						"type": "Delete",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataset": {
+								"referenceName": "test_parquet",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"enableLogging": false,
+							"storeSettings": {
+								"type": "AzureBlobFSReadSettings",
+								"recursive": true,
+								"enablePartitionDiscovery": false
+							}
+						}
+					},
+					{
+						"name": "Transform with Serverless",
+						"type": "SqlServerStoredProcedure",
+						"dependsOn": [
+							{
+								"activity": "Delete Old File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							},
+							{
+								"activity": "Extract and Load to Datalake",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"storedProcedureName": "[dbo].[transform_person]"
+						},
+						"linkedServiceName": {
+							"referenceName": "nmsynapseserverless",
+							"type": "LinkedServiceReference",
+							"parameters": {
+								"DBName": "ServerlesssDB"
+							}
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"TgtFileSystem": {
+						"type": "string",
+						"defaultValue": "rawdata"
+					},
+					"TgtDirectory": {
+						"type": "string",
+						"defaultValue": "landing/SQLServer1/Person"
+					},
+					"TgtFilename": {
+						"type": "string",
+						"defaultValue": "person.parquet"
+					},
+					"SourceTableName": {
+						"type": "string",
+						"defaultValue": "Person"
+					},
+					"SourceSchema": {
+						"type": "string",
+						"defaultValue": "Person"
+					},
+					"SqlPoolSchema": {
+						"type": "string"
+					},
+					"SqlPoolTableName": {
+						"type": "string"
+					},
+					"FinalStoredProcedureName": {
+						"type": "string",
+						"defaultValue": "[Production].[load_transaction_history]"
+					},
+					"CuratedFileSystem": {
+						"type": "string",
+						"defaultValue": "curateddata"
+					},
+					"CuratedDirectory": {
+						"type": "string",
+						"defaultValue": "enriched/Person"
+					},
+					"CuratedFilename": {
+						"type": "string",
+						"defaultValue": "person_transformed.parquet"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/OnPremServerTable')]",
+				"[concat(variables('workspaceId'), '/datasets/ParquetOut')]",
+				"[concat(variables('workspaceId'), '/datasets/test_parquet')]",
+				"[concat(variables('workspaceId'), '/linkedServices/nmsynapseserverless')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Copy Data Pipeline')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
@@ -84,6 +539,134 @@
 						"name": "Data Lake to Dedicated Pool",
 						"type": "Copy",
 						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "OnPremServerTable",
+								"type": "DatasetReference",
+								"parameters": {
+									"Schema": "Production",
+									"TableName": "TransactionHistory"
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "ParquetOut",
+								"type": "DatasetReference",
+								"parameters": {
+									"FileSystem": "rawdata",
+									"Directory": "onetwo",
+									"FileName": "etej"
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/OnPremServerTable')]",
+				"[concat(variables('workspaceId'), '/datasets/ParquetOut')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Copy Data Pipeline_copy1')]",
+			"type": "Microsoft.Synapse/workspaces/pipelines",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy from Azure SQL to Data Lake",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "AzureSqlSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "ParquetSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "ParquetWriteSettings"
+								}
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "AzureSqlTable1",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "customer",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					},
+					{
+						"name": "Data Lake to Dedicated Pool",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Copy from Azure SQL to Data Lake",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -132,6 +715,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
+				"[concat(variables('workspaceId'), '/datasets/AzureSqlTable1')]",
 				"[concat(variables('workspaceId'), '/datasets/customer')]",
 				"[concat(variables('workspaceId'), '/datasets/Customer2')]"
 			]
@@ -798,6 +1382,124 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/OnPremServerTable')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "OnPremSqlServer",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"Schema": {
+						"type": "string",
+						"defaultValue": "Production"
+					},
+					"TableName": {
+						"type": "string",
+						"defaultValue": "TransactionHistory"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().Schema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().TableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/OnPremSqlServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/ParquetOut')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"FileSystem": {
+						"type": "string"
+					},
+					"Directory": {
+						"type": "string"
+					},
+					"FileName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "Parquet",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().FileName",
+							"type": "Expression"
+						},
+						"folderPath": {
+							"value": "@dataset().Directory",
+							"type": "Expression"
+						},
+						"fileSystem": {
+							"value": "@dataset().FileSystem",
+							"type": "Expression"
+						}
+					},
+					"compressionCodec": "snappy"
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/nmdemosynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SqlPoolTable')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"SqlPoolSchema": {
+						"type": "string"
+					},
+					"SqlPoolTableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlPoolTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SqlPoolSchema",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().SqlPoolTableName",
+						"type": "Expression"
+					}
+				},
+				"sqlPool": {
+					"referenceName": "SQLPool1",
+					"type": "SqlPoolReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/sqlPools/SQLPool1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/customer')]",
 			"type": "Microsoft.Synapse/workspaces/datasets",
 			"apiVersion": "2019-06-01-preview",
@@ -879,6 +1581,29 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/test_parquet')]",
+			"type": "Microsoft.Synapse/workspaces/datasets",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Binary",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "enriched/Person/person_transformed.parquet",
+						"fileSystem": "curateddata"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/linkedServices/nmdemosynapse-WorkspaceDefaultStorage')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/AzureDatabricks1')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -933,6 +1658,25 @@
 			"dependsOn": [
 				"[concat(variables('workspaceId'), '/integrationRuntimes/AzureIR1')]",
 				"[concat(variables('workspaceId'), '/linkedServices/nmdemokv1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/OnPremSqlServer')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('OnPremSqlServer_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "SHIR",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/SHIR')]"
 			]
 		},
 		{
@@ -1145,6 +1889,30 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/nmsynapseserverless')]",
+			"type": "Microsoft.Synapse/workspaces/linkedServices",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"parameters": {
+					"DBName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('nmsynapseserverless_connectionString')]"
+				},
+				"connectVia": {
+					"referenceName": "AutoResolveIntegrationRuntime",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('workspaceId'), '/integrationRuntimes/AutoResolveIntegrationRuntime')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/nyc_tlc_fhv')]",
 			"type": "Microsoft.Synapse/workspaces/linkedServices",
 			"apiVersion": "2019-06-01-preview",
@@ -1217,7 +1985,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/IntegrationRuntime1')]",
+			"name": "[concat(parameters('workspaceName'), '/SHIR')]",
 			"type": "Microsoft.Synapse/workspaces/integrationRuntimes",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
@@ -1404,7 +2172,7 @@
 					"name": "WWI Demo"
 				},
 				"content": {
-					"query": "--Returns records for CA state\nEXECUTE AS USER ='pouyafattahi@microsoft.com'\nSELECT \n    Count(*) as EmployeeCount\nFROM \n    wwi.EmployeePIIData;\n    \nEXECUTE AS USER ='pouyafattahi@microsoft.com'\nSELECT \n    [FirstName]\n    ,[LastName]\n    ,[State]\n    ,[Phone]\n    ,[Email]\nFROM \n    wwi.EmployeePIIData ;\nrevert\n\n\n\n--Returns records for PA and NY state\nEXECUTE AS USER ='nmakarov@microsoft.com'\nSELECT \n    Count(*) as EmployeeCount\nFROM \n    wwi.EmployeePIIData;\n\nSELECT \n    [FirstName]\n    ,[LastName]\n    ,[State]\n    ,[Phone]\n    ,[Email]    \nFROM \n    wwi.EmployeePIIData;\nrevert",
+					"query": "--Returns records for CA state\nEXECUTE AS USER ='pouyafattahi@microsoft.com'\nSELECT \n    Count(*) as EmployeeCount\nFROM \n    wwi.EmployeePIIData;\n    \nEXECUTE AS USER ='pouyafattahi@microsoft.com'\nSELECT \n    [FirstName]\n    ,[LastName]\n    ,[State]\n    ,[Phone]\n    ,[Email]\nFROM \n    wwi.EmployeePIIData ;\nrevert\n\n\n\n--Returns records for PA and NY state\nEXECUTE AS USER ='nmakarov@microsoft.com'\nSELECT \n    Count(*) as EmployeeCount\nFROM \n    wwi.EmployeePIIData;\nEXECUTE AS USER ='nmakarov@microsoft.com'\nSELECT \n    [FirstName]\n    ,[LastName]\n    ,[State]\n    ,[Phone]\n    ,[Email]    \nFROM \n    wwi.EmployeePIIData;\nrevert",
 					"metadata": {
 						"language": "sql"
 					},
@@ -1502,6 +2270,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/External Table Transform')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "--SharedAccessSignature=sv=2021-10-04&ss=btqf&srt=sco&st=2023-02-22T00%3A56%3A00Z&se=2030-10-22T23%3A56%3A00Z&sp=rwdxftlacup&sig=bRGxqjjLGXubiU9Qhm0IL2z3930v916Wjsbe6Ew1gto%3D;BlobEndpoint=https://nmdemostorage1.blob.core.windows.net/;FileEndpoint=https://nmdemostorage1.file.core.windows.net/;QueueEndpoint=https://nmdemostorage1.queue.core.windows.net/;TableEndpoint=https://nmdemostorage1.table.core.windows.net/;\n--?sv=2021-10-04&ss=btqf&srt=sco&st=2023-02-22T00%3A56%3A00Z&se=2030-10-22T23%3A56%3A00Z&sp=rwdxftlacup&sig=bRGxqjjLGXubiU9Qhm0IL2z3930v916Wjsbe6Ew1gto%3D\n\nCREATE CREDENTIAL [https://nmdemostorage1.dfs.core.windows.net/rawdata]\nWITH IDENTITY='SHARED ACCESS SIGNATURE'\n, SECRET = 'sv=2021-10-04&ss=btqf&srt=sco&st=2023-02-22T00%3A56%3A00Z&se=2030-10-22T23%3A56%3A00Z&sp=rwdxftlacup&sig=bRGxqjjLGXubiU9Qhm0IL2z3930v916Wjsbe6Ew1gto%3D'\nGO;\n\nCreate MASTER KEY ;\n\nCREATE DATABASE SCOPED CREDENTIAL [datalakecred]\nWITH IDENTITY = 'SHARED ACCESS SIGNATURE',\n     SECRET = 'sv=2021-10-04&ss=btqf&srt=sco&st=2023-02-22T00%3A56%3A00Z&se=2030-10-22T23%3A56%3A00Z&sp=rwdxftlacup&sig=bRGxqjjLGXubiU9Qhm0IL2z3930v916Wjsbe6Ew1gto%3D';\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseParquetFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseParquetFormat] \n\tWITH ( FORMAT_TYPE = PARQUET)\nGO\nDROP EXTERNAL DATA SOURCE [rawdata_nmdemostorage1_dfs_core_windows_net] \nDROP EXTERNAL DATA SOURCE [curateddata_nmdemostorage1_dfs_core_windows_net] \n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'rawdata_nmdemostorage1_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [rawdata_nmdemostorage1_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://rawdata@nmdemostorage1.dfs.core.windows.net',\n\t\tCREDENTIAL = datalakecred\n\t)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'curateddata_nmdemostorage1_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [curateddata_nmdemostorage1_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://curateddata@nmdemostorage1.dfs.core.windows.net' \n\t\t,CREDENTIAL = datalakecred\n\t)\nGO\n\nCREATE EXTERNAL TABLE Person.Person (\n\t[BusinessEntityID] int,\n\t[PersonType] nvarchar(4000),\n\t[NameStyle] bit,\n\t[Title] nvarchar(4000),\n\t[FirstName] nvarchar(4000),\n\t[MiddleName] nvarchar(4000),\n\t[LastName] nvarchar(4000),\n\t[Suffix] nvarchar(4000),\n\t[EmailPromotion] int,\n\t[AdditionalContactInfo] nvarchar(4000),\n\t[Demographics] nvarchar(4000),\n\t[rowguid] nvarchar(4000),\n\t[ModifiedDate] datetime2(7)\n\t)\n\tWITH (\n\tLOCATION = 'landing/SQLServer1/Person/person.parquet',\n\tDATA_SOURCE = [rawdata_nmdemostorage1_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nGO\n\nCREATE SCHEMA Person;\n\nDROP EXTERNAL TABLE  Person.Person;\n\nCREATE EXTERNAL TABLE Person.Person \n\tWITH (\n\tLOCATION = 'enriched/Person/person_transformed.parquet',\n\tDATA_SOURCE = [curateddata_nmdemostorage1_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseParquetFormat]\n\t)\nAS\nSELECT\n    [BusinessEntityID]\n\t,[PersonType]\n\t,[NameStyle]\n\t,[Title]\n\t,[FirstName]\n\t,[MiddleName]\n\t,[LastName]\n\t,CONCAT_WS(' ',  [FirstName], [MiddleName] , [LastName])  AS [FullName] \n\t,[Suffix]\n\t,[EmailPromotion]\n\t,[AdditionalContactInfo]\n\t,[Demographics]\n\t,[rowguid]\n\t,[ModifiedDate]\nFROM\n    -- OPENROWSET(\n    --     BULK 'https://nmdemostorage1.dfs.core.windows.net/rawdata/landing/SQLServer1/Person/person.parquet',\n    --     FORMAT = 'PARQUET'\n    -- ) AS [result]\n    OPENROWSET(\n        BULK 'landing/SQLServer1/Person/person.parquet',\n\t\tDATA_SOURCE = 'rawdata_nmdemostorage1_dfs_core_windows_net',\n        FORMAT = 'PARQUET'\n    ) AS [result]\t\nGO;\n\nDROP PROCEDURE transform_person;\nCREATE PROCEDURE transform_person AS\nBEGIN\n\t-- USE ServerlesssDB;\n\t-- Drop the table if it already exists\n\tIF EXISTS (\n                SELECT * FROM sys.external_tables\n                WHERE name = 'Person'\n            )\n    DROP EXTERNAL TABLE Person.Person;\n\n\t-- create ext table\n\tCREATE EXTERNAL TABLE Person.Person \n\t\tWITH (\n\t\tLOCATION = 'enriched/Person/person_transformed.parquet',\n\t\tDATA_SOURCE = [curateddata_nmdemostorage1_dfs_core_windows_net],\n\t\tFILE_FORMAT = [SynapseParquetFormat]\n\t\t)\n\tAS\n\tSELECT\n\t\t[BusinessEntityID]\n\t\t,[PersonType]\n\t\t,[NameStyle]\n\t\t,[Title]\n\t\t,[FirstName]\n\t\t,[MiddleName]\n\t\t,[LastName]\n\t\t,CONCAT_WS(' ',  [FirstName], [MiddleName] , [LastName])  AS [FullName] \n\t\t,[Suffix]\n\t\t,[EmailPromotion]\n\t\t,[AdditionalContactInfo]\n\t\t,[Demographics]\n\t\t,[rowguid]\n\t\t,[ModifiedDate]\n\tFROM\n\t\t-- OPENROWSET(\n\t\t--     BULK 'https://nmdemostorage1.dfs.core.windows.net/rawdata/landing/SQLServer1/Person/person.parquet',\n\t\t--     FORMAT = 'PARQUET'\n\t\t-- ) AS [result]\n\t\tOPENROWSET(\n\t\t\tBULK 'landing/SQLServer1/Person/person.parquet',\n\t\t\tDATA_SOURCE = 'rawdata_nmdemostorage1_dfs_core_windows_net',\n\t\t\tFORMAT = 'PARQUET'\n\t\t) AS [result]\t\nEND\n\nEXEC transform_person;\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "ServerlesssDB",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Grant Permissions to Purview')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1545,6 +2333,66 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Query Table')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) [TransactionID]\n,[ProductID]\n,[ReferenceOrderID]\n,[ReferenceOrderLineID]\n,[TransactionDate]\n,[TransactionType]\n,[Quantity]\n,[ActualCost]\n,[CostPerUnit]\n,[ModifiedDate]\n FROM [Production].[TransactionHistory];\n\n\n SELECT COUNT(*) FROM staging.Production_TransactionHistory;",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "SQLPool1",
+						"poolName": "SQLPool1"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 2')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://nmdemostorage1.dfs.core.windows.net/curateddata/enriched/Person/person_transformed.parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/SQL script 3')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "SELECT TOP (100) \n[BusinessEntityID]\n,[PersonType]\n,[NameStyle]\n,[Title]\n,[FirstName]\n,[MiddleName]\n,[LastName]\n,[Suffix]\n,[EmailPromotion]\n,[AdditionalContactInfo]\n,[Demographics]\n,[rowguid]\n,[ModifiedDate]\n FROM [Person].[Person]",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "ServerlesssDB",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Score AND Create Stored Proc NYC Taxi')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1568,6 +2416,26 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('workspaceName'), '/Serverless Login')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "CREATE LOGIN admin_user WITH PASSWORD = '1234@BcDEFGH';\n\nCREATE USER nmakarov FROM LOGIN [nmakarov@microsoft.com];\n\nALTER ROLE db_owner ADD member [nmakarov@microsoft.com]; -- Type USER name from step 2\n\nALTER SERVER ROLE sysadmin ADD MEMBER [nmakarov@microsoft.com];\n\n--In the master database\nCREATE LOGIN [nmakarov@microsoft.com] FROM EXTERNAL PROVIDER;\n\n\nuse master\ngo\nCREATE LOGIN [nmakarov@microsoft.com] FROM EXTERNAL PROVIDER;\ngo\nALTER SERVER ROLE sysadmin ADD MEMBER [nmakarov@microsoft.com];\ngo\n\nCREATE USER [ad_user_name] FROM EXTERNAL PROVIDER;\n\n\nEXEC sp_addrolemember db_owner, [nmakarov@microsoft.com];",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "master",
+						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('workspaceName'), '/Serverless Setup')]",
 			"type": "Microsoft.Synapse/workspaces/sqlscripts",
 			"apiVersion": "2019-06-01-preview",
@@ -1580,6 +2448,26 @@
 					"currentConnection": {
 						"databaseName": "master",
 						"poolName": "Built-in"
+					},
+					"resultLimit": 5000
+				},
+				"type": "SqlQuery"
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/Transform and Insert')]",
+			"type": "Microsoft.Synapse/workspaces/sqlscripts",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"content": {
+					"query": "-- Initialize table in CTAS\n\n-- CREATE SCHEMA Production;\n\nDROP TABLE Production.TransactionHistory;\n\nCREATE TABLE Production.TransactionHistory \nWITH\n    (\n    DISTRIBUTION = ROUND_ROBIN\n    ,CLUSTERED COLUMNSTORE INDEX\n    )\nAS\n    SELECT TOP 0\n        [TransactionID]\n        ,[ProductID]\n        ,[ReferenceOrderID]\n        ,[ReferenceOrderLineID]\n        ,[TransactionDate]\n        ,CAST([TransactionType] AS NVARCHAR(100)) AS TransactionType\n        ,[Quantity]\n        ,[ActualCost]\n        ,CAST(0 AS DECIMAL(38,18)) AS [CostPerUnit]\n        ,[ModifiedDate]\n    FROM [staging].[Production_TransactionHistory];\n\n\nCREATE PROCEDURE production.load_transaction_history\nAS\nBEGIN\n    TRUNCATE TABLE [Production].[TransactionHistory]; \n    INSERT INTO [Production].[TransactionHistory]\n        SELECT \n            [TransactionID]\n            ,[ProductID]\n            ,[ReferenceOrderID]\n            ,[ReferenceOrderLineID]\n            ,[TransactionDate]\n            ,CAST([TransactionType] AS NVARCHAR(100)) AS TransactionType\n            ,[Quantity]\n            ,[ActualCost]\n            ,[ActualCost] / [Quantity] AS [CostPerUnit]\n            ,[ModifiedDate]\n        FROM [staging].[Production_TransactionHistory];\nEND;\n\nEXEC production.load_transaction_history;\n\nTRUNCATE TABLE [Production].[TransactionHistory];\nINSERT INTO [Production].[TransactionHistory]\n    SELECT \n        [TransactionID]\n        ,[ProductID]\n        ,[ReferenceOrderID]\n        ,[ReferenceOrderLineID]\n        ,[TransactionDate]\n        ,CAST([TransactionType] AS NVARCHAR(100)) AS TransactionType\n        ,[Quantity]\n        ,[ActualCost]\n        ,[ActualCost] / [Quantity] AS [CostPerUnit]\n        ,[ModifiedDate]\n    FROM [staging].[Production_TransactionHistory];\n\n\n\n",
+					"metadata": {
+						"language": "sql"
+					},
+					"currentConnection": {
+						"databaseName": "SQLPool1",
+						"poolName": "SQLPool1"
 					},
 					"resultLimit": 5000
 				},
@@ -10283,6 +11171,24 @@
 						"execution_count": 13
 					}
 				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/config1')]",
+			"type": "Microsoft.Synapse/workspaces/sparkConfigurations",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"description": "test config",
+				"configs": {
+					"spark.rpc.message.maxSize": "1024"
+				},
+				"created": "2023-02-13T11:17:07.6920000-06:00",
+				"createdBy": "nmakarov@microsoft.com",
+				"annotations": [],
+				"configMergeRule": {
+					"artifact.currentOperation.spark.rpc.message.maxSize": "replace"
+				}
 			},
 			"dependsOn": []
 		},
@@ -19586,9 +20492,9 @@
 				"isComputeIsolationEnabled": false,
 				"sparkConfigProperties": {
 					"configurationType": "Artifact",
-					"filename": "kalt_tire",
-					"content": "{\"name\":\"kalt_tire\",\"properties\":{\"configs\":{\"spark.rpc.message.maxSize\":\"1024\"},\"annotations\":[],\"type\":\"Microsoft.Synapse/workspaces/sparkconfigurations\",\"description\":\"test config\",\"notes\":\"\",\"created\":\"2023-01-26T14:58:20.8590000-06:00\",\"createdBy\":\"nmakarov@microsoft.com\",\"configMergeRule\":{\"admin.currentOperation.spark.rpc.message.maxSize\":\"replace\"}}}",
-					"time": "2023-02-02T21:05:04.9516693Z"
+					"filename": "config1",
+					"content": "{\"name\":\"config1\",\"properties\":{\"configs\":{\"spark.rpc.message.maxSize\":\"1024\"},\"annotations\":[],\"type\":\"Microsoft.Synapse/workspaces/sparkconfigurations\",\"description\":\"test config\",\"notes\":\"\",\"created\":\"2023-02-13T11:17:07.6920000-06:00\",\"createdBy\":\"nmakarov@microsoft.com\",\"configMergeRule\":{\"admin.currentOperation.spark.rpc.message.maxSize\":\"replace\"}}}",
+					"time": "2023-02-13T17:17:10.7767535Z"
 				},
 				"sessionLevelPackagesEnabled": true,
 				"annotations": []
@@ -19709,13 +20615,187 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('workspaceName'), '/Copy Data Pipeline_copy1')]",
+			"name": "[concat(parameters('workspaceName'), '/Transform Person')]",
+			"type": "Microsoft.Synapse/workspaces/notebooks",
+			"apiVersion": "2019-06-01-preview",
+			"properties": {
+				"nbformat": 4,
+				"nbformat_minor": 2,
+				"bigDataPool": {
+					"referenceName": "sparkpool1",
+					"type": "BigDataPoolReference"
+				},
+				"sessionProperties": {
+					"driverMemory": "28g",
+					"driverCores": 4,
+					"executorMemory": "28g",
+					"executorCores": 4,
+					"numExecutors": 2,
+					"conf": {
+						"spark.dynamicAllocation.enabled": "false",
+						"spark.dynamicAllocation.minExecutors": "2",
+						"spark.dynamicAllocation.maxExecutors": "2",
+						"spark.autotune.trackingId": "0b718c01-1abd-45b7-babd-31fc0b768cb2"
+					}
+				},
+				"metadata": {
+					"saveOutput": true,
+					"enableDebugMode": false,
+					"kernelspec": {
+						"name": "synapse_pyspark",
+						"display_name": "Synapse PySpark"
+					},
+					"language_info": {
+						"name": "python"
+					},
+					"a365ComputeOptions": {
+						"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+						"name": "sparkpool1",
+						"type": "Spark",
+						"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+						"auth": {
+							"type": "AAD",
+							"authResource": "https://dev.azuresynapse.net"
+						},
+						"sparkVersion": "3.3",
+						"nodeCount": 3,
+						"cores": 4,
+						"memory": 28,
+						"automaticScaleJobs": false
+					},
+					"sessionKeepAliveTimeout": 30
+				},
+				"cells": [
+					{
+						"cell_type": "code",
+						"metadata": {
+							"microsoft": {
+								"language": "python"
+							},
+							"collapsed": false
+						},
+						"source": [
+							"%%pyspark\r\n",
+							"df = spark.read.load('abfss://rawdata@nmdemostorage1.dfs.core.windows.net/landing/SQLServer1/Person/person.parquet', format='parquet')\r\n",
+							"display(df.limit(10))"
+						],
+						"outputs": [],
+						"execution_count": 1
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"df.createOrReplaceTempView('df_tbl')"
+						],
+						"outputs": [],
+						"execution_count": 2
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							},
+							"microsoft": {},
+							"collapsed": false
+						},
+						"source": [
+							"# -- %%sql \r\n",
+							"# -- SELECT tbl.*, CONCAT_WS(' ',  FirstName, MiddleName , LastName)  AS FullName   FROM df_tbl tbl"
+						],
+						"outputs": [],
+						"execution_count": 5
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"transformed_df = spark.sql(\"\"\"\r\n",
+							"SELECT tbl.*, CONCAT_WS(' ',  FirstName, MiddleName , LastName)  AS FullName   FROM df_tbl tbl\r\n",
+							"\"\"\")"
+						],
+						"outputs": [],
+						"execution_count": 6
+					},
+					{
+						"cell_type": "code",
+						"metadata": {
+							"jupyter": {
+								"source_hidden": false,
+								"outputs_hidden": false
+							},
+							"nteract": {
+								"transient": {
+									"deleting": false
+								}
+							}
+						},
+						"source": [
+							"# Write using AAD Auth to internal table\r\n",
+							"# Add required imports\r\n",
+							"import com.microsoft.spark.sqlanalytics\r\n",
+							"from com.microsoft.spark.sqlanalytics.Constants import Constants\r\n",
+							"\r\n",
+							"# Configure and submit the request to write to Synapse Dedicated SQL Pool\r\n",
+							"# Sample below is using AAD-based authentication approach; See further examples to leverage SQL Basic auth.\r\n",
+							"(transformed_df.write\r\n",
+							" # If `Constants.SERVER` is not provided, the `<database_name>` from the three-part table name argument\r\n",
+							" # to `synapsesql` method is used to infer the Synapse Dedicated SQL End Point.\r\n",
+							"#  .option(Constants.SERVER, \"<sql-server-name>.sql.azuresynapse.net\")\r\n",
+							" # Like-wise, if `Constants.TEMP_FOLDER` is not provided, the connector will use the runtime staging directory config (see section on Configuration Options for details).\r\n",
+							"#  .option(Constants.TEMP_FOLDER, \"abfss://<container_name>@<storage_account_name>.dfs.core.windows.net/<some_base_path_for_temporary_staging_folders>\")\r\n",
+							" # Choose a save mode that is apt for your use case.\r\n",
+							" # Options for save modes are \"error\" or \"errorifexists\" (default), \"overwrite\", \"append\", \"ignore\".\r\n",
+							" # refer to https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes\r\n",
+							" .mode(\"overwrite\")\r\n",
+							" # Required parameter - Three-part table name to which data will be written\r\n",
+							" .synapsesql(\"SQLPool1.dbo.Person\"))\r\n",
+							"\r\n",
+							""
+						],
+						"outputs": [],
+						"execution_count": 9
+					}
+				]
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('workspaceName'), '/A3 Copy from On-prem SQL Spark')]",
 			"type": "Microsoft.Synapse/workspaces/pipelines",
 			"apiVersion": "2019-06-01-preview",
 			"properties": {
+				"description": "using Spark",
 				"activities": [
 					{
-						"name": "Copy from Azure SQL to Data Lake",
+						"name": "Extract and Load to Datalake",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -19728,7 +20808,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"source": {
-								"type": "AzureSqlSource",
+								"type": "SqlServerSource",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -19741,29 +20821,59 @@
 									"type": "ParquetWriteSettings"
 								}
 							},
-							"enableStaging": false
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
 						},
 						"inputs": [
 							{
-								"referenceName": "AzureSqlTable1",
+								"referenceName": "OnPremServerTable",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"Schema": {
+										"value": "@pipeline().parameters.SourceSchema",
+										"type": "Expression"
+									},
+									"TableName": {
+										"value": "@pipeline().parameters.SourceTableName",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "customer",
+								"referenceName": "ParquetOut",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"FileSystem": {
+										"value": "@pipeline().parameters.TgtFileSystem",
+										"type": "Expression"
+									},
+									"Directory": {
+										"value": "@pipeline().parameters.TgtDirectory",
+										"type": "Expression"
+									},
+									"FileName": {
+										"value": "@pipeline().parameters.TgtFilename",
+										"type": "Expression"
+									}
+								}
 							}
 						]
 					},
 					{
-						"name": "Data Lake to Dedicated Pool",
-						"type": "Copy",
+						"name": "Spark Notebook",
+						"type": "SynapseNotebook",
 						"dependsOn": [
 							{
-								"activity": "Copy from Azure SQL to Data Lake",
+								"activity": "Extract and Load to Datalake",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -19778,48 +20888,81 @@
 						},
 						"userProperties": [],
 						"typeProperties": {
-							"source": {
-								"type": "ParquetSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								}
+							"notebook": {
+								"referenceName": "Transform Person",
+								"type": "NotebookReference"
 							},
-							"sink": {
-								"type": "SqlPoolSink",
-								"allowCopyCommand": true,
-								"copyCommandSettings": {},
-								"tableOption": "autoCreate"
+							"snapshot": true,
+							"sparkPool": {
+								"referenceName": "sparkpool1",
+								"type": "BigDataPoolReference"
 							},
-							"enableStaging": false
-						},
-						"inputs": [
-							{
-								"referenceName": "customer",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "Customer2",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
+							"executorSize": "Small",
+							"conf": {
+								"spark.dynamicAllocation.enabled": false,
+								"spark.dynamicAllocation.minExecutors": 3,
+								"spark.dynamicAllocation.maxExecutors": 3
+							},
+							"driverSize": "Small",
+							"numExecutors": 3
+						}
 					}
 				],
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
 				},
+				"parameters": {
+					"TgtFileSystem": {
+						"type": "string",
+						"defaultValue": "rawdata"
+					},
+					"TgtDirectory": {
+						"type": "string",
+						"defaultValue": "landing/SQLServer1/Person"
+					},
+					"TgtFilename": {
+						"type": "string",
+						"defaultValue": "person.parquet"
+					},
+					"SourceTableName": {
+						"type": "string",
+						"defaultValue": "Person"
+					},
+					"SourceSchema": {
+						"type": "string",
+						"defaultValue": "Person"
+					},
+					"SqlPoolSchema": {
+						"type": "string"
+					},
+					"SqlPoolTableName": {
+						"type": "string"
+					},
+					"FinalStoredProcedureName": {
+						"type": "string",
+						"defaultValue": "[Production].[load_transaction_history]"
+					},
+					"CuratedFileSystem": {
+						"type": "string",
+						"defaultValue": "curateddata"
+					},
+					"CuratedDirectory": {
+						"type": "string",
+						"defaultValue": "enriched/Person"
+					},
+					"CuratedFilename": {
+						"type": "string",
+						"defaultValue": "person_transformed.parquet"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('workspaceId'), '/datasets/AzureSqlTable1')]",
-				"[concat(variables('workspaceId'), '/datasets/customer')]",
-				"[concat(variables('workspaceId'), '/datasets/Customer2')]"
+				"[concat(variables('workspaceId'), '/datasets/OnPremServerTable')]",
+				"[concat(variables('workspaceId'), '/datasets/ParquetOut')]",
+				"[concat(variables('workspaceId'), '/notebooks/Transform Person')]",
+				"[concat(variables('workspaceId'), '/bigDataPools/sparkpool1')]"
 			]
 		}
 	]
