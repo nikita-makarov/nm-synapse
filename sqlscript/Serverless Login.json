@@ -2,12 +2,12 @@
 	"name": "Serverless Login",
 	"properties": {
 		"content": {
-			"query": "CREATE LOGIN Mary WITH PASSWORD = '<strong_password>';",
+			"query": "CREATE LOGIN admin_user WITH PASSWORD = '1234@BcDEFGH';\n\nCREATE USER tmp_user FROM LOGIN [nmakarov@microsoft.com];\n\nALTER ROLE db_owner ADD member admin_user; -- Type USER name from step 2\n\nALTER SERVER ROLE sysadmin ADD MEMBER [nmakarov@microsoft.com];\n\n--In the master database\nCREATE LOGIN [nmakarov@microsoft.com] FROM EXTERNAL PROVIDER;",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "default",
+				"databaseName": "ServerlesssDB",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
