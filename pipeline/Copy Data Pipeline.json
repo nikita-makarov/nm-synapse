@@ -54,7 +54,9 @@
 						"referenceName": "ParquetOut",
 						"type": "DatasetReference",
 						"parameters": {
-							"FileSystem": "rawdata"
+							"FileSystem": "rawdata",
+							"Directory": "onetwo",
+							"FileName": "etej"
 						}
 					}
 				]
