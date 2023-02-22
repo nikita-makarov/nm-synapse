@@ -1,5 +1,5 @@
 {
-	"name": "A1 Copy from On-prem SQL Server",
+	"name": "A1 Copy from On-prem SQL Server Dedicated",
 	"properties": {
 		"description": "Using Dedicated SQL Pool stored procedure",
 		"activities": [
