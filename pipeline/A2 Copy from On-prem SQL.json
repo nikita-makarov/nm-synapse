@@ -6,14 +6,7 @@
 			{
 				"name": "Extract and Load to Datalake",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Delete1",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -85,7 +78,7 @@
 				]
 			},
 			{
-				"name": "Delete1",
+				"name": "Delete Old File",
 				"type": "Delete",
 				"dependsOn": [],
 				"policy": {
@@ -98,27 +91,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ParquetOut",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileSystem": {
-								"value": "@pipeline().parameters.CuratedFileSystem",
-								"type": "Expression"
-							},
-							"Directory": {
-								"value": "@pipeline().parameters.CuratedDirectory",
-								"type": "Expression"
-							},
-							"FileName": {
-								"value": "@pipeline().parameters.CuratedFilename",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "test_parquet",
+						"type": "DatasetReference"
 					},
 					"enableLogging": false,
 					"storeSettings": {
 						"type": "AzureBlobFSReadSettings",
-						"recursive": false,
+						"recursive": true,
 						"enablePartitionDiscovery": false
 					}
 				}
