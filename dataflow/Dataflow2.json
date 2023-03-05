@@ -10,10 +10,18 @@
 			],
 			"sinks": [
 				{
+					"dataset": {
+						"referenceName": "AzureSynapseAnalyticsTable1",
+						"type": "DatasetReference"
+					},
 					"name": "sink1"
 				}
 			],
-			"transformations": [],
+			"transformations": [
+				{
+					"name": "AlterRow1"
+				}
+			],
 			"scriptLines": [
 				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
@@ -21,14 +29,21 @@
 				"     databaseType: 'spark',",
 				"     format: 'table',",
 				"     database: 'silver',",
-				"     tableName: 'dim_customer') ~> source1",
-				"source1 sink(allowSchemaDrift: true,",
+				"     tableName: 'sample_history') ~> source1",
+				"source1 alterRow() ~> AlterRow1",
+				"AlterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     store: 'synapse',",
-				"     databaseType: 'spark',",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:false,",
+				"     upsertable:true,",
 				"     format: 'table',",
-				"     database: '',",
-				"     tableName: '') ~> sink1"
+				"     staged: true,",
+				"     allowCopyCommand: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     saveOrder: 1,",
+				"     errorHandlingOption: 'stopOnFirstError') ~> sink1"
 			]
 		}
 	}
