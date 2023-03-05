@@ -1,0 +1,154 @@
+{
+	"name": "Create External Table New_Copy1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "b8e09706-d504-41d3-a1c9-153105f0c186"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"# get the params\r\n",
+					"db = 'silver'\r\n",
+					"table = 'dim_customer'\r\n",
+					"transformation_logic = ''\r\n",
+					"raw_file_path = ''\r\n",
+					"destination_file_path = '/silver/wwi-dimcustomer.parquet'\r\n",
+					"destination_container = 'curateddata'"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					}
+				},
+				"source": [
+					"%%sql\r\n",
+					"CREATE TABLE IF NOT EXISTS silver.sample_history\r\n",
+					"--     [ ( col_name1 col_type1 [ COMMENT col_comment1 ], ... ) ]\r\n",
+					"    USING DELTA\r\n",
+					"--     [ OPTIONS ( key1=val1, key2=val2, ... ) ]\r\n",
+					"--     [ PARTITIONED BY ( col_name1, col_name2, ... ) ]\r\n",
+					"--     [ CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
+					"--         [ SORTED BY ( col_name [ ASC | DESC ], ... ) ] \r\n",
+					"--         INTO num_buckets BUCKETS ]\r\n",
+					"    LOCATION 'abfss://dbxdatalake@nmdemostorage1.dfs.core.windows.net/bronze/sample_history'\r\n",
+					"--     [ COMMENT table_comment ]\r\n",
+					"--     [ TBLPROPERTIES ( key1=val1, key2=val2, ... ) ]\r\n",
+					"--     [ AS select_statement ]"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# create database if not exists\r\n",
+					"spark.sql(f\"\"\" CREATE DATABASE IF NOT EXISTS {db} \"\"\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"target_file_path = f'abfss://{destination_container}@nmdemostorage1.dfs.core.windows.net/{destination_file_path}'\r\n",
+					"print(target_file_path)"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Register table in Synapse\r\n",
+					"spark.sql(\r\n",
+					"    f\"\"\"\r\n",
+					"    CREATE TABLE IF NOT EXISTS {db}.{table} USING PARQUET LOCATION '{target_file_path}'\r\n",
+					"    \"\"\")"
+				]
+			}
+		]
+	}
+}
