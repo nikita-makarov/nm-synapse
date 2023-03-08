@@ -1,5 +1,5 @@
 {
-	"name": "AzureSynapseAnalyticsTable1",
+	"name": "sample_data_history",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DedicatedPoolDF",

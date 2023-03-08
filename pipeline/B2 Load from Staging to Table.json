@@ -1,0 +1,6 @@
+{
+	"name": "B2 Load from Staging to Table",
+	"properties": {
+		"annotations": []
+	}
+}

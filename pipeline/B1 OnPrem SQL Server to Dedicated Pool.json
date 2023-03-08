@@ -23,23 +23,12 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "ParquetSink",
-						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
-						},
-						"formatSettings": {
-							"type": "ParquetWriteSettings"
-						}
+						"type": "SqlDWSink",
+						"allowCopyCommand": true,
+						"tableOption": "autoCreate",
+						"disableMetricsCollection": false
 					},
-					"enableStaging": false,
-					"translator": {
-						"type": "TabularTranslator",
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
-					}
+					"enableStaging": false
 				},
 				"inputs": [
 					{
@@ -53,22 +42,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ParquetOut",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileSystem": {
-								"value": "@pipeline().parameters.TgtFileSystem",
-								"type": "Expression"
-							},
-							"Directory": {
-								"value": "@pipeline().parameters.TgtDirectory",
-								"type": "Expression"
-							},
-							"FileName": {
-								"value": "@pipeline().parameters.TgtFilename",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "sample_data_history",
+						"type": "DatasetReference"
 					}
 				]
 			}
