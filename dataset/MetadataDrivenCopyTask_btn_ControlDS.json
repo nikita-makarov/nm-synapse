@@ -1,0 +1,19 @@
+{
+	"name": "MetadataDrivenCopyTask_btn_ControlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DedicatedPoolDF",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "MetadataDrivenCopyTask_btn_20230308"
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "control",
+			"table": "MainControlTable_btn"
+		}
+	}
+}
