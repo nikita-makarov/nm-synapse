@@ -23,12 +23,22 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "SqlDWSink",
-						"allowCopyCommand": true,
-						"tableOption": "autoCreate",
-						"disableMetricsCollection": false
+						"type": "SqlPoolSink",
+						"allowPolyBase": true,
+						"polyBaseSettings": {
+							"rejectValue": 0,
+							"rejectType": "value",
+							"useTypeDefault": true
+						},
+						"tableOption": "autoCreate"
 					},
-					"enableStaging": false
+					"enableStaging": true,
+					"stagingSettings": {
+						"linkedServiceName": {
+							"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+							"type": "LinkedServiceReference"
+						}
+					}
 				},
 				"inputs": [
 					{
@@ -42,7 +52,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "sample_data_history",
+						"referenceName": "demo_table",
 						"type": "DatasetReference"
 					}
 				]

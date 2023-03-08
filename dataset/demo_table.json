@@ -1,0 +1,16 @@
+{
+	"name": "demo_table",
+	"properties": {
+		"annotations": [],
+		"type": "SqlPoolTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "demo_table"
+		},
+		"sqlPool": {
+			"referenceName": "SQLPool1",
+			"type": "SqlPoolReference"
+		}
+	}
+}
