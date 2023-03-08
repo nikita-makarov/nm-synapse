@@ -1,0 +1,20 @@
+{
+	"name": "Create Watermark Stored Procedures",
+	"properties": {
+		"folder": {
+			"name": "Control"
+		},
+		"content": {
+			"query": "\n            /****** Object: StoredProcedure [control].[UpdateWatermarkColumnValue_btn] ******/\n            CREATE PROCEDURE [control].[UpdateWatermarkColumnValue_btn]\n                @watermarkColumnStartValue nvarchar(max),\n                @Id [int]\n            AS\n                UPDATE [control].[MainControlTable_btn]\n                SET [DataLoadingBehaviorSettings]=JSON_MODIFY([DataLoadingBehaviorSettings],'$.watermarkColumnStartValue', @watermarkColumnStartValue) WHERE Id = @Id\n            GO",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SQLPool1",
+				"poolName": "SQLPool1"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
