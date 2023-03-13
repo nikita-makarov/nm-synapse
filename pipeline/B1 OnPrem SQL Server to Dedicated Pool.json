@@ -4,7 +4,7 @@
 		"description": "Using Dedicated SQL Pool stored procedure",
 		"activities": [
 			{
-				"name": "Extract and Load to Datalake",
+				"name": "Extract and Load to Staging",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
