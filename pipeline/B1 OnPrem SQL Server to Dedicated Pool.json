@@ -25,12 +25,19 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT * FROM ",
+						"sqlReaderQuery": {
+							"value": "@concat(\n    'SELECT * FROM '\n    , activity('Lookup Info').output.firstRow.SourceSchema\n    , '.'\n    , activity('Lookup Info').output.firstRow.SourceTable\n    , ' WHERE '\n    , activity('Lookup Info').output.firstRow.SourceWatermarkColumnName\n    , ' > '\n    , ''''\n    , activity('Lookup Info').output.firstRow.Watermark\n    , ''''\n )",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"sink": {
 						"type": "SqlPoolSink",
+						"preCopyScript": {
+							"value": "IF EXISTS \n(   SELECT 1 FROM INFORMATION_SCHEMA.TABLES \n    WHERE TABLE_SCHEMA = '@{activity('Lookup Info').output.firstRow.TargetSchema}' AND TABLE_NAME = '@{activity('Lookup Info').output.firstRow.TargetTable}')\nTRUNCATE TABLE @{activity('Lookup Info').output.firstRow.TargetSchema}.@{activity('Lookup Info').output.firstRow.TargetTable}",
+							"type": "Expression"
+						},
 						"allowPolyBase": true,
 						"polyBaseSettings": {
 							"rejectValue": 0,
@@ -59,8 +66,18 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "demo_table",
-						"type": "DatasetReference"
+						"referenceName": "SqlPoolTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"SqlPoolSchema": {
+								"value": "@activity('Lookup Info').output.firstRow.TargetSchema",
+								"type": "Expression"
+							},
+							"SqlPoolTableName": {
+								"value": "@activity('Lookup Info').output.firstRow.TargetTable",
+								"type": "Expression"
+							}
+						}
 					}
 				]
 			},
@@ -79,7 +96,10 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlPoolSource",
-						"sqlReaderQuery": "SELECT * FROM [control].[ControlTable]\nWHERE Id = 28",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM [control].[ControlTable]\nWHERE Id = @{pipeline().parameters.Id}",
+							"type": "Expression"
+						},
 						"queryTimeout": "02:00:00"
 					},
 					"dataset": {
@@ -137,6 +157,10 @@
 			"FinalStoredProcedureName": {
 				"type": "string",
 				"defaultValue": "[Production].[load_transaction_history]"
+			},
+			"Id": {
+				"type": "int",
+				"defaultValue": 28
 			}
 		},
 		"annotations": []
