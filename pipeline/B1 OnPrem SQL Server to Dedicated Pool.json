@@ -8,7 +8,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Lookup Old Watermark",
+						"activity": "Lookup Info",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -25,7 +25,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "SELECT * FROM production.TransactionHistory ",
+						"sqlReaderQuery": "SELECT * FROM ",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -65,7 +65,7 @@
 				]
 			},
 			{
-				"name": "Lookup Old Watermark",
+				"name": "Lookup Info",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
