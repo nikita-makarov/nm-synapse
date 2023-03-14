@@ -111,6 +111,87 @@
 						}
 					}
 				}
+			},
+			{
+				"name": "Lookup New Watermark",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "Extract and Load to Staging",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlPoolSource",
+						"sqlReaderQuery": {
+							"value": "SELECT \n    MAX(@{activity('Lookup Info').output.firstRow.SourceWatermarkColumnName}) as WatermarkDate\nFROM @{activity('Lookup Info').output.firstRow.TargetSchema}.@{activity('Lookup Info').output.firstRow.TargetTable}",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00"
+					},
+					"dataset": {
+						"referenceName": "SqlPoolTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"SqlPoolSchema": "none",
+							"SqlPoolTableName": "none"
+						}
+					}
+				}
+			},
+			{
+				"name": "Update New Watermark",
+				"type": "SqlPoolStoredProcedure",
+				"dependsOn": [
+					{
+						"activity": "Lookup New Watermark",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"sqlPool": {
+					"referenceName": "SQLPool1",
+					"type": "SqlPoolReference"
+				},
+				"typeProperties": {
+					"storedProcedureName": "[dbo].[usp_write_watermark]",
+					"storedProcedureParameters": {
+						"Id": {
+							"value": {
+								"value": "@{pipeline().parameters.Id}",
+								"type": "Expression"
+							},
+							"type": "Int32"
+						},
+						"LastModifiedtime": {
+							"value": {
+								"value": "@activity('Lookup New Watermark').output.firstRow.WatermarkDate",
+								"type": "Expression"
+							},
+							"type": "DateTime"
+						}
+					}
+				}
 			}
 		],
 		"parameters": {
