@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 5",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [Id]\n,[SourceObjectSettings]\n,[SourceConnectionSettingsName]\n,[CopySourceSettings]\n,[SinkObjectSettings]\n,[SinkConnectionSettingsName]\n,[CopySinkSettings]\n,[CopyActivitySettings]\n,[TopLevelPipelineName]\n,[TriggerName]\n,[DataLoadingBehaviorSettings]\n,[TaskId]\n,[CopyEnabled]\n FROM [control].[MainControlTable_btn]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SQLPool1",
+				"poolName": "SQLPool1"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
