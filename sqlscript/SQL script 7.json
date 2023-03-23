@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 7",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [CustomerKey]\n,[WWICustomerID]\n,[Customer]\n,[BIllToCustomer]\n,[Category]\n,[BuyingGroup]\n,[PrimaryContact]\n,[PostalCode]\n,[ValidFrom]\n,[ValidTo]\n,[ELT_Timestamp]\n FROM [silver].[dbo].[dim_customer]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "silver",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
