@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "96333623-dd42-4637-b54a-06d8327ffa2f"
+				"spark.autotune.trackingId": "c27aa248-65a2-49ff-9028-44c4240567b2"
 			}
 		},
 		"metadata": {
@@ -203,6 +203,46 @@
 					"\"\"\")"
 				],
 				"execution_count": 39
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"#load into dedicated sql pool\r\n",
+					"\r\n",
+					"# Write using AAD Auth to internal table\r\n",
+					"# Add required imports\r\n",
+					"import com.microsoft.spark.sqlanalytics\r\n",
+					"from com.microsoft.spark.sqlanalytics.Constants import Constants\r\n",
+					"\r\n",
+					"# Configure and submit the request to write to Synapse Dedicated SQL Pool\r\n",
+					"# Sample below is using AAD-based authentication approach; See further examples to leverage SQL Basic auth.\r\n",
+					"(df2.write\r\n",
+					" # If `Constants.SERVER` is not provided, the `<database_name>` from the three-part table name argument\r\n",
+					" # to `synapsesql` method is used to infer the Synapse Dedicated SQL End Point.\r\n",
+					"#  .option(Constants.SERVER, \"<sql-server-name>.sql.azuresynapse.net\")\r\n",
+					" # Like-wise, if `Constants.TEMP_FOLDER` is not provided, the connector will use the runtime staging directory config (see section on Configuration Options for details).\r\n",
+					"#  .option(Constants.TEMP_FOLDER, \"abfss://<container_name>@<storage_account_name>.dfs.core.windows.net/<some_base_path_for_temporary_staging_folders>\")\r\n",
+					" # Choose a save mode that is apt for your use case.\r\n",
+					" # Options for save modes are \"error\" or \"errorifexists\" (default), \"overwrite\", \"append\", \"ignore\".\r\n",
+					" # refer to https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes\r\n",
+					" .mode(\"overwrite\")\r\n",
+					" # Required parameter - Three-part table name to which data will be written\r\n",
+					" .synapsesql(\"SQLPool1.dbo.PersonSample2\"))\r\n",
+					"\r\n",
+					""
+				],
+				"execution_count": 40
 			}
 		]
 	}

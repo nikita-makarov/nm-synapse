@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Notebook1",
+				"name": "Load Person to Delta",
 				"type": "SynapseNotebook",
 				"dependsOn": [],
 				"policy": {
@@ -15,6 +15,10 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
+					"notebook": {
+						"referenceName": "Sample Delta Lake Notebook",
+						"type": "NotebookReference"
+					},
 					"snapshot": true
 				}
 			}
