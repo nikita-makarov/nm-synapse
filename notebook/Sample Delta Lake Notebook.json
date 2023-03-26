@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c27aa248-65a2-49ff-9028-44c4240567b2"
+				"spark.autotune.trackingId": "7eec6ef6-1010-4963-884a-894d4ba407f6"
 			}
 		},
 		"metadata": {
@@ -61,7 +61,7 @@
 					"df = spark.read.load('abfss://rawdata@nmdemostorage1.dfs.core.windows.net/landing/SQLServer1/Person/person.parquet', format='parquet')\r\n",
 					"display(df.limit(10))"
 				],
-				"execution_count": 29
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
