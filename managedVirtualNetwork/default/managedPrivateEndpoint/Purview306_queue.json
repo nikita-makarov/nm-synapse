@@ -1,0 +1,7 @@
+{
+	"name": "Purview306_queue",
+	"properties": {
+		"privateLinkResourceId": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/managed-rg-nmpurviewdemo1/providers/Microsoft.Storage/storageAccounts/scansouthcentralusoztkpk",
+		"groupId": "queue"
+	}
+}
