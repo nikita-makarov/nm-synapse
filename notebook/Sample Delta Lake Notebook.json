@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ff27baf8-1908-4ac8-9b2b-38df023c4a29"
+				"spark.autotune.trackingId": "fcf51b1d-667c-4dc9-b27a-aea4c506ade7"
 			}
 		},
 		"metadata": {
@@ -140,7 +140,7 @@
 				},
 				"source": [
 					"# write out table as delta\r\n",
-					"df2.write.format('delta').save('abfss://curateddata@nmdemostorage1.dfs.core.windows.net/testcurated/person')"
+					"df2.write.format('delta')..mode(\"overwrite\").save('abfss://curateddata@nmdemostorage1.dfs.core.windows.net/testcurated/person')"
 				],
 				"execution_count": 37
 			},
