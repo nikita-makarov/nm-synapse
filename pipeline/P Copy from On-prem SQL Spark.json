@@ -1,5 +1,5 @@
 {
-	"name": "A3 Copy from On-prem SQL Spark",
+	"name": "P Copy from On-prem SQL Spark",
 	"properties": {
 		"description": "using Spark",
 		"activities": [
@@ -78,7 +78,7 @@
 				]
 			},
 			{
-				"name": "Spark Notebook",
+				"name": "Write in Delta Format to Bronze ",
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
@@ -98,7 +98,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "Transform Person",
+						"referenceName": "SalesTerritory Delta Full Load",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,
@@ -162,7 +162,7 @@
 			}
 		},
 		"folder": {
-			"name": "Other"
+			"name": "E2E Parameterized"
 		},
 		"annotations": []
 	}

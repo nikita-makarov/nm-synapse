@@ -144,6 +144,9 @@
 				"defaultValue": "curateddata"
 			}
 		},
+		"folder": {
+			"name": "Other"
+		},
 		"annotations": []
 	}
 }

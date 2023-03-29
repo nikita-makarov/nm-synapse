@@ -1,0 +1,103 @@
+{
+	"name": "HC Full Copy from On-prem SQL Spark",
+	"properties": {
+		"description": "using Spark",
+		"activities": [
+			{
+				"name": "Extract as Parquet to Data Lake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings",
+							"maxRowsPerFile": 4,
+							"fileNamePrefix": "sales_territory"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SalesTerritory",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "sales_territory",
+						"type": "DatasetReference"
+					}
+				]
+			},
+			{
+				"name": "Write in Delta Format to Bronze ",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Extract as Parquet to Data Lake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "SalesTerritory Delta Full Load",
+						"type": "NotebookReference"
+					},
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "sparkpool1",
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": "Small",
+					"conf": {
+						"spark.dynamicAllocation.enabled": false,
+						"spark.dynamicAllocation.minExecutors": 3,
+						"spark.dynamicAllocation.maxExecutors": 3
+					},
+					"driverSize": "Small",
+					"numExecutors": 3
+				}
+			}
+		],
+		"folder": {
+			"name": "E2E LakeHouse HC"
+		},
+		"annotations": []
+	}
+}

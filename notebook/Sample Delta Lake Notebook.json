@@ -1,5 +1,5 @@
 {
-	"name": "Transform Person",
+	"name": "Sample Delta Lake Notebook",
 	"properties": {
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -17,12 +17,12 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2ba87e1b-8778-4e01-8589-39c50be88963"
+				"spark.autotune.trackingId": "fcf51b1d-667c-4dc9-b27a-aea4c506ade7"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"enableDebugMode": false,
+			"enableDebugMode": true,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
@@ -77,9 +77,27 @@
 					}
 				},
 				"source": [
-					"df.createOrReplaceTempView('df_tbl')"
+					"df.createOrReplaceTempView(\"tmp\")"
 				],
-				"execution_count": 2
+				"execution_count": 30
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df.columns"
+				],
+				"execution_count": 34
 			},
 			{
 				"cell_type": "code",
@@ -96,10 +114,16 @@
 					"collapsed": false
 				},
 				"source": [
-					"# -- %%sql \r\n",
-					"# -- SELECT tbl.*, CONCAT_WS(' ',  FirstName, MiddleName , LastName)  AS FullName   FROM df_tbl tbl"
+					"## the logic can be a param\r\n",
+					"df2 = spark.sql(\"\"\"\r\n",
+					"SELECT\r\n",
+					" *\r\n",
+					"FROM tmp\r\n",
+					"WHERE BusinessEntityID > 2\r\n",
+					"\"\"\") \r\n",
+					""
 				],
-				"execution_count": 5
+				"execution_count": 36
 			},
 			{
 				"cell_type": "code",
@@ -115,11 +139,70 @@
 					}
 				},
 				"source": [
-					"transformed_df = spark.sql(\"\"\"\r\n",
-					"SELECT tbl.*, CONCAT_WS(' ',  FirstName, MiddleName , LastName)  AS FullName   FROM df_tbl tbl\r\n",
+					"# write out table as delta\r\n",
+					"df2.write.format('delta')..mode(\"overwrite\").save('abfss://curateddata@nmdemostorage1.dfs.core.windows.net/testcurated/person')"
+				],
+				"execution_count": 37
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"CREATE DATABASE IF NOT EXISTS curated"
+				],
+				"execution_count": 38
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# register external table for ease of access\r\n",
+					"db_var = 'curated'\r\n",
+					"table_var = 'person'\r\n",
+					"destination_file_path_combined_var = 'abfss://curateddata@nmdemostorage1.dfs.core.windows.net/testcurated/person'\r\n",
+					"\r\n",
+					"spark.sql(\r\n",
+					"f\"\"\"\r\n",
+					"CREATE TABLE IF NOT EXISTS {db_var}.{table_var}\r\n",
+					"--     [ ( col_name1 col_type1 [ COMMENT col_comment1 ], ... ) ]\r\n",
+					"    USING DELTA\r\n",
+					"--     [ OPTIONS ( key1=val1, key2=val2, ... ) ]\r\n",
+					"--     [ PARTITIONED BY ( col_name1, col_name2, ... ) ]\r\n",
+					"--     [ CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
+					"--         [ SORTED BY ( col_name [ ASC | DESC ], ... ) ] \r\n",
+					"--         INTO num_buckets BUCKETS ]\r\n",
+					"    LOCATION '{destination_file_path_combined_var}'\r\n",
+					"--     [ COMMENT table_comment ]\r\n",
+					"--     [ TBLPROPERTIES ( key1=val1, key2=val2, ... ) ]\r\n",
+					"--     [ AS select_statement ]\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 6
+				"execution_count": 39
 			},
 			{
 				"cell_type": "code",
@@ -135,6 +218,8 @@
 					}
 				},
 				"source": [
+					"#load into dedicated sql pool\r\n",
+					"\r\n",
 					"# Write using AAD Auth to internal table\r\n",
 					"# Add required imports\r\n",
 					"import com.microsoft.spark.sqlanalytics\r\n",
@@ -142,7 +227,7 @@
 					"\r\n",
 					"# Configure and submit the request to write to Synapse Dedicated SQL Pool\r\n",
 					"# Sample below is using AAD-based authentication approach; See further examples to leverage SQL Basic auth.\r\n",
-					"(transformed_df.write\r\n",
+					"(df2.write\r\n",
 					" # If `Constants.SERVER` is not provided, the `<database_name>` from the three-part table name argument\r\n",
 					" # to `synapsesql` method is used to infer the Synapse Dedicated SQL End Point.\r\n",
 					"#  .option(Constants.SERVER, \"<sql-server-name>.sql.azuresynapse.net\")\r\n",
@@ -153,11 +238,11 @@
 					" # refer to https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes\r\n",
 					" .mode(\"overwrite\")\r\n",
 					" # Required parameter - Three-part table name to which data will be written\r\n",
-					" .synapsesql(\"SQLPool1.dbo.Person\"))\r\n",
+					" .synapsesql(\"SQLPool1.dbo.PersonSample2\"))\r\n",
 					"\r\n",
 					""
 				],
-				"execution_count": 9
+				"execution_count": 40
 			}
 		]
 	}

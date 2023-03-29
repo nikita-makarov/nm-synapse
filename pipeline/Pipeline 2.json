@@ -1,9 +1,9 @@
 {
-	"name": "Exit Value",
+	"name": "Pipeline 2",
 	"properties": {
 		"activities": [
 			{
-				"name": "Notebook1",
+				"name": "Write in Delta Format to Bronze ",
 				"type": "SynapseNotebook",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "exit value",
+						"referenceName": "SalesTerritory Delta Full Load",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,
@@ -27,16 +27,16 @@
 					"executorSize": "Small",
 					"conf": {
 						"spark.dynamicAllocation.enabled": false,
-						"spark.dynamicAllocation.minExecutors": 1,
-						"spark.dynamicAllocation.maxExecutors": 1
+						"spark.dynamicAllocation.minExecutors": 3,
+						"spark.dynamicAllocation.maxExecutors": 3
 					},
 					"driverSize": "Small",
-					"numExecutors": 1
+					"numExecutors": 3
 				}
 			}
 		],
 		"folder": {
-			"name": "Other"
+			"name": "E2E LakeHouse HC"
 		},
 		"annotations": []
 	}
