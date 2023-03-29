@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "cb7d13b6-51ce-40a8-8553-ab9e9f829890"
+				"spark.autotune.trackingId": "4a521917-dcb3-4a78-982a-a92b3bbeb2b9"
 			}
 		},
 		"metadata": {
@@ -94,7 +94,7 @@
 					"df = spark.read.load('abfss://landing@nmdemostorage1.dfs.core.windows.net/extracts/transaction_history/*.parquet', format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -125,7 +125,7 @@
 				"source": [
 					"df.createOrReplaceTempView(\"v_incremental_transaction_history\")"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -161,7 +161,7 @@
 					"%%sql\r\n",
 					"SELECT * FROM v_incremental_transaction_history LIMIT 5"
 				],
-				"execution_count": 3
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -197,7 +197,7 @@
 					"\"\"\") \r\n",
 					"display(df2.limit(2))"
 				],
-				"execution_count": 4
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -234,7 +234,7 @@
 					"    # write out table as delta\r\n",
 					"    df2.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history')"
 				],
-				"execution_count": 13
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -273,7 +273,7 @@
 					"-- create the lake database if it does not exist\r\n",
 					"CREATE DATABASE IF NOT EXISTS bronze"
 				],
-				"execution_count": 14
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -305,7 +305,7 @@
 					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history'\r\n",
 					"--     [ COMMENT table_comment ]"
 				],
-				"execution_count": 15
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -349,7 +349,7 @@
 					"WHEN NOT MATCHED\r\n",
 					"  THEN INSERT *"
 				],
-				"execution_count": 16
+				"execution_count": 9
 			}
 		]
 	}
