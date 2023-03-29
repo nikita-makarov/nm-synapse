@@ -78,7 +78,7 @@
 				]
 			},
 			{
-				"name": "Spark Notebook",
+				"name": "Write in Delta Format to Bronze ",
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
