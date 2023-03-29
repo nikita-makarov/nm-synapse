@@ -59,7 +59,7 @@
 				]
 			},
 			{
-				"name": "Sales Territory Full Load to Delta Lake",
+				"name": "Incremental Load to Delta Lake",
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
@@ -79,7 +79,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "SalesTerritory Delta Full Load",
+						"referenceName": "TransactionHistory Delta Incremental Load",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,
