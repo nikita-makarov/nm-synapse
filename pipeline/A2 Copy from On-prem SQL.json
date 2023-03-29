@@ -183,6 +183,9 @@
 				"defaultValue": "person_transformed.parquet"
 			}
 		},
+		"folder": {
+			"name": "Other"
+		},
 		"annotations": []
 	}
 }

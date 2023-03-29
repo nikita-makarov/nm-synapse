@@ -1,5 +1,5 @@
 {
-	"name": "A3 Copy from On-prem SQL Spark",
+	"name": "HC Copy from On-prem SQL Spark_copy1",
 	"properties": {
 		"description": "using Spark",
 		"activities": [
@@ -162,7 +162,7 @@
 			}
 		},
 		"folder": {
-			"name": "Other"
+			"name": "E2E LakeHouse HC"
 		},
 		"annotations": []
 	}

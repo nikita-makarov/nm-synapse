@@ -235,6 +235,9 @@
 				"defaultValue": "[Production].[load_transaction_history]"
 			}
 		},
+		"folder": {
+			"name": "Other"
+		},
 		"annotations": []
 	}
 }

@@ -36,7 +36,13 @@
 							"type": "Expression"
 						},
 						"type": "BigDataPoolReference"
-					}
+					},
+					"conf": {
+						"spark.dynamicAllocation.enabled": null,
+						"spark.dynamicAllocation.minExecutors": null,
+						"spark.dynamicAllocation.maxExecutors": null
+					},
+					"numExecutors": null
 				}
 			}
 		],
@@ -45,6 +51,9 @@
 				"type": "string",
 				"defaultValue": "sparkpool1"
 			}
+		},
+		"folder": {
+			"name": "Other"
 		},
 		"annotations": []
 	}

@@ -1,5 +1,5 @@
 {
-	"name": "B1 OnPrem SQL Server to Dedicated Pool",
+	"name": "P E2E Direct to SQL Pool",
 	"properties": {
 		"description": "Using Dedicated SQL Pool stored procedure",
 		"activities": [
@@ -279,6 +279,9 @@
 				"type": "int",
 				"defaultValue": 11
 			}
+		},
+		"folder": {
+			"name": "E2E Parameterized"
 		},
 		"annotations": []
 	}

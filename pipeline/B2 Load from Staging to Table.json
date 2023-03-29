@@ -1,6 +1,9 @@
 {
 	"name": "B2 Load from Staging to Table",
 	"properties": {
+		"folder": {
+			"name": "Other"
+		},
 		"annotations": []
 	}
 }

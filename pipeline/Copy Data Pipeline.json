@@ -62,6 +62,9 @@
 				]
 			}
 		],
+		"folder": {
+			"name": "Other"
+		},
 		"annotations": []
 	}
 }
