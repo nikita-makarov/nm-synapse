@@ -10,8 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "sales_territory",
-				"folderPath": "extracts",
+				"folderPath": "extracts/sales_territory",
 				"fileSystem": "landing"
 			},
 			"compressionCodec": "snappy"

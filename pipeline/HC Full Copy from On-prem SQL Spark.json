@@ -28,7 +28,8 @@
 						},
 						"formatSettings": {
 							"type": "ParquetWriteSettings",
-							"maxRowsPerFile": 1
+							"maxRowsPerFile": 4,
+							"fileNamePrefix": "sales_territory"
 						}
 					},
 					"enableStaging": false,
