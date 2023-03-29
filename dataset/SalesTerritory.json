@@ -1,0 +1,16 @@
+{
+	"name": "SalesTerritory",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "OnPremSqlServer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "Sales",
+			"table": "SalesTerritory"
+		}
+	}
+}

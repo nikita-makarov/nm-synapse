@@ -4,7 +4,7 @@
 		"description": "using Spark",
 		"activities": [
 			{
-				"name": "Extract and Load to Datalake",
+				"name": "Extract as Parquet to Data Lake",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -42,38 +42,14 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "OnPremServerTable",
-						"type": "DatasetReference",
-						"parameters": {
-							"Schema": {
-								"value": "@pipeline().parameters.SourceSchema",
-								"type": "Expression"
-							},
-							"TableName": {
-								"value": "@pipeline().parameters.SourceTableName",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "SalesTerritory",
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ParquetOut",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileSystem": {
-								"value": "@pipeline().parameters.TgtFileSystem",
-								"type": "Expression"
-							},
-							"Directory": {
-								"value": "@pipeline().parameters.TgtDirectory",
-								"type": "Expression"
-							},
-							"FileName": {
-								"value": "@pipeline().parameters.TgtFilename",
-								"type": "Expression"
-							}
-						}
+						"referenceName": "sales_territory",
+						"type": "DatasetReference"
 					}
 				]
 			},
@@ -82,7 +58,7 @@
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
-						"activity": "Extract and Load to Datalake",
+						"activity": "Extract as Parquet to Data Lake",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -117,50 +93,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"TgtFileSystem": {
-				"type": "string",
-				"defaultValue": "rawdata"
-			},
-			"TgtDirectory": {
-				"type": "string",
-				"defaultValue": "landing/SQLServer1/Person"
-			},
-			"TgtFilename": {
-				"type": "string",
-				"defaultValue": "person.parquet"
-			},
-			"SourceTableName": {
-				"type": "string",
-				"defaultValue": "Person"
-			},
-			"SourceSchema": {
-				"type": "string",
-				"defaultValue": "Person"
-			},
-			"SqlPoolSchema": {
-				"type": "string"
-			},
-			"SqlPoolTableName": {
-				"type": "string"
-			},
-			"FinalStoredProcedureName": {
-				"type": "string",
-				"defaultValue": "[Production].[load_transaction_history]"
-			},
-			"CuratedFileSystem": {
-				"type": "string",
-				"defaultValue": "curateddata"
-			},
-			"CuratedDirectory": {
-				"type": "string",
-				"defaultValue": "enriched/Person"
-			},
-			"CuratedFilename": {
-				"type": "string",
-				"defaultValue": "person_transformed.parquet"
-			}
-		},
 		"folder": {
 			"name": "E2E LakeHouse HC"
 		},

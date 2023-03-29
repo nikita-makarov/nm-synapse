@@ -1,0 +1,21 @@
+{
+	"name": "sales_territory",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "sales_territory.parquet",
+				"folderPath": "extracts",
+				"fileSystem": "landing"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": []
+	}
+}
