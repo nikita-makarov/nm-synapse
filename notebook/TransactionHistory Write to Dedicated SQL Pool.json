@@ -20,12 +20,12 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e1395536-1498-45b7-98d1-a8139f558c70"
+				"spark.autotune.trackingId": "e4b4eca5-189f-475d-8ace-b8a503f2f8aa"
 			}
 		},
 		"metadata": {
 			"saveOutput": true,
-			"enableDebugMode": false,
+			"enableDebugMode": true,
 			"kernelspec": {
 				"name": "synapse_pyspark",
 				"display_name": "Synapse PySpark"
@@ -75,7 +75,7 @@
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -89,7 +89,7 @@
 					"# Sample below is using AAD-based authentication approach; See further examples to leverage SQL Basic auth.\r\n",
 					"df.write.mode(\"overwrite\").synapsesql(\"SQLPool1.test.TransactionHistory\")"
 				],
-				"execution_count": 5
+				"execution_count": 8
 			}
 		]
 	}
