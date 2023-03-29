@@ -1,0 +1,105 @@
+{
+	"name": "HC Incremental Copy from On-prem SQL Spark",
+	"properties": {
+		"description": "using Spark",
+		"activities": [
+			{
+				"name": "Extract as Parquet to Data Lake",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT * FROM [Production].[TransactionHistory] \nWHERE ModifiedDate >= '2013-07-31 00:00:00.000' \nAND   ModifiedDate <= '2013-08-01 00:00:00.000' ",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "ParquetSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings",
+							"blockSizeInMB": 50
+						},
+						"formatSettings": {
+							"type": "ParquetWriteSettings"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "OnPremServerTable",
+						"type": "DatasetReference",
+						"parameters": {
+							"Schema": "none",
+							"TableName": "none"
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "ParquetOut",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileSystem": "landing",
+							"Directory": "extracts/transaction_history"
+						}
+					}
+				]
+			},
+			{
+				"name": "Sales Territory Full Load to Delta Lake",
+				"type": "SynapseNotebook",
+				"dependsOn": [
+					{
+						"activity": "Extract as Parquet to Data Lake",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"notebook": {
+						"referenceName": "SalesTerritory Delta Full Load",
+						"type": "NotebookReference"
+					},
+					"snapshot": true,
+					"conf": {
+						"spark.dynamicAllocation.enabled": null,
+						"spark.dynamicAllocation.minExecutors": null,
+						"spark.dynamicAllocation.maxExecutors": null
+					},
+					"numExecutors": null
+				}
+			}
+		],
+		"folder": {
+			"name": "E2E LakeHouse HC"
+		},
+		"annotations": []
+	}
+}
