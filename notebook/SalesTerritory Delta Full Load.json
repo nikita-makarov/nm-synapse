@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3db432f9-4f5e-41b2-ac73-fbe9d5043d65"
+				"spark.autotune.trackingId": "0e737a13-584e-46c5-83a6-58853b8e53e5"
 			}
 		},
 		"metadata": {
@@ -94,7 +94,7 @@
 					"df = spark.read.load('abfss://landing@nmdemostorage1.dfs.core.windows.net/extracts/sales_territory/*.parquet', format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 5
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",
@@ -161,7 +161,7 @@
 					"%%sql\r\n",
 					"SELECT * FROM v_sales_territory LIMIT 5"
 				],
-				"execution_count": 5
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -229,7 +229,7 @@
 					"# write out table as delta\r\n",
 					"df2.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
 				],
-				"execution_count": 7
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -268,7 +268,7 @@
 					"-- create the lake database if it does not exist\r\n",
 					"CREATE DATABASE IF NOT EXISTS bronze"
 				],
-				"execution_count": 8
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -300,7 +300,7 @@
 					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory'\r\n",
 					"--     [ COMMENT table_comment ]"
 				],
-				"execution_count": 16
+				"execution_count": 8
 			}
 		]
 	}

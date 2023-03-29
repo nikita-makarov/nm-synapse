@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1c78c238-8959-44c8-ba88-2a521eed2153"
+				"spark.autotune.trackingId": "5a568950-3056-452b-b105-898106aadcd7"
 			}
 		},
 		"metadata": {
@@ -106,7 +106,7 @@
 					"FROM bronze.transaction_history\r\n",
 					"LIMIT 2"
 				],
-				"execution_count": 19
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",
