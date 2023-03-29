@@ -1,0 +1,307 @@
+{
+	"name": "SalesTerritory Delta Full Load",
+	"properties": {
+		"folder": {
+			"name": "E2E Lakehouse HC"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "29a9debc-22e2-44d2-b6eb-80fef03beebe"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Full Load Parquet Extract from Landing to Bronze Delta Lake\r\n",
+					"Hard-coded version for demonstration purposes\r\n",
+					"\r\n",
+					"Here is a good guide on how to use spark notebooks https://learn.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-development-using-notebooks\r\n",
+					"______________________________________________"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Load parquet extract into spark dataframe"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "python"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://landing@nmdemostorage1.dfs.core.windows.net/extracts/sales_territory.parquet', format='parquet')\r\n",
+					"display(df.limit(3))"
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Register spark dataframe using _createOrReplaceTempView_ method to make it available for Spark SQL syntax"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df.createOrReplaceTempView(\"v_sales_territory\")"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Show how you can use sql logic on the _v_sales_territory_, just like querying with regular sql. We just queried a Spark Dataframe using regular SQL!"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"SELECT * FROM v_sales_territory LIMIT 5"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"You can also put the sql logic in spark.sql() and write out the result to another Spark dataframe. "
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"## the logic can be a param\r\n",
+					"df2 = spark.sql(\"\"\"\r\n",
+					"SELECT * FROM v_sales_territory\r\n",
+					"\"\"\") \r\n",
+					"display(df2.limit(2))"
+				],
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Write out the dataframe to a physical location on the data lake in delta parquet format. Writing this in subsequent runs will create a new version - it's not like trunc and replace, we just write the new version of the table on top. You can set the maximum version history you would like to keep."
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# write out table as delta\r\n",
+					"df2.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Now we need to expose these delta files in our lake database to easily query with Serverless and Spark SQL. We basically create metadata about the location of the delta files, and wrap it in familiar db.table reference.\r\n",
+					"\r\n",
+					"More info here https://learn.microsoft.com/en-us/azure/synapse-analytics/metadata/table"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"-- create the lake database if it does not exist\r\n",
+					"CREATE DATABASE IF NOT EXISTS bronze"
+				],
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"-- create the delta reference\r\n",
+					"CREATE TABLE IF NOT EXISTS bronze.sales_territory\r\n",
+					"    USING DELTA\r\n",
+					"--     [ OPTIONS ( key1=val1, key2=val2, ... ) ]\r\n",
+					"--     [ PARTITIONED BY ( col_name1, col_name2, ... ) ]\r\n",
+					"--     [ CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
+					"--         [ SORTED BY ( col_name [ ASC | DESC ], ... ) ] \r\n",
+					"--         INTO num_buckets BUCKETS ]\r\n",
+					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory'\r\n",
+					"--     [ COMMENT table_comment ]"
+				],
+				"execution_count": 16
+			}
+		]
+	}
+}
