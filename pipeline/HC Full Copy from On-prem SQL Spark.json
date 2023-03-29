@@ -56,7 +56,7 @@
 				]
 			},
 			{
-				"name": "Write in Delta Format to Bronze ",
+				"name": "Sales Territory Full Load to Delta Lake",
 				"type": "SynapseNotebook",
 				"dependsOn": [
 					{
@@ -79,19 +79,7 @@
 						"referenceName": "SalesTerritory Delta Full Load",
 						"type": "NotebookReference"
 					},
-					"snapshot": true,
-					"sparkPool": {
-						"referenceName": "sparkpool1",
-						"type": "BigDataPoolReference"
-					},
-					"executorSize": "Small",
-					"conf": {
-						"spark.dynamicAllocation.enabled": false,
-						"spark.dynamicAllocation.minExecutors": 3,
-						"spark.dynamicAllocation.maxExecutors": 3
-					},
-					"driverSize": "Small",
-					"numExecutors": 3
+					"snapshot": true
 				}
 			}
 		],
