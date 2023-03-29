@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "transaction_history.parquet",
 				"folderPath": "extracts/transaction_history",
 				"fileSystem": "landing"
 			},
