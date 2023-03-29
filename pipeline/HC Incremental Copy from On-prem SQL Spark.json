@@ -25,8 +25,7 @@
 					"sink": {
 						"type": "ParquetSink",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings",
-							"blockSizeInMB": 50
+							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
 							"type": "ParquetWriteSettings"
@@ -54,12 +53,8 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ParquetOut",
-						"type": "DatasetReference",
-						"parameters": {
-							"FileSystem": "landing",
-							"Directory": "extracts/transaction_history"
-						}
+						"referenceName": "sales_history",
+						"type": "DatasetReference"
 					}
 				]
 			},
