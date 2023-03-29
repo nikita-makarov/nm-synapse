@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d2216ac3-61c5-43c4-879e-8eb7a68a5617"
+				"spark.autotune.trackingId": "bb09424c-f277-4ad1-8ead-5dc7200ba9b4"
 			}
 		},
 		"metadata": {
@@ -92,7 +92,7 @@
 				"source": [
 					"%%pyspark\r\n",
 					"df = spark.read.load('abfss://landing@nmdemostorage1.dfs.core.windows.net/extracts/sales_territory/*.parquet', format='parquet')\r\n",
-					"display(df.limit(3))"
+					"bdisplay(df.limit(3))"
 				],
 				"execution_count": 2
 			},
