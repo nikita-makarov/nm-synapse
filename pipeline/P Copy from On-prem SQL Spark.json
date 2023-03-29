@@ -98,7 +98,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"notebook": {
-						"referenceName": "Transform Person",
+						"referenceName": "SalesTerritory Delta Full Load",
 						"type": "NotebookReference"
 					},
 					"snapshot": true,
