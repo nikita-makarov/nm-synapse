@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e4b4eca5-189f-475d-8ace-b8a503f2f8aa"
+				"spark.autotune.trackingId": "4d0a3238-2c56-4bcc-b77b-fef40fed43b5"
 			}
 		},
 		"metadata": {
@@ -70,12 +70,30 @@
 					"df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
 					"    SELECT \r\n",
-					"        *\r\n",
+					"'a' as TransactionType\r\n",
 					"    FROM silver.transaction_history\r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 2
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df.printSchema()"
+				],
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
