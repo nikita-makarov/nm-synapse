@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2ba87e1b-8778-4e01-8589-39c50be88963"
+				"spark.autotune.trackingId": "e9ca8909-81e3-4e04-90fc-d6e2536d1317"
 			}
 		},
 		"metadata": {
@@ -61,7 +61,7 @@
 					"df = spark.read.load('abfss://rawdata@nmdemostorage1.dfs.core.windows.net/landing/SQLServer1/Person/person.parquet', format='parquet')\r\n",
 					"display(df.limit(10))"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -79,7 +79,7 @@
 				"source": [
 					"df.createOrReplaceTempView('df_tbl')"
 				],
-				"execution_count": 2
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -119,7 +119,7 @@
 					"SELECT tbl.*, CONCAT_WS(' ',  FirstName, MiddleName , LastName)  AS FullName   FROM df_tbl tbl\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 6
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -153,11 +153,35 @@
 					" # refer to https://spark.apache.org/docs/latest/sql-data-sources-load-save-functions.html#save-modes\r\n",
 					" .mode(\"overwrite\")\r\n",
 					" # Required parameter - Three-part table name to which data will be written\r\n",
-					" .synapsesql(\"SQLPool1.dbo.Person\"))\r\n",
+					" .synapsesql(\"SQLPool1.dbo.Person1\"))\r\n",
 					"\r\n",
 					""
 				],
 				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df = spark.sql(\r\n",
+					"    \"\"\"\r\n",
+					"    SELECT \r\n",
+					"        1 AS Column\r\n",
+					"    FROM silver.transaction_history\r\n",
+					"    \"\"\"\r\n",
+					")"
+				],
+				"execution_count": 7
 			}
 		]
 	}
