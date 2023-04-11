@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0e737a13-584e-46c5-83a6-58853b8e53e5"
+				"spark.autotune.trackingId": "a188177d-d457-4232-b39d-426f978e22c4"
 			}
 		},
 		"metadata": {
@@ -158,8 +158,8 @@
 					"collapsed": false
 				},
 				"source": [
-					"%%sql\r\n",
-					"SELECT * FROM v_sales_territory LIMIT 5"
+					" %%sql\r\n",
+					"-- SELECT * FROM v_sales_territory LIMIT 5"
 				],
 				"execution_count": 3
 			},
@@ -191,11 +191,11 @@
 					"collapsed": false
 				},
 				"source": [
-					"## the logic can be a param\r\n",
-					"df2 = spark.sql(\"\"\"\r\n",
-					"SELECT * FROM v_sales_territory\r\n",
-					"\"\"\") \r\n",
-					"display(df2.limit(2))"
+					"# ## the logic can be a param\r\n",
+					"# df2 = spark.sql(\"\"\"\r\n",
+					"# SELECT * FROM v_sales_territory\r\n",
+					"# \"\"\") \r\n",
+					"# display(df2.limit(2))"
 				],
 				"execution_count": 4
 			},
