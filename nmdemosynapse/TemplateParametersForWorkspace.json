@@ -8,6 +8,9 @@
 		"AzureDatabricks1_accessToken": {
 			"value": ""
 		},
+		"DedicatedPoolDF_connectionString": {
+			"value": ""
+		},
 		"OnPremSqlServer_connectionString": {
 			"value": ""
 		},
