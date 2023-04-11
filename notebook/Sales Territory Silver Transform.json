@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "89eea43c-ec8a-4e8a-b92f-63da7878ec84"
+				"spark.autotune.trackingId": "680da6b2-52b1-46df-a095-5a8809bf7933"
 			}
 		},
 		"metadata": {
@@ -92,11 +92,17 @@
 				"source": [
 					"%%sql\r\n",
 					"SELECT\r\n",
-					"*\r\n",
+					"    TerritoryID\r\n",
+					"    , Name\r\n",
+					"    , CountryRegionCode\r\n",
+					"    , Group\r\n",
+					"    , SalesYTD\r\n",
+					"    , SalesLastYear\r\n",
+					"    manageddeltatable\r\n",
 					"FROM bronze.sales_territory\r\n",
 					"LIMIT 2"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -139,7 +145,7 @@
 					"    , ActualCost\r\n",
 					"    , Quantity * ActualCost AS TotalCost \r\n",
 					"    , ModifiedDate\r\n",
-					"    FROM bronze.transaction_history\r\n",
+					"    FROM bronze.sales_territory\r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
@@ -173,7 +179,7 @@
 				},
 				"source": [
 					"# write out table as delta\r\n",
-					"transformed_df.write.format('delta').option ('mergeSchema', 'true').mode(\"overwrite\").save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history')"
+					"transformed_df.write.format('delta').option ('mergeSchema', 'true').mode(\"overwrite\").save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
 				],
 				"execution_count": 4
 			},
@@ -236,14 +242,14 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the delta reference\r\n",
-					"CREATE TABLE IF NOT EXISTS silver.transaction_history\r\n",
+					"CREATE TABLE IF NOT EXISTS silver.sales_territory\r\n",
 					"    USING DELTA\r\n",
 					"--      OPTIONS ( key1=val1, key2=val2, ... ) \r\n",
 					"--      PARTITIONED BY ( col_name1, col_name2, ... ) \r\n",
 					"--      CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
 					"--          SORTED BY ( col_name  ASC | DESC , ... )  \r\n",
 					"--         INTO num_buckets BUCKETS \r\n",
-					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history'\r\n",
+					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory'\r\n",
 					"--      COMMENT table_comment "
 				],
 				"execution_count": 6
