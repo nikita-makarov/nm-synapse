@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "8dc86e84-9934-4ba8-8998-7e14aa582252"
+				"spark.autotune.trackingId": "2fde221d-9094-4644-b337-6fb8e0fe87e6"
 			}
 		},
 		"metadata": {
@@ -94,7 +94,7 @@
 					"df = spark.read.load('abfss://landing@nmdemostorage1.dfs.core.windows.net/extracts/sales_territory/*.parquet', format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -125,7 +125,7 @@
 				"source": [
 					"df.createOrReplaceTempView(\"v_sales_territory\")"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -161,7 +161,7 @@
 					" %%sql\r\n",
 					" SELECT * FROM v_sales_territory LIMIT 5"
 				],
-				"execution_count": 3
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -197,7 +197,7 @@
 					"\"\"\") \r\n",
 					"display(df2.limit(2))"
 				],
-				"execution_count": 4
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
