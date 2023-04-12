@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "151961da-a845-4e5c-a7fe-53cbe8ab2979"
+				"spark.autotune.trackingId": "1e6922fc-da30-4880-9ed4-25fbea05c8c9"
 			}
 		},
 		"metadata": {
@@ -249,7 +249,7 @@
 					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory'\r\n",
 					"--      COMMENT table_comment "
 				],
-				"execution_count": 6
+				"execution_count": 9
 			}
 		]
 	}
