@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1e6922fc-da30-4880-9ed4-25fbea05c8c9"
+				"spark.autotune.trackingId": "6f6656cd-a091-4212-af1f-c493d19ff0a9"
 			}
 		},
 		"metadata": {
@@ -138,6 +138,20 @@
 				"source": [
 					"transformed_df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
+					"SELECT\r\n",
+					"    TerritoryID\r\n",
+					"    , Name As RegionName\r\n",
+					"    , CountryRegionCode\r\n",
+					"    , Group\r\n",
+					"    , SalesYTD\r\n",
+					"    , SalesLastYear\r\n",
+					"    , CostYTD\r\n",
+					"    , CostLastYear\r\n",
+					"    , SalesYTD - CostYTD AS ProfitYTD\r\n",
+					"    , SalesLastYear - CostLastYear AS ProfitLastYear\r\n",
+					"    , rowguid\r\n",
+					"    , ModifiedDate\r\n",
+					"FROM bronze.sales_territory    \r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
