@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "680da6b2-52b1-46df-a095-5a8809bf7933"
+				"spark.autotune.trackingId": "c29d9326-afd8-46b9-ba63-7260467b9275"
 			}
 		},
 		"metadata": {
@@ -98,11 +98,16 @@
 					"    , Group\r\n",
 					"    , SalesYTD\r\n",
 					"    , SalesLastYear\r\n",
-					"    manageddeltatable\r\n",
+					"    , CostYTD\r\n",
+					"    , CostLastYear\r\n",
+					"    , SalesYTD - CostYTD AS ProfitYTD\r\n",
+					"    , SalesLastYear - CostLastYear AS ProfitLastYear\r\n",
+					"    , rowguid\r\n",
+					"    , ModifiedDate\r\n",
 					"FROM bronze.sales_territory\r\n",
 					"LIMIT 2"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -133,23 +138,24 @@
 				"source": [
 					"transformed_df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
-					"    SELECT\r\n",
-					"    TransactionID\r\n",
-					"    , ProductID\r\n",
-					"    , ReferenceOrderID\r\n",
-					"    , ReferenceOrderLineID\r\n",
-					"    , TransactionDate AS TransactionDateTime\r\n",
-					"    , TO_DATE(TransactionDate) AS TransactionDate\r\n",
-					"    , TransactionType\r\n",
-					"    , Quantity\r\n",
-					"    , ActualCost\r\n",
-					"    , Quantity * ActualCost AS TotalCost \r\n",
+					"SELECT\r\n",
+					"    TerritoryID\r\n",
+					"    , Name\r\n",
+					"    , CountryRegionCode\r\n",
+					"    , Group\r\n",
+					"    , SalesYTD\r\n",
+					"    , SalesLastYear\r\n",
+					"    , CostYTD\r\n",
+					"    , CostLastYear\r\n",
+					"    , SalesYTD - CostYTD AS ProfitYTD\r\n",
+					"    , SalesLastYear - CostLastYear AS ProfitLastYear\r\n",
+					"    , rowguid\r\n",
 					"    , ModifiedDate\r\n",
-					"    FROM bronze.sales_territory\r\n",
+					"FROM bronze.sales_territory\r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 3
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
