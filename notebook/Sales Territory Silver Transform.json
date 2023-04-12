@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "a4b28456-6473-4502-9a59-779392be7a34"
+				"spark.autotune.trackingId": "ce510ca3-9191-4c19-ace0-afaae4f66c1f"
 			}
 		},
 		"metadata": {
@@ -93,7 +93,7 @@
 					"%%sql\r\n",
 					"SELECT\r\n",
 					"    TerritoryID\r\n",
-					"    , Name\r\n",
+					"    , Name As RegionName\r\n",
 					"    , CountryRegionCode\r\n",
 					"    , Group\r\n",
 					"    , SalesYTD\r\n",
@@ -107,7 +107,7 @@
 					"FROM bronze.sales_territory\r\n",
 					"LIMIT 2"
 				],
-				"execution_count": 3
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -138,11 +138,10 @@
 				"source": [
 					"transformed_df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
-					"\r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 4
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -172,9 +171,13 @@
 				},
 				"source": [
 					"# write out table as delta\r\n",
-					"transformed_df.write.format('delta').option ('mergeSchema', 'true').mode(\"overwrite\").save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
+					"transformed_df.write.format('delta')\\\r\n",
+					"    .partitionBy('RegionName')\\\r\n",
+					"    .option ('mergeSchema', 'true')\\\r\n",
+					"    .mode(\"overwrite\")\\\r\n",
+					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
 				],
-				"execution_count": 4
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
