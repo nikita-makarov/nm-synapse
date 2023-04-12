@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "fd9baaf7-15f4-46a0-99d6-d339634611b3"
+				"spark.autotune.trackingId": "8eb91c33-8a45-46ed-8f63-eceaafb450b6"
 			}
 		},
 		"metadata": {
@@ -171,7 +171,7 @@
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -203,7 +203,7 @@
 					"# write out table as delta\r\n",
 					"transformed_df.write.format('delta').option ('mergeSchema', 'true').mode(\"overwrite\").save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history')"
 				],
-				"execution_count": null
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -242,7 +242,7 @@
 					"-- create the lake database if it does not exist\r\n",
 					"CREATE DATABASE IF NOT EXISTS silver"
 				],
-				"execution_count": null
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -274,7 +274,7 @@
 					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history'\r\n",
 					"--      COMMENT table_comment "
 				],
-				"execution_count": null
+				"execution_count": 7
 			}
 		]
 	}
