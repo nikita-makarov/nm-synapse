@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ce510ca3-9191-4c19-ace0-afaae4f66c1f"
+				"spark.autotune.trackingId": "e3ae0c0f-ccf8-4f16-b75c-255fbc2441c6"
 			}
 		},
 		"metadata": {
@@ -174,10 +174,11 @@
 					"transformed_df.write.format('delta')\\\r\n",
 					"    .partitionBy('RegionName')\\\r\n",
 					"    .option ('mergeSchema', 'true')\\\r\n",
+					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
 					"    .mode(\"overwrite\")\\\r\n",
 					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
 				],
-				"execution_count": 7
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
