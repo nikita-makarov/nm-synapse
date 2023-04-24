@@ -3,19 +3,13 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Wait1_copy1",
+				"name": "Duplicate 1",
 				"type": "Wait",
 				"dependsOn": [
 					{
-						"activity": "Wait1_copy2_copy1",
-						"dependencyConditions": [
-							"Completed"
-						]
-					},
-					{
 						"activity": "Wait1",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
@@ -25,7 +19,7 @@
 				}
 			},
 			{
-				"name": "Wait1_copy2",
+				"name": "Extract",
 				"type": "Wait",
 				"dependsOn": [
 					{
@@ -41,11 +35,11 @@
 				}
 			},
 			{
-				"name": "Wait1_copy2_copy1",
+				"name": "If Condition",
 				"type": "Wait",
 				"dependsOn": [
 					{
-						"activity": "Wait1_copy2",
+						"activity": "Extract",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -60,6 +54,22 @@
 				"name": "Wait1",
 				"type": "Wait",
 				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			},
+			{
+				"name": "Duplicate 2",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "If Condition",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"userProperties": [],
 				"typeProperties": {
 					"waitTimeInSeconds": 1
