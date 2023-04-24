@@ -1,0 +1,71 @@
+{
+	"name": "Pipeline 1_copy1",
+	"properties": {
+		"activities": [
+			{
+				"name": "Wait1_copy1",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Wait1_copy2_copy1",
+						"dependencyConditions": [
+							"Completed"
+						]
+					},
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			},
+			{
+				"name": "Wait1_copy2",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Wait1",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			},
+			{
+				"name": "Wait1_copy2_copy1",
+				"type": "Wait",
+				"dependsOn": [
+					{
+						"activity": "Wait1_copy2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			},
+			{
+				"name": "Wait1",
+				"type": "Wait",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"waitTimeInSeconds": 1
+				}
+			}
+		],
+		"annotations": []
+	}
+}
