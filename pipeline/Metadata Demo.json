@@ -30,7 +30,10 @@
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
 							"maxRowsPerFile": 5,
-							"fileNamePrefix": "bg",
+							"fileNamePrefix": {
+								"value": "@pipeline().parameters.FilePrefix",
+								"type": "Expression"
+							},
 							"quoteAllText": true,
 							"fileExtension": ".csv"
 						}
