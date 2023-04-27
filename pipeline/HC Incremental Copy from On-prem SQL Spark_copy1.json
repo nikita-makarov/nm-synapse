@@ -51,7 +51,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ParquetOut",
+						"referenceName": "ParquetOutMultiple",
 						"type": "DatasetReference",
 						"parameters": {
 							"FileSystem": "landing",
