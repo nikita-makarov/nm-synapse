@@ -1,0 +1,12 @@
+{
+	"name": "SqlTable",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "demodb2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
