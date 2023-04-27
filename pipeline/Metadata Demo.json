@@ -1,10 +1,10 @@
 {
-	"name": "HC Incremental Copy from On-prem SQL Spark_copy1",
+	"name": "Metadata Demo",
 	"properties": {
 		"description": "using Spark",
 		"activities": [
 			{
-				"name": "Extract as Parquet to Data Lake",
+				"name": "Extract as CSV to Data Lake",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -23,17 +23,16 @@
 						"partitionOption": "None"
 					},
 					"sink": {
-						"type": "ParquetSink",
+						"type": "DelimitedTextSink",
 						"storeSettings": {
 							"type": "AzureBlobFSWriteSettings"
 						},
 						"formatSettings": {
-							"type": "ParquetWriteSettings",
+							"type": "DelimitedTextWriteSettings",
 							"maxRowsPerFile": 5,
-							"fileNamePrefix": {
-								"value": "@pipeline().parameters.FilePrefix",
-								"type": "Expression"
-							}
+							"fileNamePrefix": "bg",
+							"quoteAllText": true,
+							"fileExtension": ".csv"
 						}
 					},
 					"enableStaging": false,
@@ -54,7 +53,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "ParquetOutMultiple",
+						"referenceName": "CsvOutMultiple",
 						"type": "DatasetReference",
 						"parameters": {
 							"FileSystem": "landing",
