@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d0f6f38e-74ca-4d9a-bc7b-9b99794ee6ff"
+				"spark.autotune.trackingId": "802206f2-1149-473b-891e-0f5e3c8418f9"
 			}
 		},
 		"metadata": {
@@ -137,9 +137,33 @@
 				},
 				"source": [
 					"%%sql\r\n",
-					"SELECT MIN(file_modification_time) AS LastModified FROM tmp_table"
+					"SELECT * FROM tmp_table"
 				],
-				"execution_count": 9
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"-- one day earlier for logic to work\r\n",
+					"SELECT to_timestamp(date_sub(MIN(file_modification_time),1)) AS LastModified FROM tmp_table"
+				],
+				"execution_count": 21
 			},
 			{
 				"cell_type": "code",
@@ -163,7 +187,7 @@
 					"    print('Creating the watermark table')\r\n",
 					"    # create the lake database if it does not exist\r\n",
 					"    spark.sql(\"\"\"CREATE DATABASE IF NOT EXISTS control\"\"\")\r\n",
-					"    df3 = spark.sql(\"\"\" SELECT MIN(file_modification_time) AS LastModified FROM tmp_table \"\"\")\r\n",
+					"    df3 = spark.sql(\"\"\" SELECT to_timestamp(date_sub(MIN(file_modification_time),1)) AS LastModified FROM tmp_table \"\"\")\r\n",
 					"    # write out table as delta    \r\n",
 					"    df3.write.format('delta').mode(\"overwrite\").save('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/watermark')\r\n",
 					"    # register as external table in lake database\r\n",
@@ -186,7 +210,7 @@
 					}
 				},
 				"source": [
-					"%%g"
+					"Grab the watermark and filter to filepaths that are greater than watermark date"
 				]
 			},
 			{
@@ -207,15 +231,12 @@
 					"collapsed": false
 				},
 				"source": [
-					"%%sql\r\n",
-					"SELECT \r\n",
-					"    file_path\r\n",
-					"    , file_modification_time\r\n",
-					"    , to_date(file_modification_time) as datefield\r\n",
-					"FROM tmp\r\n",
-					"WHERE to_date(file_modification_time) >= '2023-01-25'"
+					"%%sql \r\n",
+					"\r\n",
+					"SELECT file_path,file_modification_time  FROM tmp_table\r\n",
+					"WHERE file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark) "
 				],
-				"execution_count": 28
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
