@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "802206f2-1149-473b-891e-0f5e3c8418f9"
+				"spark.autotune.trackingId": "6f56822b-9d61-429e-b76e-cb0047180d40"
 			}
 		},
 		"metadata": {
@@ -78,12 +78,13 @@
 				"source": [
 					"df = spark.read \\\r\n",
 					"  .format(\"csv\") \\\r\n",
+					"  .option(\"header\", \"true\") \\\r\n",
 					"  .load('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/*.csv') \\\r\n",
 					"  .select(\"*\", \"_metadata\")\r\n",
 					"# look at files\r\n",
 					"display(df)"
 				],
-				"execution_count": 5
+				"execution_count": 29
 			},
 			{
 				"cell_type": "markdown",
@@ -116,7 +117,7 @@
 					"df2 = df.select(\"_metadata.file_path\", \"_metadata.file_modification_time\").dropDuplicates()\r\n",
 					"df2.createOrReplaceTempView(\"tmp_table\")"
 				],
-				"execution_count": 6
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -198,7 +199,7 @@
 					"    \"\"\")    \r\n",
 					""
 				],
-				"execution_count": 12
+				"execution_count": 22
 			},
 			{
 				"cell_type": "markdown",
@@ -232,11 +233,10 @@
 				},
 				"source": [
 					"%%sql \r\n",
-					"\r\n",
 					"SELECT file_path,file_modification_time  FROM tmp_table\r\n",
 					"WHERE file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark) "
 				],
-				"execution_count": 17
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -253,16 +253,12 @@
 					"collapsed": false
 				},
 				"source": [
-					"df3 = spark.sql(\"\"\"\r\n",
-					"SELECT \r\n",
-					"    file_path\r\n",
-					"    , file_modification_time\r\n",
-					"    , to_date(file_modification_time) as datefield\r\n",
-					"FROM tmp\r\n",
-					"WHERE to_date(file_modification_time) >= '2023-01-25'\r\n",
+					"df4 = spark.sql(\"\"\"\r\n",
+					"SELECT file_path,file_modification_time  FROM tmp_table\r\n",
+					"WHERE file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark) \r\n",
 					"\"\"\")"
 				],
-				"execution_count": 21
+				"execution_count": 24
 			},
 			{
 				"cell_type": "code",
