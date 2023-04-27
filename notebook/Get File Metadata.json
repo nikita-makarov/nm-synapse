@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "18d77d45-e562-47f1-8796-221051b4caee"
+				"spark.autotune.trackingId": "e656d1d4-02c6-404a-901b-df52a7b69dbc"
 			}
 		},
 		"metadata": {
@@ -72,17 +72,18 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
 					"df = spark.read \\\r\n",
 					"  .format(\"csv\") \\\r\n",
-					"  .load('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/*.csv') \\\r\n",
+					"  .load('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/*.csv') \\\r\n",
 					"  .select(\"*\", \"_metadata\")\r\n",
 					"# look at files\r\n",
 					"display(df)"
 				],
-				"execution_count": 4
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -115,7 +116,81 @@
 					"df2 = df.select(\"_metadata.file_path\", \"_metadata.file_modification_time\").dropDuplicates()\r\n",
 					"df2.createOrReplaceTempView(\"tmp_table\")"
 				],
-				"execution_count": 13
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"SELECT MIN(file_modification_time) AS LastModified FROM tmp_table"
+				],
+				"execution_count": 9
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"\r\n",
+					"# create the lake database if it does not exist\r\n",
+					"spark.sql(\"\"\"CREATE DATABASE IF NOT EXISTS control\"\"\")"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## Only run this for the first time to create the watermark\r\n",
+					"try:\r\n",
+					"    mssparkutils.fs.ls('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/watermark.parquet')\r\n",
+					"    print('Watermark does not exist')\r\n",
+					"except:\r\n",
+					"    print('Creating the watermark table')\r\n",
+					"    \r\n",
+					"    # create the lake database if it does not exist\r\n",
+					"    spark.sql(\"\"\"CREATE DATABASE IF NOT EXISTS control\"\"\")\r\n",
+					"    df3 = spark.sql(\"\"\"\r\n",
+					"    SELECT MIN(file_modification_time) AS LastModified FROM tmp_table\r\n",
+					"    \"\"\")\r\n",
+					"    # write out table as delta    \r\n",
+					"    df3.write.format('delta').mode(\"overwrite\").save('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/watermark.parquet')"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
