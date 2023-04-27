@@ -29,7 +29,8 @@
 						},
 						"formatSettings": {
 							"type": "ParquetWriteSettings",
-							"maxRowsPerFile": 3
+							"maxRowsPerFile": 3,
+							"fileNamePrefix": "sample_extract"
 						}
 					},
 					"enableStaging": false,
@@ -54,8 +55,7 @@
 						"type": "DatasetReference",
 						"parameters": {
 							"FileSystem": "landing",
-							"Directory": "dataverse",
-							"FileName": "sample_extract.parquet"
+							"Directory": "dataverse"
 						}
 					}
 				]
