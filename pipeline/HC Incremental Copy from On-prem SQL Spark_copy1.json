@@ -29,8 +29,11 @@
 						},
 						"formatSettings": {
 							"type": "ParquetWriteSettings",
-							"maxRowsPerFile": 3,
-							"fileNamePrefix": "sample_extract"
+							"maxRowsPerFile": 5,
+							"fileNamePrefix": {
+								"value": "@pipeline().parameters.FilePrefix",
+								"type": "Expression"
+							}
 						}
 					},
 					"enableStaging": false,
@@ -61,6 +64,12 @@
 				]
 			}
 		],
+		"parameters": {
+			"FilePrefix": {
+				"type": "string",
+				"defaultValue": "bg"
+			}
+		},
 		"folder": {
 			"name": "Spark Incremental Files to Staging Ded SQL Pool"
 		},
