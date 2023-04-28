@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "54046edd-406c-4228-8357-10f04a8bb2b3"
+				"spark.autotune.trackingId": "311045bc-7e5e-4e57-b3cf-a8e792e70ab6"
 			}
 		},
 		"metadata": {
@@ -84,9 +84,9 @@
 					"## register for SQL querying\r\n",
 					"df.createOrReplaceTempView(\"extract_tbl\")\r\n",
 					"# look at files\r\n",
-					"display(df)"
+					"# display(df)"
 				],
-				"execution_count": 5
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -107,8 +107,8 @@
 				},
 				"source": [
 					"%%sql \r\n",
-					"--- another way to query the files\r\n",
-					"SELECT * FROM extract_tbl"
+					"-- --- another way to query the files\r\n",
+					"-- SELECT * FROM extract_tbl"
 				],
 				"execution_count": 3
 			},
@@ -224,7 +224,7 @@
 					"WHERE _metadata.file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark)\r\n",
 					"-- WHERE SalesOrderID = 71784"
 				],
-				"execution_count": 4
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -269,7 +269,7 @@
 					"WHERE _metadata.file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark)\r\n",
 					"\"\"\") "
 				],
-				"execution_count": 71
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -302,7 +302,7 @@
 					"#materialize the cache by callign an action (spark is lazy evaluation)\r\n",
 					"final_df.count()"
 				],
-				"execution_count": 72
+				"execution_count": 10
 			},
 			{
 				"cell_type": "markdown",
@@ -340,7 +340,7 @@
 					"# Sample below is using AAD-based authentication approach; See further examples to leverage SQL Basic auth.\r\n",
 					"final_df.write.mode(\"overwrite\").synapsesql(\"SQLPool1.staging.DataverseFiles\")"
 				],
-				"execution_count": 73
+				"execution_count": 11
 			},
 			{
 				"cell_type": "markdown",
@@ -373,7 +373,7 @@
 					"watermark_df = spark.sql(\"\"\" SELECT MAX(FileModifiedDate) AS LastModified FROM final_df_view  \"\"\")\r\n",
 					"watermark_df.write.format('delta').mode(\"overwrite\").save('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/watermark')"
 				],
-				"execution_count": 74
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -397,7 +397,7 @@
 					"--new watermark\r\n",
 					"SELECT * FROM control.watermark"
 				],
-				"execution_count": 75
+				"execution_count": 13
 			}
 		]
 	}

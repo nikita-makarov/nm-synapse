@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 9",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [SalesOrderID]\n,[RevisionNumber]\n,[OrderDate]\n,[DueDate]\n,[ShipDate]\n,[Status]\n,[OnlineOrderFlag]\n,[SalesOrderNumber]\n,[PurchaseOrderNumber]\n,[AccountNumber]\n,[CustomerID]\n,[ShipToAddressID]\n,[BillToAddressID]\n,[ShipMethod]\n,[CreditCardApprovalCode]\n,[SubTotal]\n,[TaxAmt]\n,[Freight]\n,[TotalDue]\n,[Comment]\n,[rowguid]\n,[ModifiedDate]\n,[FileModifiedDate]\n FROM [staging].[DataverseFiles]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SQLPool1",
+				"poolName": "SQLPool1"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
