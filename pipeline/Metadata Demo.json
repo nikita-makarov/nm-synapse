@@ -89,7 +89,19 @@
 						"referenceName": "Get File Metadata",
 						"type": "NotebookReference"
 					},
-					"snapshot": true
+					"snapshot": true,
+					"sparkPool": {
+						"referenceName": "sparkpool1",
+						"type": "BigDataPoolReference"
+					},
+					"executorSize": "Small",
+					"conf": {
+						"spark.dynamicAllocation.enabled": false,
+						"spark.dynamicAllocation.minExecutors": 1,
+						"spark.dynamicAllocation.maxExecutors": 1
+					},
+					"driverSize": "Small",
+					"numExecutors": 1
 				}
 			}
 		],
