@@ -69,7 +69,7 @@
 		"parameters": {
 			"FilePrefix": {
 				"type": "string",
-				"defaultValue": "bg"
+				"defaultValue": "bh"
 			}
 		},
 		"folder": {

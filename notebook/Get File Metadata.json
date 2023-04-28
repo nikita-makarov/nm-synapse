@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d6956915-1fb3-4dac-9a68-a64632115642"
+				"spark.autotune.trackingId": "13da42e1-8b85-4fd9-bcc6-cab2d84233d4"
 			}
 		},
 		"metadata": {
@@ -297,7 +297,7 @@
 					}
 				},
 				"source": [
-					"Before writing to staging, cache the dataframe to avoid a weird bug when trying to write directly to Ded SQL Pool"
+					"Before writing to staging, cache the dataframe if there is a weird data type bug"
 				]
 			},
 			{
@@ -315,9 +315,10 @@
 				},
 				"source": [
 					"final_df.cache()\r\n",
+					"#materialize the cache by callign an action (spark is lazy evaluation)\r\n",
 					"final_df.count()"
 				],
-				"execution_count": null
+				"execution_count": 59
 			},
 			{
 				"cell_type": "markdown",
@@ -355,7 +356,59 @@
 					"# Sample below is using AAD-based authentication approach; See further examples to leverage SQL Basic auth.\r\n",
 					"final_df.write.mode(\"overwrite\").synapsesql(\"SQLPool1.staging.DataverseFiles\")"
 				],
-				"execution_count": 57
+				"execution_count": 60
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Update watermark"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"final_df.createOrReplaceTempView('final_df_view')\r\n",
+					"watermark_df = spark.sql(\"\"\" SELECT MAX(FileModifiedDate) AS LastModfified FROM final_df_view  \"\"\")\r\n",
+					"watermark_df.write.format('delta').mode(\"overwrite\").save('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/watermark')\r\n",
+					""
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
