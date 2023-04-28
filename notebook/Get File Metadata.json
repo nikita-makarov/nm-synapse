@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "13da42e1-8b85-4fd9-bcc6-cab2d84233d4"
+				"spark.autotune.trackingId": "38d4cb56-1d11-4cd3-9352-f357430980f2"
 			}
 		},
 		"metadata": {
@@ -212,8 +212,10 @@
 				},
 				"source": [
 					"%%sql \r\n",
-					"SELECT \r\n",
-					" SalesOrderID\r\n",
+					"SELECT\r\n",
+					" _metadata.file_modification_time AS FileModifiedDate\r\n",
+					" ,_metadata.file_path \r\n",
+					" ,SalesOrderID\r\n",
 					" , RevisionNumber\r\n",
 					" , OrderDate\r\n",
 					" , DueDate\r\n",
@@ -235,12 +237,11 @@
 					" , Comment\r\n",
 					" , rowguid\r\n",
 					" , ModifiedDate\r\n",
-					" ,_metadata.file_modification_time AS FileModifiedDate\r\n",
 					"FROM extract_tbl\r\n",
 					"WHERE _metadata.file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark)\r\n",
 					"-- WHERE SalesOrderID = 71784"
 				],
-				"execution_count": 55
+				"execution_count": 64
 			},
 			{
 				"cell_type": "code",
@@ -386,29 +387,10 @@
 				},
 				"source": [
 					"final_df.createOrReplaceTempView('final_df_view')\r\n",
-					"watermark_df = spark.sql(\"\"\" SELECT MAX(FileModifiedDate) AS LastModfified FROM final_df_view  \"\"\")\r\n",
-					"watermark_df.write.format('delta').mode(\"overwrite\").save('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/watermark')\r\n",
-					""
+					"watermark_df = spark.sql(\"\"\" SELECT MAX(FileModifiedDate) AS LastModified FROM final_df_view  \"\"\")\r\n",
+					"watermark_df.write.format('delta').mode(\"overwrite\").save('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/watermark')"
 				],
-				"execution_count": null
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					""
-				],
-				"execution_count": null
+				"execution_count": 62
 			},
 			{
 				"cell_type": "code",
@@ -428,106 +410,11 @@
 					"collapsed": false
 				},
 				"source": [
-					"%%sql \r\n",
-					"SELECT file_path,file_modification_time  FROM tmp_table\r\n",
-					"WHERE file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark) "
+					"%%sql\r\n",
+					"--new watermark\r\n",
+					"SELECT * FROM control.watermark"
 				],
-				"execution_count": 23
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": false
-				},
-				"source": [
-					"df4 = spark.sql(\"\"\"\r\n",
-					"SELECT file_path,file_modification_time  FROM tmp_table\r\n",
-					"WHERE file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark) \r\n",
-					"\"\"\")"
-				],
-				"execution_count": 24
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"list_of_files_to_move = df3.select(\"file_path\").rdd.flatMap(lambda x: x).collect()"
-				],
-				"execution_count": 24
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"for i in list_of_files_to_move:\r\n",
-					"    print(f\"moving {i}\")"
-				],
-				"execution_count": 26
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"mssparkutils.fs.help()"
-				],
-				"execution_count": 20
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"mssparkutils.fs."
-				],
-				"execution_count": null
+				"execution_count": 63
 			}
 		]
 	}
