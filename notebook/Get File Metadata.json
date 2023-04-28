@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d7835b35-e20e-45c1-b17f-4f154f0e7082"
+				"spark.autotune.trackingId": "d262536b-b29a-4e6f-9f32-71ee9c4ebc8b"
 			}
 		},
 		"metadata": {
@@ -48,6 +48,19 @@
 			"sessionKeepAliveTimeout": 30
 		},
 		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"This is sample code and is not intended to be used for production workloads."
+				]
+			},
 			{
 				"cell_type": "markdown",
 				"metadata": {
@@ -107,8 +120,8 @@
 				},
 				"source": [
 					"%%sql \r\n",
-					"-- --- another way to query the files\r\n",
-					"-- SELECT * FROM extract_tbl"
+					"--- another way to query the files\r\n",
+					"SELECT * FROM extract_tbl"
 				],
 				"execution_count": 3
 			},
