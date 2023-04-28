@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6f56822b-9d61-429e-b76e-cb0047180d40"
+				"spark.autotune.trackingId": "d6956915-1fb3-4dac-9a68-a64632115642"
 			}
 		},
 		"metadata": {
@@ -81,10 +81,36 @@
 					"  .option(\"header\", \"true\") \\\r\n",
 					"  .load('abfss://landing@nmdemostorage1.dfs.core.windows.net/dataverse/bg_extract/*.csv') \\\r\n",
 					"  .select(\"*\", \"_metadata\")\r\n",
+					"## register for SQL querying\r\n",
+					"df.createOrReplaceTempView(\"extract_tbl\")\r\n",
 					"# look at files\r\n",
 					"display(df)"
 				],
-				"execution_count": 29
+				"execution_count": 34
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql \r\n",
+					"--- another way to query the files\r\n",
+					"SELECT * FROM extract_tbl"
+				],
+				"execution_count": 35
 			},
 			{
 				"cell_type": "markdown",
@@ -110,73 +136,6 @@
 						"transient": {
 							"deleting": false
 						}
-					},
-					"collapsed": false
-				},
-				"source": [
-					"df2 = df.select(\"_metadata.file_path\", \"_metadata.file_modification_time\").dropDuplicates()\r\n",
-					"df2.createOrReplaceTempView(\"tmp_table\")"
-				],
-				"execution_count": 31
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql\r\n",
-					"SELECT * FROM tmp_table"
-				],
-				"execution_count": 16
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql\r\n",
-					"-- one day earlier for logic to work\r\n",
-					"SELECT to_timestamp(date_sub(MIN(file_modification_time),1)) AS LastModified FROM tmp_table"
-				],
-				"execution_count": 21
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
 					}
 				},
 				"source": [
@@ -186,6 +145,8 @@
 					"    print('Watermark already exists')\r\n",
 					"except:\r\n",
 					"    print('Creating the watermark table')\r\n",
+					"    df2 = df.select(\"_metadata.file_path\", \"_metadata.file_modification_time\").dropDuplicates()\r\n",
+					"    df2.createOrReplaceTempView(\"tmp_table\")\r\n",
 					"    # create the lake database if it does not exist\r\n",
 					"    spark.sql(\"\"\"CREATE DATABASE IF NOT EXISTS control\"\"\")\r\n",
 					"    df3 = spark.sql(\"\"\" SELECT to_timestamp(date_sub(MIN(file_modification_time),1)) AS LastModified FROM tmp_table \"\"\")\r\n",
@@ -199,7 +160,7 @@
 					"    \"\"\")    \r\n",
 					""
 				],
-				"execution_count": 22
+				"execution_count": 33
 			},
 			{
 				"cell_type": "markdown",
@@ -213,6 +174,188 @@
 				"source": [
 					"Grab the watermark and filter to filepaths that are greater than watermark date"
 				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"df.columns"
+				],
+				"execution_count": 42
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql \r\n",
+					"SELECT \r\n",
+					" SalesOrderID\r\n",
+					" , RevisionNumber\r\n",
+					" , OrderDate\r\n",
+					" , DueDate\r\n",
+					" , ShipDate\r\n",
+					" , Status\r\n",
+					" , OnlineOrderFlag\r\n",
+					" , SalesOrderNumber\r\n",
+					" , PurchaseOrderNumber\r\n",
+					" , AccountNumber\r\n",
+					" , CustomerID\r\n",
+					" , ShipToAddressID\r\n",
+					" , BillToAddressID\r\n",
+					" , ShipMethod\r\n",
+					" , CreditCardApprovalCode\r\n",
+					" , SubTotal\r\n",
+					" , TaxAmt\r\n",
+					" , Freight\r\n",
+					" , TotalDue\r\n",
+					" , Comment\r\n",
+					" , rowguid\r\n",
+					" , ModifiedDate\r\n",
+					" ,_metadata.file_modification_time AS FileModifiedDate\r\n",
+					"FROM extract_tbl\r\n",
+					"WHERE _metadata.file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark)\r\n",
+					"-- WHERE SalesOrderID = 71784"
+				],
+				"execution_count": 55
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"final_df = spark.sql(\"\"\"\r\n",
+					"SELECT \r\n",
+					" SalesOrderID\r\n",
+					" , RevisionNumber\r\n",
+					" , OrderDate\r\n",
+					" , DueDate\r\n",
+					" , ShipDate\r\n",
+					" , Status\r\n",
+					" , OnlineOrderFlag\r\n",
+					" , SalesOrderNumber\r\n",
+					" , PurchaseOrderNumber\r\n",
+					" , AccountNumber\r\n",
+					" , CustomerID\r\n",
+					" , ShipToAddressID\r\n",
+					" , BillToAddressID\r\n",
+					" , ShipMethod\r\n",
+					" , CreditCardApprovalCode\r\n",
+					" , SubTotal\r\n",
+					" , TaxAmt\r\n",
+					" , Freight\r\n",
+					" , TotalDue\r\n",
+					" , Comment\r\n",
+					" , rowguid\r\n",
+					" , ModifiedDate\r\n",
+					" ,_metadata.file_modification_time AS FileModifiedDate\r\n",
+					"FROM extract_tbl\r\n",
+					"WHERE _metadata.file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark)\r\n",
+					"\"\"\") "
+				],
+				"execution_count": 56
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Before writing to staging, cache the dataframe to avoid a weird bug when trying to write directly to Ded SQL Pool"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"final_df.cache()\r\n",
+					"final_df.count()"
+				],
+				"execution_count": null
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Write to Dedicated SQL Pool"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Write using AAD Auth to internal table\r\n",
+					"# Add required imports\r\n",
+					"import com.microsoft.spark.sqlanalytics\r\n",
+					"from com.microsoft.spark.sqlanalytics.Constants import Constants\r\n",
+					"\r\n",
+					"# Configure and submit the request to write to Synapse Dedicated SQL Pool\r\n",
+					"# Sample below is using AAD-based authentication approach; See further examples to leverage SQL Basic auth.\r\n",
+					"final_df.write.mode(\"overwrite\").synapsesql(\"SQLPool1.staging.DataverseFiles\")"
+				],
+				"execution_count": 57
 			},
 			{
 				"cell_type": "code",
