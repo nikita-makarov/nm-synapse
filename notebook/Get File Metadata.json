@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7e9310ed-80f1-42cc-b9a0-2067abca0266"
+				"spark.autotune.trackingId": "54046edd-406c-4228-8357-10f04a8bb2b3"
 			}
 		},
 		"metadata": {
@@ -86,7 +86,7 @@
 					"# look at files\r\n",
 					"display(df)"
 				],
-				"execution_count": 1
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -110,7 +110,7 @@
 					"--- another way to query the files\r\n",
 					"SELECT * FROM extract_tbl"
 				],
-				"execution_count": 66
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -224,7 +224,7 @@
 					"WHERE _metadata.file_modification_time > (SELECT MAX(LastModified) as LastModified FROM control.watermark)\r\n",
 					"-- WHERE SalesOrderID = 71784"
 				],
-				"execution_count": 70
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
