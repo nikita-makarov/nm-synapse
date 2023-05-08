@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1376a8a6-62b8-424f-a35a-77e7a858dacc"
+				"spark.autotune.trackingId": "92fdce9b-b05b-42bb-ae0b-131df88a6b6f"
 			}
 		},
 		"metadata": {
@@ -536,7 +536,6 @@
 					"from azureml.core import Workspace\r\n",
 					"\r\n",
 					"linkedService_name = \"nmdemoaml1\"\r\n",
-					"# experiment_name = \"nmdemosynapse-dim_customer-20230508051456\"\r\n",
 					"\r\n",
 					"ws = mssparkutils.azureML.getWorkspace(linkedService_name)\r\n",
 					"print(ws.name, ws.resource_group, ws.location, ws.subscription_id, sep='\\n')"
@@ -561,31 +560,31 @@
 					"collapsed": true
 				},
 				"source": [
-					"import mlflow\r\n",
-					"import mlflow.onnx\r\n",
+					"# import mlflow\r\n",
+					"# import mlflow.onnx\r\n",
 					"\r\n",
-					"from mlflow.models.signature import infer_signature\r\n",
+					"# from mlflow.models.signature import infer_signature\r\n",
 					"\r\n",
-					"experiment_name = 'nyc_taxi_tip_predict_exp'\r\n",
-					"artifact_path = 'nyc_taxi_tip_predict_artifact'\r\n",
+					"# experiment_name = 'nyc_taxi_tip_predict_exp1'\r\n",
+					"# artifact_path = 'nyc_taxi_tip_predict_artifact'\r\n",
 					"\r\n",
-					"mlflow.set_tracking_uri(ws.get_mlflow_tracking_uri())\r\n",
-					"mlflow.set_experiment(experiment_name)\r\n",
+					"# mlflow.set_tracking_uri(ws.get_mlflow_tracking_uri())\r\n",
+					"# mlflow.set_experiment(experiment_name)\r\n",
 					"\r\n",
-					"with mlflow.start_run() as run:\r\n",
-					"    # Infer signature\r\n",
-					"    input_sample = x_train.head(1)\r\n",
-					"    output_sample = pandas.DataFrame(columns=['output_label'], data=[1])\r\n",
-					"    signature = infer_signature(input_sample, output_sample)\r\n",
+					"# with mlflow.start_run() as run:\r\n",
+					"#     # Infer signature\r\n",
+					"#     input_sample = x_train.head(1)\r\n",
+					"#     output_sample = pandas.DataFrame(columns=['output_label'], data=[1])\r\n",
+					"#     signature = infer_signature(input_sample, output_sample)\r\n",
 					"\r\n",
-					"    # Save the model to the outputs directory for capture\r\n",
-					"    mlflow.onnx.log_model(onnx_model, artifact_path, signature=signature, input_example=input_sample)\r\n",
+					"#     # Save the model to the outputs directory for capture\r\n",
+					"#     mlflow.onnx.log_model(onnx_model, artifact_path, signature=signature, input_example=input_sample)\r\n",
 					"\r\n",
-					"    # Register the model to AML model registry\r\n",
-					"    mlflow.register_model('runs:/' + run.info.run_id + '/' + artifact_path, 'nyc_taxi_tip_predict')\r\n",
+					"#     # Register the model to AML model registry\r\n",
+					"#     mlflow.register_model('runs:/' + run.info.run_id + '/' + artifact_path, 'nyc_taxi_tip_predict')\r\n",
 					""
 				],
-				"execution_count": 36
+				"execution_count": 39
 			}
 		]
 	}
