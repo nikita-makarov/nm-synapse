@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4e57223d-1be4-47ad-a047-4345d89cea3a"
+				"spark.autotune.trackingId": "4d1ce618-ca2c-4c5b-9de3-e943ebc1595e"
 			}
 		},
 		"metadata": {
@@ -58,18 +58,18 @@
 					"from notebookutils import mssparkutils\n",
 					"from azureml.data.dataset_factory import TabularDatasetFactory"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
 				"source": [
 					"linkedService_name = \"nmdemoaml1\"\n",
-					"experiment_name = \"nmdemosynapse-dim_customer-20230508051456\"\n",
+					"experiment_name = \"nmdemosynapse-transaction_history-20230508051456\"\n",
 					"\n",
 					"ws = mssparkutils.azureML.getWorkspace(linkedService_name)\n",
 					"experiment = Experiment(ws, experiment_name)"
 				],
-				"execution_count": 4
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -79,7 +79,7 @@
 					"datastore = Datastore.get_default(ws)\n",
 					"dataset = TabularDatasetFactory.register_spark_dataframe(df, datastore, name = experiment_name + \"-dataset\")"
 				],
-				"execution_count": 6
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -89,11 +89,11 @@
 					"                             training_data = dataset,\n",
 					"                             label_column_name = \"Quantity\",\n",
 					"                             primary_metric = \"spearman_correlation\",\n",
-					"                             experiment_timeout_hours = 3,\n",
+					"                             experiment_timeout_hours = 0.1,\n",
 					"                             max_concurrent_iterations = 2,\n",
 					"                             enable_onnx_compatible_models = False)"
 				],
-				"execution_count": 7
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -129,7 +129,7 @@
 					"    mlflow.sklearn.log_model(non_onnx_model, artifact_path)\n",
 					"\n",
 					"    # Register the model to AML model registry\n",
-					"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"nmdemosynapse-dim_customer-20230508051456-Best\")"
+					"    mlflow.register_model(\"runs:/\" + run.info.run_id + \"/\" + artifact_path, \"nmdemosynapse-transaction_history-20230508051456-Best\")"
 				],
 				"execution_count": 10
 			}
