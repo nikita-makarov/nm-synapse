@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 10",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) [Id]\n,[SourceSchema]\n,[SourceTable]\n,[TargetSchema]\n,[TargetTable]\n,[FinalStoredProc]\n,[SourceWatermarkColumnName]\n,[Watermark]\n FROM [control].[ControlTable]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SQLPool1",
+				"poolName": "SQLPool1"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
