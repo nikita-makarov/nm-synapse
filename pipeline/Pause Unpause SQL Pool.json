@@ -185,7 +185,51 @@
 										]
 									},
 									{
-										"value": "Online-Pause"
+										"value": "Online-Pause",
+										"activities": [
+											{
+												"name": "Pause",
+												"type": "WebActivity",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"url": {
+														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('CheckState').output.name,'/pause?api-version=2021-06-01')",
+														"type": "Expression"
+													},
+													"connectVia": {
+														"referenceName": "AutoResolveIntegrationRuntime",
+														"type": "IntegrationRuntimeReference"
+													},
+													"method": "POST",
+													"body": {
+														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('CheckState').output.name,'/resume?api-version=2021-06-01')",
+														"type": "Expression"
+													},
+													"authentication": {
+														"type": "ServicePrincipal",
+														"userTenant": "16b3c013-d300-468d-ac64-7eda0820b6d3",
+														"username": "1c15fd52-948b-4f71-b4bc-1d2dcd2eba26",
+														"resource": "https://management.azure.com/",
+														"password": {
+															"type": "AzureKeyVaultSecret",
+															"store": {
+																"referenceName": "nmdemokv1",
+																"type": "LinkedServiceReference"
+															},
+															"secretName": "demosp"
+														}
+													}
+												}
+											}
+										]
 									}
 								]
 							}
