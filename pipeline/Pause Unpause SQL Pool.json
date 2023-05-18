@@ -141,7 +141,7 @@
 										"value": "Paused-Resume",
 										"activities": [
 											{
-												"name": "Pause",
+												"name": "Resume",
 												"type": "WebActivity",
 												"dependsOn": [],
 												"policy": {
