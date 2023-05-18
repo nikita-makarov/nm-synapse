@@ -25,8 +25,18 @@
 					},
 					"method": "GET",
 					"authentication": {
-						"type": "MSI",
-						"resource": "https://management.azure.com/"
+						"type": "ServicePrincipal",
+						"userTenant": "16b3c013-d300-468d-ac64-7eda0820b6d3",
+						"username": "1c15fd52-948b-4f71-b4bc-1d2dcd2eba26",
+						"resource": "https://management.azure.com/",
+						"password": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "nmdemokv1",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "demosp"
+						}
 					}
 				}
 			}
