@@ -1,0 +1,65 @@
+{
+	"name": "Pause SQL Pool",
+	"properties": {
+		"activities": [
+			{
+				"name": "Pause",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": {
+						"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',pipeline().parameters.SQLPoolName,'/pause?api-version=2021-06-01')",
+						"type": "Expression"
+					},
+					"connectVia": {
+						"referenceName": "AutoResolveIntegrationRuntime",
+						"type": "IntegrationRuntimeReference"
+					},
+					"method": "POST",
+					"body": "Pause",
+					"authentication": {
+						"type": "ServicePrincipal",
+						"userTenant": "16b3c013-d300-468d-ac64-7eda0820b6d3",
+						"username": "1c15fd52-948b-4f71-b4bc-1d2dcd2eba26",
+						"resource": "https://management.azure.com/",
+						"password": {
+							"type": "AzureKeyVaultSecret",
+							"store": {
+								"referenceName": "nmdemokv1",
+								"type": "LinkedServiceReference"
+							},
+							"secretName": "demosp"
+						}
+					}
+				}
+			}
+		],
+		"parameters": {
+			"ResourceGroup": {
+				"type": "string",
+				"defaultValue": "rg_synapse"
+			},
+			"SubscriptionID": {
+				"type": "string",
+				"defaultValue": "8a936955-932a-425a-8c07-f6035412c4a1"
+			},
+			"WorkspaceName": {
+				"type": "string",
+				"defaultValue": "nmdemosynapse"
+			},
+			"SQLPoolName": {
+				"type": "string",
+				"defaultValue": "SQLPool1"
+			}
+		},
+		"annotations": []
+	}
+}
