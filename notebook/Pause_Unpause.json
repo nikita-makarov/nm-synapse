@@ -1,0 +1,111 @@
+{
+	"name": "Pause_Unpause",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "3740899f-d626-405e-96bc-b0804661c693"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"source": [
+					"print('a')"
+				],
+				"execution_count": 1
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"from azure.identity import DefaultAzureCredential\r\n",
+					"from azure.mgmt.synapse import SynapseManagementClient\r\n",
+					"\r\n",
+					"\"\"\"\r\n",
+					"# PREREQUISITES\r\n",
+					"    pip install azure-identity\r\n",
+					"    pip install azure-mgmt-synapse\r\n",
+					"# USAGE\r\n",
+					"    python get_sql_pool.py\r\n",
+					"\r\n",
+					"    Before run the sample, please set the values of the client ID, tenant ID and client secret\r\n",
+					"    of the AAD application as environment variables: AZURE_CLIENT_ID, AZURE_TENANT_ID,\r\n",
+					"    AZURE_CLIENT_SECRET. For more info about how to get the value, please see:\r\n",
+					"    https://docs.microsoft.com/azure/active-directory/develop/howto-create-service-principal-portal\r\n",
+					"\"\"\"\r\n",
+					"\r\n",
+					"\r\n",
+					"def main():\r\n",
+					"    client = SynapseManagementClient(\r\n",
+					"        credential=DefaultAzureCredential(),\r\n",
+					"        subscription_id=\"8a936955-932a-425a-8c07-f6035412c4a1\",\r\n",
+					"    )\r\n",
+					"\r\n",
+					"    response = client.sql_pools.get(\r\n",
+					"        resource_group_name=\"rg_synapse\",\r\n",
+					"        workspace_name=\"nmdemosynapse\",\r\n",
+					"        sql_pool_name=\"SQLPool1\",\r\n",
+					"    )\r\n",
+					"    print(response)\r\n",
+					"\r\n",
+					"\r\n",
+					"# x-ms-original-file: specification/synapse/resource-manager/Microsoft.Synapse/stable/2021-06-01/examples/GetSqlPool.json\r\n",
+					"if __name__ == \"__main__\":\r\n",
+					"    main()"
+				],
+				"execution_count": null
+			}
+		]
+	}
+}

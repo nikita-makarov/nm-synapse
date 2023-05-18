@@ -26,7 +26,7 @@
 					"method": "GET",
 					"authentication": {
 						"type": "MSI",
-						"resource": "https://dev.azure.com/"
+						"resource": "https://management.azure.com/"
 					}
 				}
 			}
