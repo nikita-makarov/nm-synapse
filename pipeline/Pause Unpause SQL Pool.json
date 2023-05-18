@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Get List of Pools",
+				"name": "Get List",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
@@ -37,6 +37,48 @@
 							},
 							"secretName": "demosp"
 						}
+					}
+				}
+			},
+			{
+				"name": "Filter Pools",
+				"type": "Filter",
+				"dependsOn": [
+					{
+						"activity": "Get List",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Get list').output.value",
+						"type": "Expression"
+					},
+					"condition": {
+						"value": "@not(endswith(item().name,'prod'))",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ForEach_pool",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Filter Pools",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Filter Pools').output.value",
+						"type": "Expression"
 					}
 				}
 			}
