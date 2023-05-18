@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Scale Up",
+				"name": "Scale Up or Down",
 				"type": "WebActivity",
 				"dependsOn": [],
 				"policy": {
@@ -16,15 +16,18 @@
 				"userProperties": [],
 				"typeProperties": {
 					"url": {
-						"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('CheckState').output.name,'/pause?api-version=2021-06-01')",
+						"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/', pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/', pipeline().parameters.WorkspaceName, '/sqlPools/', pipeline().parameters.SQLPoolName,'/?api-version=2021-06-01')",
 						"type": "Expression"
 					},
 					"connectVia": {
 						"referenceName": "AutoResolveIntegrationRuntime",
 						"type": "IntegrationRuntimeReference"
 					},
-					"method": "POST",
-					"body": "Pause and Resume",
+					"method": "PATCH",
+					"body": {
+						"value": "{ “sku”: { “name”: ‘@{pipeline().parameters.PerformanceLevel}’ } }",
+						"type": "Expression"
+					},
 					"authentication": {
 						"type": "ServicePrincipal",
 						"userTenant": "16b3c013-d300-468d-ac64-7eda0820b6d3",
