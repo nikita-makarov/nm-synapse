@@ -25,7 +25,7 @@
 					},
 					"method": "PATCH",
 					"body": {
-						"value": "{ “sku”: { “name”: ‘@{pipeline().parameters.PerformanceLevel}’ } }",
+						"value": "{ \"sku\": { \"name\": '@{pipeline().parameters.PerformanceLevel}' } }",
 						"type": "Expression"
 					},
 					"authentication": {
@@ -64,7 +64,7 @@
 			},
 			"PerformanceLevel": {
 				"type": "string",
-				"defaultValue": "DW200c"
+				"defaultValue": "DW100c"
 			}
 		},
 		"annotations": []
