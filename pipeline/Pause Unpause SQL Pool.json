@@ -118,6 +118,26 @@
 									}
 								}
 							}
+						},
+						{
+							"name": "State-PauseOrResume",
+							"type": "Switch",
+							"dependsOn": [
+								{
+									"activity": "CheckState",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"on": {
+									"value": "@concat(activity('CheckState').output.properties.status,'-',pipeline().parameters.PauseOrResume)",
+									"type": "Expression"
+								},
+								"cases": []
+							}
 						}
 					]
 				}
@@ -140,7 +160,7 @@
 				"type": "string",
 				"defaultValue": "SQLPool1"
 			},
-			"PauseorResume": {
+			"PauseOrResume": {
 				"type": "string",
 				"defaultValue": "Pause"
 			}
