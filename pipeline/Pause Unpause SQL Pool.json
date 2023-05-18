@@ -154,7 +154,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"url": {
-														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',item().name,'?api-version=2021-06-01')",
+														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('CheckState').output.name,'/resume?api-version=2021-06-01')",
 														"type": "Expression"
 													},
 													"connectVia": {
@@ -162,10 +162,7 @@
 														"type": "IntegrationRuntimeReference"
 													},
 													"method": "POST",
-													"body": {
-														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('CheckState').output.name,'/resume?api-version=2021-06-01')",
-														"type": "Expression"
-													},
+													"body": "Pause and Resume",
 													"authentication": {
 														"type": "ServicePrincipal",
 														"userTenant": "16b3c013-d300-468d-ac64-7eda0820b6d3",
@@ -209,10 +206,7 @@
 														"type": "IntegrationRuntimeReference"
 													},
 													"method": "POST",
-													"body": {
-														"value": "@concat('https://management.azure.com/subscriptions/',pipeline().parameters.SubscriptionID,'/resourceGroups/',pipeline().parameters.ResourceGroup,'/providers/Microsoft.Synapse/workspaces/',pipeline().parameters.WorkspaceName,'/sqlPools/',activity('CheckState').output.name,'/resume?api-version=2021-06-01')",
-														"type": "Expression"
-													},
+													"body": "Pause and Resume",
 													"authentication": {
 														"type": "ServicePrincipal",
 														"userTenant": "16b3c013-d300-468d-ac64-7eda0820b6d3",
