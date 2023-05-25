@@ -72,7 +72,8 @@
 									"path": "$['catalog']['book'][0]['price']"
 								},
 								"sink": {
-									"name": "price"
+									"name": "price",
+									"type": "String"
 								}
 							},
 							{
