@@ -28,11 +28,89 @@
 							"namespaces": true
 						}
 					},
-					"enableStaging": false
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"path": "$['catalog']['book'][0]['author']"
+								},
+								"sink": {
+									"name": "author"
+								}
+							},
+							{
+								"source": {
+									"path": "$['catalog']['book'][0]['title']"
+								},
+								"sink": {
+									"name": "title"
+								}
+							},
+							{
+								"source": {
+									"path": "$['catalog']['book'][0]['genre']"
+								},
+								"sink": {
+									"name": "genre"
+								}
+							},
+							{
+								"source": {
+									"path": "$['catalog']['book'][0]['price']"
+								},
+								"sink": {
+									"name": "price"
+								}
+							},
+							{
+								"source": {
+									"path": "$['catalog']['book'][0]['publish_date']"
+								},
+								"sink": {
+									"name": "publish_date"
+								}
+							},
+							{
+								"source": {
+									"path": "$['catalog']['book'][0]['description']"
+								},
+								"sink": {
+									"name": "description"
+								}
+							},
+							{
+								"source": {
+									"path": "$['catalog']['book'][0]['@id']"
+								},
+								"sink": {
+									"name": "@@id"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
 						"referenceName": "Xml1",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "test_file_csv",
 						"type": "DatasetReference"
 					}
 				]

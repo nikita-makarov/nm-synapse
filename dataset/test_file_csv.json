@@ -2,7 +2,7 @@
 	"name": "test_file_csv",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "nmdatalakestore",
+			"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
@@ -11,8 +11,8 @@
 			"location": {
 				"type": "AzureBlobFSLocation",
 				"fileName": "test_out.csv",
-				"folderPath": "staging",
-				"fileSystem": "nmdeltalake"
+				"folderPath": "extracts",
+				"fileSystem": "landing"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
