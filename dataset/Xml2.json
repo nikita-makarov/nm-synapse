@@ -1,0 +1,19 @@
+{
+	"name": "Xml2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Xml",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "example_output.xml",
+				"folderPath": "extracts",
+				"fileSystem": "landing"
+			}
+		}
+	}
+}
