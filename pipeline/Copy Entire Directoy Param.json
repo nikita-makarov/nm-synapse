@@ -44,7 +44,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('LookupParams').output",
+						"value": "@activity('LookupParams').output.value",
 						"type": "Expression"
 					},
 					"isSequential": false,
@@ -62,11 +62,11 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"SourcePathContainer": {
-										"value": "@item().value.SourceContainer",
+										"value": "@item().SourceContainer",
 										"type": "Expression"
 									},
 									"TgtPathContainer": {
-										"value": "@item().value.TgtContainer",
+										"value": "@item().TgtContainer",
 										"type": "Expression"
 									}
 								}
