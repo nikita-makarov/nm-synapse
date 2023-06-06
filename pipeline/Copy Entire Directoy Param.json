@@ -26,7 +26,8 @@
 							"SqlPoolSchema": "control",
 							"SqlPoolTableName": "ControlTableDataLake"
 						}
-					}
+					},
+					"firstRowOnly": false
 				}
 			},
 			{
@@ -46,6 +47,7 @@
 						"value": "@activity('LookupParams').output",
 						"type": "Expression"
 					},
+					"isSequential": false,
 					"activities": [
 						{
 							"name": "Execute Pipeline1",
@@ -60,10 +62,13 @@
 								"waitOnCompletion": true,
 								"parameters": {
 									"SourcePathContainer": {
-										"value": "@item().Container",
+										"value": "@item().value.SourceContainer",
 										"type": "Expression"
 									},
-									"TgtPathContainer": "testoutput"
+									"TgtPathContainer": {
+										"value": "@item().value.TgtContainer",
+										"type": "Expression"
+									}
 								}
 							}
 						}

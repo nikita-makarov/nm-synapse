@@ -2,7 +2,7 @@
 	"name": "Create Control Table DataLake",
 	"properties": {
 		"content": {
-			"query": "CREATE TABLE control.ControlTableDataLake\nWITH (\n\tDISTRIBUTION = ROUND_ROBIN,\n\tHEAP\n)\n AS\nSELECT 'bronze' AS Container\n\n",
+			"query": "DROP TABLE control.ControlTableDataLake;\n\nCREATE  TABLE control.ControlTableDataLake\nWITH (\n\tDISTRIBUTION = ROUND_ROBIN,\n\tHEAP\n)\n AS\nSELECT 'bronze' AS SourceContainer, 'testoutput' as TgtContainer\n\n",
 			"metadata": {
 				"language": "sql"
 			},
