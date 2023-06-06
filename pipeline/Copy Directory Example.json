@@ -37,7 +37,13 @@
 				"inputs": [
 					{
 						"referenceName": "BinaryAdlsSource",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"FileSystem": {
+								"value": "@pipeline().parameters.SourcePathContainer",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
@@ -50,10 +56,12 @@
 		],
 		"parameters": {
 			"SourcePathContainer": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "rawdata"
 			},
 			"TgtPathContainer": {
-				"type": "string"
+				"type": "string",
+				"defaultValue": "testoutput"
 			}
 		},
 		"annotations": []
