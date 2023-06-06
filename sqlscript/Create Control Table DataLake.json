@@ -1,0 +1,17 @@
+{
+	"name": "Create Control Table DataLake",
+	"properties": {
+		"content": {
+			"query": "CREATE TABLE control.ControlTableDataLake\nWITH (\n\tDISTRIBUTION = ROUND_ROBIN,\n\tHEAP\n)\n AS\nSELECT 'bronze' AS Container\n\n",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "SQLPool1",
+				"poolName": "SQLPool1"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
