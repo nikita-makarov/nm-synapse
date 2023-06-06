@@ -1,0 +1,16 @@
+{
+	"name": "BinaryAdlsTgt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation"
+			}
+		}
+	}
+}
