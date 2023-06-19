@@ -49,8 +49,13 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "sales_territory",
-						"type": "DatasetReference"
+						"referenceName": "ParquetOut",
+						"type": "DatasetReference",
+						"parameters": {
+							"FileSystem": "rawdata",
+							"Directory": "landing/salesrusdb1",
+							"FileName": "txmykw01"
+						}
 					}
 				]
 			}
