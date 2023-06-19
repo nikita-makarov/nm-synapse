@@ -1,0 +1,12 @@
+{
+	"name": "tbl_salesrusdb1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "salesrusdb1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}

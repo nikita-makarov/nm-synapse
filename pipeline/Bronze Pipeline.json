@@ -4,7 +4,7 @@
 		"description": "using Spark",
 		"activities": [
 			{
-				"name": "Extract as Parquet to Data Lake",
+				"name": "txmykw01",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -17,7 +17,8 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
+						"type": "AzureSqlSource",
+						"sqlReaderQuery": "SELECT * FROM txmykw01",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -42,7 +43,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SalesTerritory",
+						"referenceName": "tbl_salesrusdb1",
 						"type": "DatasetReference"
 					}
 				],
