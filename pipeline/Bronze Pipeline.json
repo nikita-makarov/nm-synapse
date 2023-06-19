@@ -54,7 +54,7 @@
 						"parameters": {
 							"FileSystem": "rawdata",
 							"Directory": "landing/salesrusdb1",
-							"FileName": "txmykw01"
+							"FileName": "txmykw01.parquet"
 						}
 					}
 				]
