@@ -1,5 +1,5 @@
 {
-	"name": "HC Full Copy from On-prem SQL Spark",
+	"name": "HC Sales Territory FULL",
 	"properties": {
 		"description": "using Spark",
 		"activities": [

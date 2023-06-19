@@ -1,5 +1,5 @@
 {
-	"name": "HC Incremental Copy from On-prem SQL Spark",
+	"name": "HC Transaction History INCR",
 	"properties": {
 		"description": "using Spark",
 		"activities": [
