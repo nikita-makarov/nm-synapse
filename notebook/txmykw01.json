@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "748ef9ec-e978-4858-a2fb-b8ba652a3b2c"
+				"spark.autotune.trackingId": "626fd4cb-5966-4151-a9d2-49f985a11d3e"
 			}
 		},
 		"metadata": {
@@ -61,7 +61,7 @@
 					}
 				},
 				"source": [
-					"# Full Load Parquet Extract from Landing to Bronze Delta Lake\r\n",
+					"# Load txmykw01 into Bronze in Delta Format\r\n",
 					"Hard-coded version for demonstration purposes\r\n",
 					"\r\n",
 					"Here is a good guide on how to use spark notebooks https://learn.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-development-using-notebooks\r\n",
@@ -91,7 +91,7 @@
 				},
 				"source": [
 					"%%pyspark\r\n",
-					"df = spark.read.load('abfss://landing@nmdemostorage1.dfs.core.windows.net/extracts/sales_territory/*.parquet', format='parquet')\r\n",
+					"df = spark.read.load('abfss://rawdata@nmdemostorage1.dfs.core.windows.net/landing/salesrusdb1/txmykw01.parquet', format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
 				"execution_count": 1
@@ -123,81 +123,9 @@
 					}
 				},
 				"source": [
-					"df.createOrReplaceTempView(\"v_sales_territory\")"
+					"df.createOrReplaceTempView(\"v_tmp\")"
 				],
 				"execution_count": 3
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"Show how you can use sql logic on the _v_sales_territory_, just like querying with regular sql. We just queried a Spark Dataframe using regular SQL!"
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					" %%sql\r\n",
-					" SELECT * FROM v_sales_territory LIMIT 5"
-				],
-				"execution_count": 4
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"You can also put the sql logic in spark.sql() and write out the result to another Spark dataframe. "
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"collapsed": false
-				},
-				"source": [
-					"## the logic can be a param\r\n",
-					"df2 = spark.sql(\"\"\"\r\n",
-					"SELECT * FROM v_sales_territory\r\n",
-					"\"\"\") \r\n",
-					"display(df2.limit(2))"
-				],
-				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -227,7 +155,7 @@
 				},
 				"source": [
 					"# write out table as delta\r\n",
-					"df2.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
+					"df.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmykw01')"
 				],
 				"execution_count": 6
 			},
@@ -297,7 +225,7 @@
 					"--     [ CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
 					"--         [ SORTED BY ( col_name [ ASC | DESC ], ... ) ] \r\n",
 					"--         INTO num_buckets BUCKETS ]\r\n",
-					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory'\r\n",
+					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmykw01'\r\n",
 					"--     [ COMMENT table_comment ]"
 				],
 				"execution_count": 8
