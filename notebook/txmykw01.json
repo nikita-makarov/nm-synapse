@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "88fd00c1-0322-4778-95f7-08cf52dadd82"
+				"spark.autotune.trackingId": "abfd4162-db27-4585-bc7a-7b6758c54391"
 			}
 		},
 		"metadata": {
@@ -165,7 +165,7 @@
 					"-- create the lake database if it does not exist\r\n",
 					"CREATE DATABASE IF NOT EXISTS bronze"
 				],
-				"execution_count": 4
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -197,7 +197,7 @@
 					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmykw01'\r\n",
 					"--     [ COMMENT table_comment ]"
 				],
-				"execution_count": 5
+				"execution_count": 6
 			}
 		]
 	}

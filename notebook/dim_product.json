@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ac97b583-5b3e-458c-8e7a-a02013236003"
+				"spark.autotune.trackingId": "7c4546d9-f650-4cfb-8547-057b305c1935"
 			}
 		},
 		"metadata": {
@@ -97,7 +97,7 @@
 				"source": [
 					"print('a')"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -115,7 +115,7 @@
 					"    , ProductDescription\r\n",
 					"FROM silver.product"
 				],
-				"execution_count": 1
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",

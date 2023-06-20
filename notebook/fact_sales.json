@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "41aa0434-1c20-4e76-902f-47ff36be9ded"
+				"spark.autotune.trackingId": "5a78e490-9d56-496b-8918-7e84087cbcd9"
 			}
 		},
 		"metadata": {
@@ -124,7 +124,7 @@
 					"FROM silver.sales_transactions tr \r\n",
 					"LEFT JOIN gold.dim_product pr ON tr.ProductID = pr.ProductID -- dependency on dim_product to run first"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -172,7 +172,7 @@
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 7
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -209,7 +209,7 @@
 					"    .mode(\"overwrite\")\\\r\n",
 					"    .save('abfss://gold@nmdemostorage1.dfs.core.windows.net/delta_files/fact_sales')"
 				],
-				"execution_count": 8
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -248,7 +248,7 @@
 					"-- create the lake database if it does not exist\r\n",
 					"CREATE DATABASE IF NOT EXISTS gold"
 				],
-				"execution_count": 9
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -280,7 +280,7 @@
 					"    LOCATION 'abfss://gold@nmdemostorage1.dfs.core.windows.net/delta_files/fact_sales'\r\n",
 					"--      COMMENT table_comment "
 				],
-				"execution_count": 10
+				"execution_count": 7
 			}
 		]
 	}
