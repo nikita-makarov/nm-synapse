@@ -1,0 +1,270 @@
+{
+	"name": "product",
+	"properties": {
+		"folder": {
+			"name": "E2E Lakehouse HC/2 - Silver"
+		},
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkpool1",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "016da180-dea3-47a2-88c1-a13d2e1eb6c1"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": true,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/8a936955-932a-425a-8c07-f6035412c4a1/resourceGroups/rg_synapse/providers/Microsoft.Synapse/workspaces/nmdemosynapse/bigDataPools/sparkpool1",
+				"name": "sparkpool1",
+				"type": "Spark",
+				"endpoint": "https://nmdemosynapse.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkpool1",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.3",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Sales Territory Silver Transform\r\n",
+					"Hard-coded version for demonstration purposes\r\n",
+					"\r\n",
+					"Here is a good guide on how to use spark notebooks https://learn.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-development-using-notebooks\r\n",
+					"______________________________________________"
+				]
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Write our transformation interactively"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"SELECT DISTINCT\r\n",
+					"    TerritoryID\r\n",
+					"    , Name As RegionName\r\n",
+					"    , CountryRegionCode\r\n",
+					"    , Group\r\n",
+					"    , SalesYTD\r\n",
+					"    , SalesLastYear\r\n",
+					"    , CostYTD\r\n",
+					"    , CostLastYear\r\n",
+					"    , SalesYTD - CostYTD AS ProfitYTD\r\n",
+					"    , SalesLastYear - CostLastYear AS ProfitLastYear\r\n",
+					"    , rowguid\r\n",
+					"    , ModifiedDate\r\n",
+					"FROM bronze.sales_territory\r\n",
+					"LIMIT 2"
+				],
+				"execution_count": 11
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Once done figuring out the logic, put it into spark.sql and register as dataframe"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"transformed_df = spark.sql(\r\n",
+					"    \"\"\"\r\n",
+					"SELECT DISTINCT\r\n",
+					"    TerritoryID\r\n",
+					"    , Name As RegionName\r\n",
+					"    , CountryRegionCode\r\n",
+					"    , Group\r\n",
+					"    , SalesYTD\r\n",
+					"    , SalesLastYear\r\n",
+					"    , CostYTD\r\n",
+					"    , CostLastYear\r\n",
+					"    , SalesYTD - CostYTD AS ProfitYTD\r\n",
+					"    , SalesLastYear - CostLastYear AS ProfitLastYear\r\n",
+					"    , rowguid\r\n",
+					"    , ModifiedDate\r\n",
+					"FROM bronze.sales_territory \r\n",
+					"    \"\"\"\r\n",
+					")"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Write out the dataframe to a physical location on the data lake in delta parquet format. Writing this in subsequent runs will create a new version - it's not like trunc and replace, we just write the new version of the table on top. You can set the maximum version history you would like to keep."
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# write out table as delta\r\n",
+					"transformed_df.write.format('delta')\\\r\n",
+					"    .partitionBy('RegionName')\\\r\n",
+					"    .option ('mergeSchema', 'true')\\\r\n",
+					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
+					"    .mode(\"overwrite\")\\\r\n",
+					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
+				],
+				"execution_count": 13
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Now we need to expose these delta files in our lake database to easily query with Serverless and Spark SQL. We basically create metadata about the location of the delta files, and wrap it in familiar db.table reference.\r\n",
+					"\r\n",
+					"More info here https://learn.microsoft.com/en-us/azure/synapse-analytics/metadata/table"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"-- create the lake database if it does not exist\r\n",
+					"CREATE DATABASE IF NOT EXISTS silver"
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"-- create the delta reference\r\n",
+					"CREATE TABLE IF NOT EXISTS silver.sales_territory\r\n",
+					"    USING DELTA\r\n",
+					"--      OPTIONS ( key1=val1, key2=val2, ... ) \r\n",
+					"--      PARTITIONED BY ( col_name1, col_name2, ... ) \r\n",
+					"--      CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
+					"--          SORTED BY ( col_name  ASC | DESC , ... )  \r\n",
+					"--         INTO num_buckets BUCKETS \r\n",
+					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory'\r\n",
+					"--      COMMENT table_comment "
+				],
+				"execution_count": 14
+			}
+		]
+	}
+}
