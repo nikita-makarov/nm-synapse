@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "21bca765-faa5-40e3-ad7f-52e2d8eaea29"
+				"spark.autotune.trackingId": "2665d96c-5561-4f0c-8837-315cf6d02bad"
 			}
 		},
 		"metadata": {
@@ -165,7 +165,6 @@
 				"source": [
 					"# write out table as delta\r\n",
 					"transformed_df.write.format('delta')\\\r\n",
-					"    # .partitionBy('RegionName')\\\r\n",
 					"    .option ('mergeSchema', 'true')\\\r\n",
 					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
 					"    .mode(\"overwrite\")\\\r\n",

@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7ffb4912-5751-454a-9886-66849d5fbd8e"
+				"spark.autotune.trackingId": "6f18121b-5ce6-461e-a023-07309a59eb71"
 			}
 		},
 		"metadata": {
@@ -92,10 +92,14 @@
 						"transient": {
 							"deleting": false
 						}
+					},
+					"microsoft": {
+						"language": "sparksql"
 					}
 				},
 				"source": [
-					"print('a')"
+					"%%sql\r\n",
+					"SELECT * FROM bronze.txmybw00"
 				],
 				"execution_count": 1
 			},
@@ -118,7 +122,7 @@
 					"FROM bronze.txmybw00\r\n",
 					"LIMIT 2"
 				],
-				"execution_count": 3
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -195,7 +199,12 @@
 				},
 				"source": [
 					"# write out table as delta\r\n",
-					"transformed_df.write.format('delta').option ('mergeSchema', 'true').mode(\"overwrite\").save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history')"
+					"transformed_df.write.format('delta')\\\r\n",
+					"    # .partitionBy('RegionName')\\\r\n",
+					"    .option ('mergeSchema', 'true')\\\r\n",
+					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
+					"    .mode(\"overwrite\")\\\r\n",
+					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/product')"
 				],
 				"execution_count": 5
 			},
