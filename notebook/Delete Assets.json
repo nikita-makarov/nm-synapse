@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "db39eb46-e589-4b7f-9310-c28687616ca8"
+				"spark.autotune.trackingId": "a72d58a2-7fae-43fd-8b09-3c100d8b16f9"
 			}
 		},
 		"metadata": {
@@ -79,6 +79,9 @@
 					"%%sql\r\n",
 					"DROP TABLE IF EXISTS bronze.sales_territory;\r\n",
 					"DROP TABLE IF EXISTS bronze.transaction_history;\r\n",
+					"DROP TABLE IF EXISTS bronze.txmybw00;\r\n",
+					"-- DROP TABLE IF EXISTS bronze.txmy;\r\n",
+					"\r\n",
 					"DROP TABLE IF EXISTS silver.sales_territory;\r\n",
 					"DROP TABLE IF EXISTS silver.transaction_history;"
 				],
