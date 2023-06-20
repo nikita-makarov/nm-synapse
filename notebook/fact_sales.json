@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1a1b4082-42c7-4417-8a87-6b926d4cc48d"
+				"spark.autotune.trackingId": "41aa0434-1c20-4e76-902f-47ff36be9ded"
 			}
 		},
 		"metadata": {
@@ -84,6 +84,24 @@
 			{
 				"cell_type": "code",
 				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print('a')"
+				],
+				"execution_count": 2
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
 					"microsoft": {
 						"language": "sparksql"
 					},
@@ -106,7 +124,7 @@
 					"FROM silver.sales_transactions tr \r\n",
 					"LEFT JOIN gold.dim_product pr ON tr.ProductID = pr.ProductID -- dependency on dim_product to run first"
 				],
-				"execution_count": 6
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",

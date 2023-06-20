@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ff9c9956-64c9-4a81-9f68-2673a66b8793"
+				"spark.autotune.trackingId": "88fd00c1-0322-4778-95f7-08cf52dadd82"
 			}
 		},
 		"metadata": {
@@ -94,7 +94,7 @@
 					"df = spark.read.load('abfss://rawdata@nmdemostorage1.dfs.core.windows.net/landing/salesrusdb1/txmykw01.parquet', format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -126,7 +126,7 @@
 					"# write out table as delta\r\n",
 					"df.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmykw01')"
 				],
-				"execution_count": 3
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
