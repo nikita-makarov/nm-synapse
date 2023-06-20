@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "68d1d94f-d2ca-4c67-91ab-63403b5ba653"
+				"spark.autotune.trackingId": "a40b2a5a-def8-46f1-802a-1415043f952d"
 			}
 		},
 		"metadata": {
@@ -155,14 +155,14 @@
 				},
 				"source": [
 					"try:\r\n",
-					"    mssparkutils.fs.ls('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history')\r\n",
+					"    mssparkutils.fs.ls('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmybw00')\r\n",
 					"    print('Delta Files exist')\r\n",
 					"except:\r\n",
 					"    print('Creating initial table')\r\n",
 					"    # write out table as delta\r\n",
-					"    df.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history')"
+					"    df.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmybw00')"
 				],
-				"execution_count": 7
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -223,17 +223,17 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the delta reference\r\n",
-					"CREATE TABLE IF NOT EXISTS bronze.transaction_history\r\n",
+					"CREATE TABLE IF NOT EXISTS bronze.txmybw00\r\n",
 					"    USING DELTA\r\n",
 					"--     [ OPTIONS ( key1=val1, key2=val2, ... ) ]\r\n",
 					"--     [ PARTITIONED BY ( col_name1, col_name2, ... ) ]\r\n",
 					"--     [ CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
 					"--         [ SORTED BY ( col_name [ ASC | DESC ], ... ) ] \r\n",
 					"--         INTO num_buckets BUCKETS ]\r\n",
-					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/transaction_history'\r\n",
+					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmybw00'\r\n",
 					"--     [ COMMENT table_comment ]"
 				],
-				"execution_count": 9
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -269,15 +269,15 @@
 				},
 				"source": [
 					" %%sql \r\n",
-					"MERGE INTO bronze.transaction_history tgt\r\n",
-					"USING v_incremental_transaction_history src\r\n",
-					"ON tgt.TransactionID = src.TransactionID\r\n",
+					"MERGE INTO bronze.txmybw00 tgt\r\n",
+					"USING v_tmp src\r\n",
+					"ON tgt.trid = src.trid\r\n",
 					"WHEN MATCHED THEN\r\n",
 					"  UPDATE SET *\r\n",
 					"WHEN NOT MATCHED\r\n",
 					"  THEN INSERT *"
 				],
-				"execution_count": 10
+				"execution_count": 6
 			}
 		]
 	}

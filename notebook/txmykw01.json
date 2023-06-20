@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "626fd4cb-5966-4151-a9d2-49f985a11d3e"
+				"spark.autotune.trackingId": "ff9c9956-64c9-4a81-9f68-2673a66b8793"
 			}
 		},
 		"metadata": {
@@ -106,37 +106,6 @@
 					}
 				},
 				"source": [
-					"Register spark dataframe using _createOrReplaceTempView_ method to make it available for Spark SQL syntax"
-				]
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"df.createOrReplaceTempView(\"v_tmp\")"
-				],
-				"execution_count": 3
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
 					"Write out the dataframe to a physical location on the data lake in delta parquet format. Writing this in subsequent runs will create a new version - it's not like trunc and replace, we just write the new version of the table on top. You can set the maximum version history you would like to keep."
 				]
 			},
@@ -157,7 +126,7 @@
 					"# write out table as delta\r\n",
 					"df.write.format('delta').mode(\"overwrite\").save('abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmykw01')"
 				],
-				"execution_count": 6
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -196,7 +165,7 @@
 					"-- create the lake database if it does not exist\r\n",
 					"CREATE DATABASE IF NOT EXISTS bronze"
 				],
-				"execution_count": 7
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -218,7 +187,7 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the delta reference\r\n",
-					"CREATE TABLE IF NOT EXISTS bronze.sales_territory\r\n",
+					"CREATE TABLE IF NOT EXISTS bronze.txmykw01\r\n",
 					"    USING DELTA\r\n",
 					"--     [ OPTIONS ( key1=val1, key2=val2, ... ) ]\r\n",
 					"--     [ PARTITIONED BY ( col_name1, col_name2, ... ) ]\r\n",
@@ -228,7 +197,7 @@
 					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmykw01'\r\n",
 					"--     [ COMMENT table_comment ]"
 				],
-				"execution_count": 8
+				"execution_count": 5
 			}
 		]
 	}
