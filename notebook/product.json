@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "016da180-dea3-47a2-88c1-a13d2e1eb6c1"
+				"spark.autotune.trackingId": "21bca765-faa5-40e3-ad7f-52e2d8eaea29"
 			}
 		},
 		"metadata": {
@@ -61,7 +61,7 @@
 					}
 				},
 				"source": [
-					"# Sales Territory Silver Transform\r\n",
+					"# Silver Notebook for txmykw01 -> product\r\n",
 					"Hard-coded version for demonstration purposes\r\n",
 					"\r\n",
 					"Here is a good guide on how to use spark notebooks https://learn.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-development-using-notebooks\r\n",
@@ -92,22 +92,11 @@
 				"source": [
 					"%%sql\r\n",
 					"SELECT DISTINCT\r\n",
-					"    TerritoryID\r\n",
-					"    , Name As RegionName\r\n",
-					"    , CountryRegionCode\r\n",
-					"    , Group\r\n",
-					"    , SalesYTD\r\n",
-					"    , SalesLastYear\r\n",
-					"    , CostYTD\r\n",
-					"    , CostLastYear\r\n",
-					"    , SalesYTD - CostYTD AS ProfitYTD\r\n",
-					"    , SalesLastYear - CostLastYear AS ProfitLastYear\r\n",
-					"    , rowguid\r\n",
-					"    , ModifiedDate\r\n",
-					"FROM bronze.sales_territory\r\n",
-					"LIMIT 2"
+					"    prtp AS ProductID\r\n",
+					"    , prtpdesc AS ProductDescription\r\n",
+					"FROM bronze.txmykw01"
 				],
-				"execution_count": 11
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -139,23 +128,13 @@
 					"transformed_df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
 					"SELECT DISTINCT\r\n",
-					"    TerritoryID\r\n",
-					"    , Name As RegionName\r\n",
-					"    , CountryRegionCode\r\n",
-					"    , Group\r\n",
-					"    , SalesYTD\r\n",
-					"    , SalesLastYear\r\n",
-					"    , CostYTD\r\n",
-					"    , CostLastYear\r\n",
-					"    , SalesYTD - CostYTD AS ProfitYTD\r\n",
-					"    , SalesLastYear - CostLastYear AS ProfitLastYear\r\n",
-					"    , rowguid\r\n",
-					"    , ModifiedDate\r\n",
-					"FROM bronze.sales_territory \r\n",
+					"    prtp AS ProductID\r\n",
+					"    , prtpdesc AS ProductDescription\r\n",
+					"FROM bronze.txmykw01\r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 12
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -186,13 +165,13 @@
 				"source": [
 					"# write out table as delta\r\n",
 					"transformed_df.write.format('delta')\\\r\n",
-					"    .partitionBy('RegionName')\\\r\n",
+					"    # .partitionBy('RegionName')\\\r\n",
 					"    .option ('mergeSchema', 'true')\\\r\n",
 					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
 					"    .mode(\"overwrite\")\\\r\n",
-					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory')"
+					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/product')"
 				],
-				"execution_count": 13
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -253,17 +232,17 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the delta reference\r\n",
-					"CREATE TABLE IF NOT EXISTS silver.sales_territory\r\n",
+					"CREATE TABLE IF NOT EXISTS silver.product\r\n",
 					"    USING DELTA\r\n",
 					"--      OPTIONS ( key1=val1, key2=val2, ... ) \r\n",
 					"--      PARTITIONED BY ( col_name1, col_name2, ... ) \r\n",
 					"--      CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
 					"--          SORTED BY ( col_name  ASC | DESC , ... )  \r\n",
 					"--         INTO num_buckets BUCKETS \r\n",
-					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/sales_territory'\r\n",
+					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/product'\r\n",
 					"--      COMMENT table_comment "
 				],
-				"execution_count": 14
+				"execution_count": 8
 			}
 		]
 	}

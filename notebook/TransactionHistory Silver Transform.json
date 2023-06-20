@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "b390c1cb-d7b5-4c37-9110-663ef4560e7f"
+				"spark.autotune.trackingId": "009afc9a-584e-47ef-880e-9b12f265896e"
 			}
 		},
 		"metadata": {
@@ -61,7 +61,7 @@
 					}
 				},
 				"source": [
-					"# Transaction History Silver Transform\r\n",
+					"# Silver notebook for txmybw00 --> sales_transactions\r\n",
 					"Hard-coded version for demonstration purposes\r\n",
 					"\r\n",
 					"Here is a good guide on how to use spark notebooks https://learn.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-development-using-notebooks\r\n",
@@ -92,12 +92,16 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
 				},
 				"source": [
-					"print('a')"
+					"%%sql"
 				],
-				"execution_count": 1
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -124,7 +128,7 @@
 					"FROM bronze.transaction_history\r\n",
 					"LIMIT 2"
 				],
-				"execution_count": 3
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",

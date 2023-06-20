@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ad6aeb90-8f39-4628-a8c5-830600fb69f1"
+				"spark.autotune.trackingId": "7ffb4912-5751-454a-9886-66849d5fbd8e"
 			}
 		},
 		"metadata": {
@@ -110,18 +110,12 @@
 				"source": [
 					"%%sql\r\n",
 					"SELECT\r\n",
-					"    TransactionID\r\n",
-					"    , ProductID\r\n",
-					"    , ReferenceOrderID\r\n",
-					"    , ReferenceOrderLineID\r\n",
-					"    , TransactionDate AS TransactionDateTime\r\n",
-					"    , TO_DATE(TransactionDate) AS TransactionDate\r\n",
-					"    , TransactionType\r\n",
-					"    , Quantity\r\n",
-					"    , ActualCost\r\n",
-					"    , Quantity * ActualCost AS TotalCost \r\n",
-					"    , ModifiedDate\r\n",
-					"FROM bronze.transaction_history\r\n",
+					"    trid AS TransactionID\r\n",
+					"    , bb1 as Email\r\n",
+					"    , TO_DATE(trdt, 'mm/dd/yyyy') as TransactionDate\r\n",
+					"    , trdt\r\n",
+					"\r\n",
+					"FROM bronze.txmybw00\r\n",
 					"LIMIT 2"
 				],
 				"execution_count": 3
