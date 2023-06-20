@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c562d46e-76c1-4095-a21f-78995e9c3995"
+				"spark.autotune.trackingId": "1a1b4082-42c7-4417-8a87-6b926d4cc48d"
 			}
 		},
 		"metadata": {
@@ -92,23 +92,21 @@
 				"source": [
 					"%%sql\r\n",
 					"SELECT\r\n",
-					"    trid AS TransactionID\r\n",
-					"    , bb1 as Email\r\n",
-					"    , TO_DATE(trdt, 'mm/dd/yyyy') as TransactionDate\r\n",
-					"    , YEAR(TO_DATE(trdt, 'mm/dd/yyyy')) AS TransactionYear\r\n",
-					"    , MONTH(TO_DATE(trdt, 'mm/dd/yyyy')) AS TransactionMonth\r\n",
-					"    , cust AS CustomerName\r\n",
-					"    , ctry AS Country\r\n",
-					"    , region AS Region\r\n",
-					"    , city AS City\r\n",
-					"    , INT(prtp) AS ProductID\r\n",
-					"    , clrs as ProductColor\r\n",
-					"    , amt as DollarAmount\r\n",
-					"    , lastmodifieddate AS LastModifiedDate\r\n",
-					"FROM bronze.txmybw00\r\n",
-					"LIMIT 2"
+					"    pr.ProductKey\r\n",
+					"    , Email\r\n",
+					"    , TransactionDate\r\n",
+					"    , TransactionYear\r\n",
+					"    , TransactionMonth\r\n",
+					"    , CustomerName\r\n",
+					"    , Country\r\n",
+					"    , Region\r\n",
+					"    , City\r\n",
+					"    , ProductColor\r\n",
+					"    , DollarAmount\r\n",
+					"FROM silver.sales_transactions tr \r\n",
+					"LEFT JOIN gold.dim_product pr ON tr.ProductID = pr.ProductID -- dependency on dim_product to run first"
 				],
-				"execution_count": 1
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -139,25 +137,24 @@
 				"source": [
 					"transformed_df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
-					"    SELECT\r\n",
-					"        trid AS TransactionID\r\n",
-					"        , bb1 as Email\r\n",
-					"        , TO_DATE(trdt, 'mm/dd/yyyy') as TransactionDate\r\n",
-					"        , YEAR(TO_DATE(trdt, 'mm/dd/yyyy')) AS TransactionYear\r\n",
-					"        , MONTH(TO_DATE(trdt, 'mm/dd/yyyy')) AS TransactionMonth\r\n",
-					"        , cust AS CustomerName\r\n",
-					"        , ctry AS Country\r\n",
-					"        , region AS Region\r\n",
-					"        , city AS City\r\n",
-					"        , INT(prtp) AS ProductID\r\n",
-					"        , clrs as ProductColor\r\n",
-					"        , amt as DollarAmount\r\n",
-					"        , lastmodifieddate AS LastModifiedDate\r\n",
-					"    FROM bronze.txmybw00\r\n",
+					"        SELECT\r\n",
+					"            pr.ProductKey\r\n",
+					"            , Email\r\n",
+					"            , TransactionDate\r\n",
+					"            , TransactionYear\r\n",
+					"            , TransactionMonth\r\n",
+					"            , CustomerName\r\n",
+					"            , Country\r\n",
+					"            , Region\r\n",
+					"            , City\r\n",
+					"            , ProductColor\r\n",
+					"            , DollarAmount\r\n",
+					"        FROM silver.sales_transactions tr \r\n",
+					"        LEFT JOIN gold.dim_product pr ON tr.ProductID = pr.ProductID -- dependency on dim_product to run first\r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 8
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -192,9 +189,9 @@
 					"    .option ('mergeSchema', 'true')\\\r\n",
 					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
 					"    .mode(\"overwrite\")\\\r\n",
-					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/sales_transactions')"
+					"    .save('abfss://gold@nmdemostorage1.dfs.core.windows.net/delta_files/fact_sales')"
 				],
-				"execution_count": 9
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -231,9 +228,9 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the lake database if it does not exist\r\n",
-					"CREATE DATABASE IF NOT EXISTS silver"
+					"CREATE DATABASE IF NOT EXISTS gold"
 				],
-				"execution_count": 6
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -255,14 +252,14 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the delta reference\r\n",
-					"CREATE TABLE IF NOT EXISTS silver.sales_transactions\r\n",
+					"CREATE TABLE IF NOT EXISTS gold.fact_sales\r\n",
 					"    USING DELTA\r\n",
 					"--      OPTIONS ( key1=val1, key2=val2, ... ) \r\n",
 					"--      PARTITIONED BY ( col_name1, col_name2, ... ) \r\n",
 					"--      CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
 					"--          SORTED BY ( col_name  ASC | DESC , ... )  \r\n",
 					"--         INTO num_buckets BUCKETS \r\n",
-					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/sales_transactions'\r\n",
+					"    LOCATION 'abfss://gold@nmdemostorage1.dfs.core.windows.net/delta_files/fact_sales'\r\n",
 					"--      COMMENT table_comment "
 				],
 				"execution_count": 10

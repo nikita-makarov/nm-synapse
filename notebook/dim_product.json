@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "262dfa8b-564c-4329-a357-32a6a85ea965"
+				"spark.autotune.trackingId": "b51d7f45-405a-43d4-a4dc-2b3b0d59f7c9"
 			}
 		},
 		"metadata": {
@@ -91,12 +91,13 @@
 				},
 				"source": [
 					"%%sql\r\n",
-					"SELECT DISTINCT\r\n",
-					"    prtp AS ProductID\r\n",
-					"    , prtpdesc AS ProductDescription\r\n",
-					"FROM bronze.txmykw01"
+					"SELECT\r\n",
+					"    monotonically_increasing_id() as ProductKey\r\n",
+					"    , ProductID\r\n",
+					"    , ProductDescription\r\n",
+					"FROM silver.product"
 				],
-				"execution_count": 1
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -127,14 +128,15 @@
 				"source": [
 					"transformed_df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
-					"SELECT DISTINCT\r\n",
-					"    prtp AS ProductID\r\n",
-					"    , prtpdesc AS ProductDescription\r\n",
-					"FROM bronze.txmykw01\r\n",
+					"    SELECT\r\n",
+					"        monotonically_increasing_id() as ProductKey\r\n",
+					"        , ProductID\r\n",
+					"        , ProductDescription\r\n",
+					"    FROM silver.product\r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 4
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -168,7 +170,7 @@
 					"    .option ('mergeSchema', 'true')\\\r\n",
 					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
 					"    .mode(\"overwrite\")\\\r\n",
-					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/product')"
+					"    .save('abfss://gold@nmdemostorage1.dfs.core.windows.net/delta_files/dim_product')"
 				],
 				"execution_count": 6
 			},
@@ -207,9 +209,9 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the lake database if it does not exist\r\n",
-					"CREATE DATABASE IF NOT EXISTS silver"
+					"CREATE DATABASE IF NOT EXISTS gold"
 				],
-				"execution_count": 5
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -231,14 +233,14 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the delta reference\r\n",
-					"CREATE TABLE IF NOT EXISTS silver.product\r\n",
+					"CREATE TABLE IF NOT EXISTS gold.dim_product\r\n",
 					"    USING DELTA\r\n",
 					"--      OPTIONS ( key1=val1, key2=val2, ... ) \r\n",
 					"--      PARTITIONED BY ( col_name1, col_name2, ... ) \r\n",
 					"--      CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
 					"--          SORTED BY ( col_name  ASC | DESC , ... )  \r\n",
 					"--         INTO num_buckets BUCKETS \r\n",
-					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/product'\r\n",
+					"    LOCATION 'abfss://gold@nmdemostorage1.dfs.core.windows.net/delta_files/dim_product'\r\n",
 					"--      COMMENT table_comment "
 				],
 				"execution_count": 8
