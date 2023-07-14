@@ -117,7 +117,7 @@
 				"typeProperties": {
 					"variableName": "PipelineStart",
 					"value": {
-						"value": "@utcnow()",
+						"value": "@formatDateTime(utcNow())",
 						"type": "Expression"
 					}
 				}
