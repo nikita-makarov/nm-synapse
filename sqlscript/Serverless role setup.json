@@ -1,5 +1,5 @@
 {
-	"name": "SQL script 3",
+	"name": "Serverless role setup",
 	"properties": {
 		"content": {
 			"query": "CREATE LOGIN [nmdemosynapse] FROM EXTERNAL PROVIDER;\n\nCREATE USER nmdemosynapse FROM EXTERNAL PROVIDER;\nALTER ROLE db_datareader ADD MEMBER nmdemosynapse;\n\nALTER SERVER ROLE sysadmin ADD MEMBER [nmdemosynapse];\n\n\nCREATE USER [nmakarov@microsoft.com] FROM EXTERNAL PROVIDER;\nGO\nALTER ROLE db_datareader ADD MEMBER [nmakarov@microsoft.com];\n\n\nEXEC sp_addrolemember db_owner, [nmakarov@microsoft.com];",

@@ -156,13 +156,16 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SqlServerSource",
+						"type": "SqlDWSource",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "serverless_table",
-						"type": "DatasetReference"
+						"referenceName": "serverless_table_v2",
+						"type": "DatasetReference",
+						"parameters": {
+							"table": "elt_metadata"
+						}
 					}
 				}
 			}
