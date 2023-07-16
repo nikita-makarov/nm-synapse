@@ -204,7 +204,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "SELECT * FROM @{pipeline().parameters.src_schema}.item().src_table",
+										"value": "SELECT * FROM @{pipeline().parameters.src_schema}.@{item().src_table}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -248,7 +248,12 @@
 							"outputs": [
 								{
 									"referenceName": "ParquetOut",
-									"type": "DatasetReference"
+									"type": "DatasetReference",
+									"parameters": {
+										"FileSystem": "test_output",
+										"Directory": "test",
+										"FileName": "test"
+									}
 								}
 							]
 						}
