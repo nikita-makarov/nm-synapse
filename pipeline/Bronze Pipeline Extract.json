@@ -55,7 +55,7 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "Execute in Parallel",
 				"type": "ForEach",
 				"dependsOn": [
 					{
