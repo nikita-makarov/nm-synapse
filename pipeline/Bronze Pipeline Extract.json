@@ -50,7 +50,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "tbl_salesrusdb1",
+						"referenceName": "AzureSqlTable1",
 						"type": "DatasetReference"
 					}
 				],

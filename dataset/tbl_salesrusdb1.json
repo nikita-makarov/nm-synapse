@@ -2,8 +2,12 @@
 	"name": "tbl_salesrusdb1",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "salesrusdb1",
-			"type": "LinkedServiceReference"
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"fqdn": "nmdemosqldb.database.windows.net",
+				"db_name": "salesrusdb1"
+			}
 		},
 		"annotations": [],
 		"type": "AzureSqlTable",

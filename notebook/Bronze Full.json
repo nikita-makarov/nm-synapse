@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "3c8e1f1c-dfa8-49e6-83b0-63bb04258779"
+				"spark.autotune.trackingId": "44bd281f-8a14-40a9-97bf-f87c35592685"
 			}
 		},
 		"metadata": {
@@ -80,6 +80,26 @@
 				"source": [
 					"Load parquet extract into spark dataframe"
 				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"## parameters\r\n",
+					"source_table_name = \r\n",
+					"execution_datetime = '07-16-2023_13-04-18'"
+				],
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
