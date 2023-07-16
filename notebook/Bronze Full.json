@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f36613c3-2ec5-4dc6-a437-2528e67bf020"
+				"spark.autotune.trackingId": "4f43b9a7-ebd5-4ecf-84c6-59d3ed0f0d4c"
 			}
 		},
 		"metadata": {
@@ -111,6 +111,7 @@
 					]
 				},
 				"source": [
+					"layer = 'bronze'\r\n",
 					"src_type = 'azure_sql'\r\n",
 					"src_address = 'nmdemosqldb.database.windows.net'\r\n",
 					"src_db = 'salesrusdb1'\r\n",
@@ -124,7 +125,57 @@
 					"watermark = ''\r\n",
 					""
 				],
-				"execution_count": 1
+				"execution_count": 4
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Build variables"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"extract_path = f'abfss://{layer}@nmdemostorage1.dfs.core.windows.net/{tgt_lakehouse}/Files/{tgt_extract_name}'\r\n",
+					""
+				],
+				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"print('Loading ' + extract_path)"
+				],
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
