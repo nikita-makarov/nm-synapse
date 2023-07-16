@@ -6,14 +6,7 @@
 			{
 				"name": "txmykw01",
 				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "Get current execution time",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
+				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
