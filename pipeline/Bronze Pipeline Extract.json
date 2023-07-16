@@ -25,7 +25,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "AzureSqlSource",
-						"sqlReaderQuery": "SELECT * FROM txmykw01",
+						"sqlReaderQuery": "",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -53,8 +53,14 @@
 						"referenceName": "AzureSQLTableParam",
 						"type": "DatasetReference",
 						"parameters": {
-							"fqdn": "nmdemosqldb.database.windows.net",
-							"db_name": "salesrusdb1"
+							"fqdn": {
+								"value": "@pipeline().parameters.src_address",
+								"type": "Expression"
+							},
+							"db_name": {
+								"value": "@pipeline().parameters.src_db",
+								"type": "Expression"
+							}
 						}
 					}
 				],
