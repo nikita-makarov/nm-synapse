@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4f43b9a7-ebd5-4ecf-84c6-59d3ed0f0d4c"
+				"spark.autotune.trackingId": "7cfa79ef-34e5-466c-8c2e-df64c3d97b2e"
 			}
 		},
 		"metadata": {
@@ -259,9 +259,9 @@
 				"source": [
 					"%%sql\r\n",
 					"-- create the lake database if it does not exist\r\n",
-					"CREATE DATABASE IF NOT EXISTS bronze"
+					"CREATE DATABASE IF NOT EXISTS {layer}"
 				],
-				"execution_count": 5
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
