@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "44bd281f-8a14-40a9-97bf-f87c35592685"
+				"spark.autotune.trackingId": "f36613c3-2ec5-4dc6-a437-2528e67bf020"
 			}
 		},
 		"metadata": {
@@ -82,6 +82,19 @@
 				]
 			},
 			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"### Parameters"
+				]
+			},
+			{
 				"cell_type": "code",
 				"metadata": {
 					"jupyter": {
@@ -92,14 +105,26 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"tags": [
+						"parameters"
+					]
 				},
 				"source": [
-					"## parameters\r\n",
-					"source_table_name = \r\n",
-					"execution_datetime = '07-16-2023_13-04-18'"
+					"src_type = 'azure_sql'\r\n",
+					"src_address = 'nmdemosqldb.database.windows.net'\r\n",
+					"src_db = 'salesrusdb1'\r\n",
+					"src_schema = 'dbo'\r\n",
+					"src_table = 'txmykw01'\r\n",
+					"src_incr_col = ''\r\n",
+					"tgt_lakehouse = 'salesrusdb1_raw' \r\n",
+					"tgt_extract_name = 'txmykw01'\r\n",
+					"key_columns = ''\r\n",
+					"load_type = 'full'\r\n",
+					"watermark = ''\r\n",
+					""
 				],
-				"execution_count": null
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
