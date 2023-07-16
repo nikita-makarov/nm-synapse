@@ -2,12 +2,12 @@
 	"name": "SQL script 3",
 	"properties": {
 		"content": {
-			"query": "SELECT TOP (100) \n[BusinessEntityID]\n,[PersonType]\n,[NameStyle]\n,[Title]\n,[FirstName]\n,[MiddleName]\n,[LastName]\n,[Suffix]\n,[EmailPromotion]\n,[AdditionalContactInfo]\n,[Demographics]\n,[rowguid]\n,[ModifiedDate]\n FROM [Person].[Person]",
+			"query": "CREATE LOGIN [nmdemosynapse] FROM EXTERNAL PROVIDER;\n\nCREATE USER nmdemosynapse FROM EXTERNAL PROVIDER;\nALTER ROLE db_datareader ADD MEMBER nmdemosynapse;\n\nALTER SERVER ROLE sysadmin ADD MEMBER [nmdemosynapse];\n\n\nCREATE USER [nmakarov@microsoft.com] FROM EXTERNAL PROVIDER;\nGO\nALTER ROLE db_datareader ADD MEMBER [nmakarov@microsoft.com];\n\n\nEXEC sp_addrolemember db_owner, [nmakarov@microsoft.com];",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "ServerlesssDB",
+				"databaseName": "control",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
