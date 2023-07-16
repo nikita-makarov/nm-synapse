@@ -1,0 +1,42 @@
+{
+	"name": "serverless_table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "nmsynapseserverless",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"DBName": {
+					"value": "@dataset().DB",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"DB": {
+				"type": "string",
+				"defaultValue": "control"
+			},
+			"Schema": {
+				"type": "string",
+				"defaultValue": "dbo"
+			},
+			"Table": {
+				"type": "string",
+				"defaultValue": "elt_metadata"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().Schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().Table",
+				"type": "Expression"
+			}
+		}
+	}
+}

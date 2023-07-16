@@ -156,12 +156,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "AzureSqlSource",
+						"type": "SqlServerSource",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
 					"dataset": {
-						"referenceName": "SqlTable",
+						"referenceName": "serverless_table",
 						"type": "DatasetReference"
 					}
 				}
