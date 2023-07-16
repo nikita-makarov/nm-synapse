@@ -2,12 +2,12 @@
 	"name": "Create Control Table Serverless",
 	"properties": {
 		"content": {
-			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://nmdemostorage1.dfs.core.windows.net/curateddata/enriched/Person/person_transformed.parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
+			"query": "IF NOT EXISTS (SELECT * FROM sys.external_file_formats WHERE name = 'SynapseDeltaFormat') \n\tCREATE EXTERNAL FILE FORMAT [SynapseDeltaFormat] \n\tWITH ( FORMAT_TYPE = DELTA)\nGO\n\nIF NOT EXISTS (SELECT * FROM sys.external_data_sources WHERE name = 'datalake_nmdemostorage1_dfs_core_windows_net') \n\tCREATE EXTERNAL DATA SOURCE [datalake_nmdemostorage1_dfs_core_windows_net] \n\tWITH (\n\t\tLOCATION = 'abfss://datalake@nmdemostorage1.dfs.core.windows.net' \n\t)\nGO\n\nCREATE EXTERNAL TABLE dbo.control_table (\n\t[src_type] nvarchar(4000),\n    [src_address] nvarchar(4000),\n    [src_db] nvarchar(4000),\n    [src_schema] nvarchar(4000),\n    [src_table] nvarchar(4000),\n    [src_incr_col] nvarchar(4000),\n    [tgt_lakehouse] nvarchar(4000),\n    [tgt_extract_name] nvarchar(4000),\n    [key_columns] nvarchar(4000),\n    [load_type] nvarchar(4000),\n    [watermark] nvarchar(4000),\n\t)\n\tWITH (\n\tLOCATION = 'synapse/workspaces/nmdemosynapse/control/control_table/',\n\tDATA_SOURCE = [datalake_nmdemostorage1_dfs_core_windows_net],\n\tFILE_FORMAT = [SynapseDeltaFormat]\n\t)\nGO\n\nDROP EXTERNAL TABLE dbo.yellow_taxi\n\nSELECT TOP 100 * FROM dbo.yellow_taxi\nGO",
 			"metadata": {
 				"language": "sql"
 			},
 			"currentConnection": {
-				"databaseName": "master",
+				"databaseName": "control",
 				"poolName": "Built-in"
 			},
 			"resultLimit": 5000
