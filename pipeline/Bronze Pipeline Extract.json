@@ -177,7 +177,53 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"snapshot": true
+								"notebook": {
+									"referenceName": "Bronze Full Metadata Driven",
+									"type": "NotebookReference"
+								},
+								"parameters": {
+									"layer": {
+										"value": {
+											"value": "@pipeline().parameters.layer",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"input_file_path": {
+										"value": {
+											"value": "@{item().tgt_lakehouse}/Files/@{item().tgt_extract_name}/@{item().tgt_extract_name}_@{variables('PipelineStart')}.parquet",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"tgt_lakehouse": {
+										"value": {
+											"value": "@{item().tgt_lakehouse}",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"tgt_extract_name": {
+										"value": {
+											"value": "@{item().tgt_extract_name}",
+											"type": "Expression"
+										},
+										"type": "string"
+									}
+								},
+								"snapshot": true,
+								"sparkPool": {
+									"referenceName": "sparkpool1",
+									"type": "BigDataPoolReference"
+								},
+								"executorSize": "Small",
+								"conf": {
+									"spark.dynamicAllocation.enabled": false,
+									"spark.dynamicAllocation.minExecutors": 2,
+									"spark.dynamicAllocation.maxExecutors": 2
+								},
+								"driverSize": "Small",
+								"numExecutors": 2
 							}
 						}
 					]
