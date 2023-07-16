@@ -1,5 +1,5 @@
 {
-	"name": "SQL script 2",
+	"name": "Create Control Table Serverless",
 	"properties": {
 		"content": {
 			"query": "-- This is auto-generated code\nSELECT\n    TOP 100 *\nFROM\n    OPENROWSET(\n        BULK 'https://nmdemostorage1.dfs.core.windows.net/curateddata/enriched/Person/person_transformed.parquet/**',\n        FORMAT = 'PARQUET'\n    ) AS [result]\n",
