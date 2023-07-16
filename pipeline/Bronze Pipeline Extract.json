@@ -6,7 +6,20 @@
 			{
 				"name": "txmykw01",
 				"type": "Copy",
-				"dependsOn": [],
+				"dependsOn": [
+					{
+						"activity": "Get current execution time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Lookup metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
 				"policy": {
 					"timeout": "0.12:00:00",
 					"retry": 0,
@@ -122,6 +135,30 @@
 					"value": {
 						"value": "@formatDateTime(convertFromUtc(utcNow(),'Central Standard Time'), 'MM-dd-yyyy_HH-mm-ss')",
 						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Lookup metadata",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureSqlSource",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "SqlTable",
+						"type": "DatasetReference"
 					}
 				}
 			}
