@@ -1,5 +1,5 @@
 {
-	"name": "Bronze Full",
+	"name": "Bronze Full Metadata Driven",
 	"properties": {
 		"folder": {
 			"name": "E2E Lakehouse Metadata/Bronze"
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "dbc5f4bb-2cff-4964-ac97-8ffb976ae5e9"
+				"spark.autotune.trackingId": "529cec85-f82f-4dea-a75f-4cb1cc7af8db"
 			}
 		},
 		"metadata": {
