@@ -157,6 +157,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlDWSource",
+						"sqlReaderQuery": "SELECT * FROM control.dbo.elt_metadata",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -164,9 +165,12 @@
 						"referenceName": "serverless_table_v2",
 						"type": "DatasetReference",
 						"parameters": {
-							"table": "elt_metadata"
+							"schema": "dbo",
+							"table": "elt_metadata",
+							"db": "control"
 						}
-					}
+					},
+					"firstRowOnly": false
 				}
 			}
 		],
