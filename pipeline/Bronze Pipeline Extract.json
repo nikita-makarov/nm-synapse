@@ -189,7 +189,7 @@
 					"batchCount": 5,
 					"activities": [
 						{
-							"name": "txmykw01_copy1",
+							"name": "copy_from_source",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
