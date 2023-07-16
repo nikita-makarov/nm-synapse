@@ -255,11 +255,11 @@
 											"type": "Expression"
 										},
 										"Directory": {
-											"value": "@{item().tgt_lakehouse}/@{item().tgt_extract_name}",
+											"value": "@{item().tgt_lakehouse}/Files",
 											"type": "Expression"
 										},
 										"FileName": {
-											"value": "@{item().tgt_extract_name}.parquet",
+											"value": "@{item().tgt_extract_name}_@{variables('PipelineStart')}.parquet",
 											"type": "Expression"
 										}
 									}
