@@ -1,0 +1,42 @@
+{
+	"name": "serverless_table_v2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ServerlessConnctionV2",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"db": {
+					"value": "@dataset().db",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"schema": {
+				"type": "string",
+				"defaultValue": "dbo"
+			},
+			"table": {
+				"type": "string",
+				"defaultValue": "elt_metadata"
+			},
+			"db": {
+				"type": "string",
+				"defaultValue": "control"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlDWTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": {
+				"value": "@dataset().schema",
+				"type": "Expression"
+			},
+			"table": {
+				"value": "@dataset().table",
+				"type": "Expression"
+			}
+		}
+	}
+}
