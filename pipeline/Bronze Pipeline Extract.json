@@ -51,7 +51,11 @@
 				"inputs": [
 					{
 						"referenceName": "AzureSQLTableParam",
-						"type": "DatasetReference"
+						"type": "DatasetReference",
+						"parameters": {
+							"fqdn": "nmdemosqldb.database.windows.net",
+							"db_name": "salesrusdb1"
+						}
 					}
 				],
 				"outputs": [
@@ -123,6 +127,48 @@
 				}
 			}
 		],
+		"parameters": {
+			"src_address": {
+				"type": "string",
+				"defaultValue": "nmdemosqldb.database.windows.net"
+			},
+			"src_db": {
+				"type": "string",
+				"defaultValue": "salesrusdb1"
+			},
+			"src_schema": {
+				"type": "string",
+				"defaultValue": "dbo"
+			},
+			"src_table": {
+				"type": "string",
+				"defaultValue": "txmykw01"
+			},
+			"src_incr_col": {
+				"type": "string",
+				"defaultValue": "n/a"
+			},
+			"tgt_lakehouse": {
+				"type": "string",
+				"defaultValue": "salesrusdb1_raw"
+			},
+			"tgt_extract_name": {
+				"type": "string",
+				"defaultValue": "txmykw01"
+			},
+			"key_columns": {
+				"type": "string",
+				"defaultValue": "n/a"
+			},
+			"load_type": {
+				"type": "string",
+				"defaultValue": "full"
+			},
+			"watermark": {
+				"type": "string",
+				"defaultValue": "n/a"
+			}
+		},
 		"variables": {
 			"PipelineStart": {
 				"type": "String"
