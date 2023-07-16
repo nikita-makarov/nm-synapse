@@ -1,0 +1,32 @@
+{
+	"name": "AzureSQLTableParam",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlDatabase1",
+			"type": "LinkedServiceReference",
+			"parameters": {
+				"fqdn": {
+					"value": "@dataset().fqdn",
+					"type": "Expression"
+				},
+				"db_name": {
+					"value": "@dataset().db_name",
+					"type": "Expression"
+				}
+			}
+		},
+		"parameters": {
+			"fqdn": {
+				"type": "string",
+				"defaultValue": "nmdemosqldb.database.windows.net"
+			},
+			"db_name": {
+				"type": "string",
+				"defaultValue": "salesrusdb1"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": []
+	}
+}
