@@ -204,7 +204,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "SELECT * FROM @{pipeline().parameters.src_schema}.@{item().src_table}",
+										"value": "SELECT * FROM @{item().src_schema}.@{item().src_table}",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -235,11 +235,11 @@
 									"type": "DatasetReference",
 									"parameters": {
 										"fqdn": {
-											"value": "@pipeline().parameters.src_address",
+											"value": "@item().src_address",
 											"type": "Expression"
 										},
 										"db_name": {
-											"value": "@pipeline().parameters.src_db",
+											"value": "@item().src_db",
 											"type": "Expression"
 										}
 									}
@@ -250,9 +250,18 @@
 									"referenceName": "ParquetOut",
 									"type": "DatasetReference",
 									"parameters": {
-										"FileSystem": "test_output",
-										"Directory": "test",
-										"FileName": "test"
+										"FileSystem": {
+											"value": "@pipeline().parameters.layer",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@{item().tgt_lakehouse}/@{item().tgt_extract_name}",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "@{item().tgt_extract_name}.parquet",
+											"type": "Expression"
+										}
 									}
 								}
 							]
@@ -301,6 +310,10 @@
 			"watermark": {
 				"type": "string",
 				"defaultValue": "n/a"
+			},
+			"layer": {
+				"type": "string",
+				"defaultValue": "bronze"
 			}
 		},
 		"variables": {
