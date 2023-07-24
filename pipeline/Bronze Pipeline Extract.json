@@ -146,7 +146,7 @@
 											"type": "Expression"
 										},
 										"Directory": {
-											"value": "@{item().tgt_lakehouse}/Files/@{item().tgt_extract_name}",
+											"value": "@{item().tgt_lakehouse}/Files/Full/@{item().tgt_extract_name}",
 											"type": "Expression"
 										},
 										"FileName": {
@@ -191,7 +191,7 @@
 									},
 									"input_file_path": {
 										"value": {
-											"value": "@{item().tgt_lakehouse}/Files/@{item().tgt_extract_name}/@{item().tgt_extract_name}_@{variables('PipelineStart')}.parquet",
+											"value": "@{item().tgt_lakehouse}/Files/Full/@{item().tgt_extract_name}/@{item().tgt_extract_name}_@{variables('PipelineStart')}.parquet",
 											"type": "Expression"
 										},
 										"type": "string"
