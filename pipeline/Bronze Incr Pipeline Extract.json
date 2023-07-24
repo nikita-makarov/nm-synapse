@@ -180,7 +180,7 @@
 							"userProperties": [],
 							"typeProperties": {
 								"notebook": {
-									"referenceName": "Bronze Full Metadata Driven",
+									"referenceName": "Bronze Incremental Metadata Driven",
 									"type": "NotebookReference"
 								},
 								"parameters": {
