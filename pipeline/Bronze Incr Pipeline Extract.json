@@ -1,0 +1,289 @@
+{
+	"name": "Bronze Incr Pipeline Extract",
+	"properties": {
+		"description": "using Spark",
+		"activities": [
+			{
+				"name": "Get current execution time",
+				"type": "SetVariable",
+				"dependsOn": [],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "PipelineStart",
+					"value": {
+						"value": "@formatDateTime(convertFromUtc(utcNow(),'Central Standard Time'), 'MM-dd-yyyy_HH-mm-ss')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "Lookup metadata",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": {
+							"value": "SELECT * FROM control.dbo.elt_metadata\nWHERE load_type = '@{pipeline().parameters.load_type}'",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "serverless_table_v2",
+						"type": "DatasetReference",
+						"parameters": {
+							"schema": "dbo",
+							"table": "elt_metadata",
+							"db": "control"
+						}
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "Execute in Parallel",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Get current execution time",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					},
+					{
+						"activity": "Lookup metadata",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup metadata').output.value",
+						"type": "Expression"
+					},
+					"batchCount": 5,
+					"activities": [
+						{
+							"name": "copy_from_source",
+							"type": "Copy",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "SELECT * FROM @{item().src_schema}.@{item().src_table}",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "ParquetSink",
+									"storeSettings": {
+										"type": "AzureBlobFSWriteSettings"
+									},
+									"formatSettings": {
+										"type": "ParquetWriteSettings"
+									}
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "AzureSQLTableParam",
+									"type": "DatasetReference",
+									"parameters": {
+										"fqdn": {
+											"value": "@item().src_address",
+											"type": "Expression"
+										},
+										"db_name": {
+											"value": "@item().src_db",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "ParquetOut",
+									"type": "DatasetReference",
+									"parameters": {
+										"FileSystem": {
+											"value": "@pipeline().parameters.layer",
+											"type": "Expression"
+										},
+										"Directory": {
+											"value": "@{item().tgt_lakehouse}/Files/@{item().tgt_extract_name}",
+											"type": "Expression"
+										},
+										"FileName": {
+											"value": "@{item().tgt_extract_name}_@{variables('PipelineStart')}.parquet",
+											"type": "Expression"
+										}
+									}
+								}
+							]
+						},
+						{
+							"name": "write_to_bronze",
+							"type": "SynapseNotebook",
+							"dependsOn": [
+								{
+									"activity": "copy_from_source",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"notebook": {
+									"referenceName": "Bronze Full Metadata Driven",
+									"type": "NotebookReference"
+								},
+								"parameters": {
+									"layer": {
+										"value": {
+											"value": "@pipeline().parameters.layer",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"input_file_path": {
+										"value": {
+											"value": "@{item().tgt_lakehouse}/Files/@{item().tgt_extract_name}/@{item().tgt_extract_name}_@{variables('PipelineStart')}.parquet",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"tgt_lakehouse": {
+										"value": {
+											"value": "@{item().tgt_lakehouse}",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"tgt_extract_name": {
+										"value": {
+											"value": "@{item().tgt_extract_name}",
+											"type": "Expression"
+										},
+										"type": "string"
+									}
+								},
+								"snapshot": true,
+								"sparkPool": {
+									"referenceName": "sparkpool1",
+									"type": "BigDataPoolReference"
+								},
+								"executorSize": "Small",
+								"conf": {
+									"spark.dynamicAllocation.enabled": false,
+									"spark.dynamicAllocation.minExecutors": 2,
+									"spark.dynamicAllocation.maxExecutors": 2
+								},
+								"driverSize": "Small",
+								"numExecutors": 2
+							}
+						}
+					]
+				}
+			}
+		],
+		"parameters": {
+			"src_address": {
+				"type": "string",
+				"defaultValue": "nmdemosqldb.database.windows.net"
+			},
+			"src_db": {
+				"type": "string",
+				"defaultValue": "salesrusdb1"
+			},
+			"src_schema": {
+				"type": "string",
+				"defaultValue": "dbo"
+			},
+			"src_table": {
+				"type": "string",
+				"defaultValue": "txmykw01"
+			},
+			"src_incr_col": {
+				"type": "string",
+				"defaultValue": "n/a"
+			},
+			"tgt_lakehouse": {
+				"type": "string",
+				"defaultValue": "salesrusdb1_raw"
+			},
+			"tgt_extract_name": {
+				"type": "string",
+				"defaultValue": "txmykw01"
+			},
+			"key_columns": {
+				"type": "string",
+				"defaultValue": "n/a"
+			},
+			"load_type": {
+				"type": "string",
+				"defaultValue": "incr"
+			},
+			"watermark": {
+				"type": "string",
+				"defaultValue": "n/a"
+			},
+			"layer": {
+				"type": "string",
+				"defaultValue": "bronze"
+			}
+		},
+		"variables": {
+			"PipelineStart": {
+				"type": "String"
+			}
+		},
+		"folder": {
+			"name": "E2E Parameterized/Bronze"
+		},
+		"annotations": []
+	}
+}
