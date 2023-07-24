@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d628a33f-4960-4110-8ff6-11ae8225fc79"
+				"spark.autotune.trackingId": "d283350a-d6b8-4871-a207-a87595f75aea"
 			}
 		},
 		"metadata": {
@@ -112,24 +112,20 @@
 				},
 				"source": [
 					"layer = 'bronze' #\r\n",
-					"input_file_path = 'salesrusdb1_raw/Files/txmykw01/txmykw01_07-16-2023_16-43-57.parquet' #\r\n",
+					"input_file_path = 'salesrusdb1_raw/Files/Incremental/txmybw00/txmybw00_07-24-2023_18-27-45.parquet' #\r\n",
 					"watermark = '2022-06-19T23:13:06.877'\r\n",
 					"key_columns =  'guid'\r\n",
 					"# src_type = 'azure_sql'\r\n",
 					"# src_address = 'nmdemosqldb.database.windows.net'\r\n",
 					"src_db = 'salesrusdb1'\r\n",
 					"src_schema = 'dbo'\r\n",
-					"src_table = 'txmykw01'\r\n",
+					"src_table = 'txmybw00'\r\n",
 					"src_incr_col = 'lastmodifieddate'\r\n",
-					"# src_incr_col = ''\r\n",
 					"tgt_lakehouse = 'salesrusdb1_raw' \r\n",
-					"tgt_extract_name = 'txmykw01' \r\n",
-					"# key_columns = ''\r\n",
-					"# load_type = 'full' \r\n",
-					"# watermark = ''\r\n",
-					""
+					"tgt_extract_name = 'txmybw00' \r\n",
+					"# load_type = 'incr' "
 				],
-				"execution_count": 1
+				"execution_count": 13
 			},
 			{
 				"cell_type": "markdown",
@@ -162,7 +158,7 @@
 					"delta_table_path = f'abfss://{layer}@nmdemostorage1.dfs.core.windows.net/{tgt_lakehouse}/Tables/{tgt_extract_name}'\r\n",
 					""
 				],
-				"execution_count": 13
+				"execution_count": 14
 			},
 			{
 				"cell_type": "code",
@@ -180,7 +176,7 @@
 				"source": [
 					"print('Loading ' + input_file_path_full)"
 				],
-				"execution_count": 11
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -195,7 +191,7 @@
 					"df = spark.read.load(input_file_path_full, format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 12
+				"execution_count": 16
 			},
 			{
 				"cell_type": "markdown",
@@ -207,7 +203,7 @@
 					}
 				},
 				"source": [
-					"Write out the dataframe to a physical location on the data lake in delta parquet format. Writing this in subsequent runs will create a new version - it's not like trunc and replace, we just write the new version of the table on top. You can set the maximum version history you would like to keep."
+					"Create the initial delta files if they don't exist (on the first load only)"
 				]
 			},
 			{
@@ -226,7 +222,7 @@
 				"source": [
 					"print('Writing to ', delta_table_path)"
 				],
-				"execution_count": 14
+				"execution_count": 17
 			},
 			{
 				"cell_type": "code",
@@ -242,10 +238,15 @@
 					}
 				},
 				"source": [
-					"# write out table as delta\r\n",
-					"df.write.format('delta').mode(\"overwrite\").save(delta_table_path)"
+					"try:\r\n",
+					"    mssparkutils.fs.ls(delta_table_path)\r\n",
+					"    print('Delta Files exist')\r\n",
+					"except:\r\n",
+					"    print('Creating initial table')\r\n",
+					"    # write out table as delta\r\n",
+					"    df.write.format('delta').mode(\"overwrite\").save(delta_table_path)"
 				],
-				"execution_count": 15
+				"execution_count": 18
 			},
 			{
 				"cell_type": "markdown",
@@ -281,7 +282,7 @@
 					"CREATE DATABASE IF NOT EXISTS {tgt_lakehouse}\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 16
+				"execution_count": 19
 			},
 			{
 				"cell_type": "code",
@@ -310,7 +311,115 @@
 					"--     [ COMMENT table_comment ]\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 17
+				"execution_count": 20
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# register incremental view\r\n",
+					"df.createOrReplaceTempView('incr_tbl')"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"# Merge"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"spark.sql(f\"\"\"\r\n",
+					"MERGE INTO {tgt_lakehouse}.{tgt_extract_name} tgt\r\n",
+					"USING incr_tbl src\r\n",
+					"ON tgt.{key_columns} = src.{key_columns}\r\n",
+					"WHEN MATCHED THEN\r\n",
+					"  UPDATE SET *\r\n",
+					"WHEN NOT MATCHED\r\n",
+					"  THEN INSERT *\r\n",
+					"  \"\"\")"
+				],
+				"execution_count": 22
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					"Update Watermark"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"spark.sql(f\"\"\"SELECT MAX({src_incr_col} as I) FROM incr_tbl\"\"\").first()"
+				],
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
+					""
+				],
+				"execution_count": null
 			}
 		]
 	}
