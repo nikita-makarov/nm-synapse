@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d283350a-d6b8-4871-a207-a87595f75aea"
+				"spark.autotune.trackingId": "69ff4a24-03c8-4df7-b08a-e9d0e74695ab"
 			}
 		},
 		"metadata": {
@@ -113,7 +113,6 @@
 				"source": [
 					"layer = 'bronze' #\r\n",
 					"input_file_path = 'salesrusdb1_raw/Files/Incremental/txmybw00/txmybw00_07-24-2023_18-27-45.parquet' #\r\n",
-					"watermark = '2022-06-19T23:13:06.877'\r\n",
 					"key_columns =  'guid'\r\n",
 					"# src_type = 'azure_sql'\r\n",
 					"# src_address = 'nmdemosqldb.database.windows.net'\r\n",
@@ -399,9 +398,9 @@
 					"collapsed": false
 				},
 				"source": [
-					"spark.sql(f\"\"\"SELECT MAX({src_incr_col} as I) FROM incr_tbl\"\"\").first()"
+					"new_watermark = spark.sql(f\"\"\"SELECT STRING(MAX({src_incr_col})) as I FROM incr_tbl\"\"\").first()[\"I\"]"
 				],
-				"execution_count": 12
+				"execution_count": 27
 			},
 			{
 				"cell_type": "code",
@@ -417,9 +416,13 @@
 					}
 				},
 				"source": [
-					""
+					"spark.sql(f\"\"\"\r\n",
+					"UPDATE control.elt_metadata\r\n",
+					"SET watermark = '{new_watermark}' \r\n",
+					"WHERE src_db = '{src_db}' AND src_schema = '{src_schema}' AND src_table = '{src_table}'\r\n",
+					"\"\"\")"
 				],
-				"execution_count": null
+				"execution_count": 30
 			}
 		]
 	}
