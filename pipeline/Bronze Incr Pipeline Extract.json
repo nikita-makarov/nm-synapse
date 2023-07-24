@@ -95,7 +95,7 @@
 								"source": {
 									"type": "AzureSqlSource",
 									"sqlReaderQuery": {
-										"value": "SELECT * FROM @{item().src_schema}.@{item().src_table}",
+										"value": "SELECT * FROM @{item().src_schema}.@{item().src_table}\nWHERE @{item().src_incr_col} > '@{item().watermark}'",
 										"type": "Expression"
 									},
 									"queryTimeout": "02:00:00",
@@ -146,7 +146,7 @@
 											"type": "Expression"
 										},
 										"Directory": {
-											"value": "@{item().tgt_lakehouse}/Files/@{item().tgt_extract_name}",
+											"value": "@{item().tgt_lakehouse}/Files/Incremental/@{item().tgt_extract_name}",
 											"type": "Expression"
 										},
 										"FileName": {
@@ -193,7 +193,7 @@
 									},
 									"input_file_path": {
 										"value": {
-											"value": "@{item().tgt_lakehouse}/Files/@{item().tgt_extract_name}/@{item().tgt_extract_name}_@{variables('PipelineStart')}.parquet",
+											"value": "@{item().tgt_lakehouse}/Files/Incremental/@{item().tgt_extract_name}/@{item().tgt_extract_name}_@{variables('PipelineStart')}.parquet",
 											"type": "Expression"
 										},
 										"type": "string"
