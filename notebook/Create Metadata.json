@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "7393bfa6-72ba-4abc-b4a8-6be82f7979dc"
+				"spark.autotune.trackingId": "59611288-ee61-41ae-aba4-04d6c78ca099"
 			}
 		},
 		"metadata": {
@@ -179,7 +179,7 @@
 					"DELETE FROM control.elt_metadata\r\n",
 					"WHERE src_table = 'txmybw00'"
 				],
-				"execution_count": 1
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -201,9 +201,9 @@
 				"source": [
 					"%%sql\r\n",
 					"INSERT INTO control.elt_metadata  VALUES\r\n",
-					"    ('azure_sql','nmdemosqldb.database.windows.net','salesrusdb1','dbo','txmybw00','lastmodifieddate','salesrusdb1_raw', 'txmybw00','trid','incr','2022-06-19 23:13:06.877');"
+					"    ('azure_sql','nmdemosqldb.database.windows.net','salesrusdb1','dbo','txmybw00','lastmodifieddate','salesrusdb1_raw', 'txmybw00','guid','incr','2022-06-19 23:13:06.877');"
 				],
-				"execution_count": 4
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -250,7 +250,7 @@
 					"\r\n",
 					"SELECT DISTINCT  lastmodifieddate FROM bronze.txmybw00"
 				],
-				"execution_count": 3
+				"execution_count": 8
 			}
 		]
 	}

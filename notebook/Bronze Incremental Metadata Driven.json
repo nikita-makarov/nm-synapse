@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "41e5623c-b294-42d6-b994-16f3dec49f9e"
+				"spark.autotune.trackingId": "d628a33f-4960-4110-8ff6-11ae8225fc79"
 			}
 		},
 		"metadata": {
@@ -113,11 +113,14 @@
 				"source": [
 					"layer = 'bronze' #\r\n",
 					"input_file_path = 'salesrusdb1_raw/Files/txmykw01/txmykw01_07-16-2023_16-43-57.parquet' #\r\n",
+					"watermark = '2022-06-19T23:13:06.877'\r\n",
+					"key_columns =  'guid'\r\n",
 					"# src_type = 'azure_sql'\r\n",
 					"# src_address = 'nmdemosqldb.database.windows.net'\r\n",
-					"# src_db = 'salesrusdb1'\r\n",
-					"# src_schema = 'dbo'\r\n",
-					"# src_table = 'txmykw01'\r\n",
+					"src_db = 'salesrusdb1'\r\n",
+					"src_schema = 'dbo'\r\n",
+					"src_table = 'txmykw01'\r\n",
+					"src_incr_col = 'lastmodifieddate'\r\n",
 					"# src_incr_col = ''\r\n",
 					"tgt_lakehouse = 'salesrusdb1_raw' \r\n",
 					"tgt_extract_name = 'txmykw01' \r\n",
