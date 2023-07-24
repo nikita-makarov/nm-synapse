@@ -211,6 +211,41 @@
 											"type": "Expression"
 										},
 										"type": "string"
+									},
+									"key_columns": {
+										"value": {
+											"value": "@{item().key_columns}",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"src_db": {
+										"value": {
+											"value": "@{item().src_db}",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"src_schema": {
+										"value": {
+											"value": "@{item().src_schema}",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"src_table": {
+										"value": {
+											"value": "@{item().src_table}",
+											"type": "Expression"
+										},
+										"type": "string"
+									},
+									"src_incr_col": {
+										"value": {
+											"value": "@{item().src_incr_col}",
+											"type": "Expression"
+										},
+										"type": "string"
 									}
 								},
 								"snapshot": true,
