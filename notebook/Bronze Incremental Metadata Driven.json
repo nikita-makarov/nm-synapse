@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "113b90b9-3e7a-4de7-b5c9-89703e1df874"
+				"spark.autotune.trackingId": "afa8428c-488a-4068-8d42-ac1432e6d92d"
 			}
 		},
 		"metadata": {
@@ -112,7 +112,7 @@
 				},
 				"source": [
 					"layer = 'bronze' #\r\n",
-					"input_file_path = 'salesrusdb1_raw/Files/Incremental/txmybw00/txmybw00_07-24-2023_18-27-45.parquet' #\r\n",
+					"input_file_path = 'salesrusdb1_raw/Files/Incremental/txmybw00/txmybw00_07-25-2023_09-16-51.parquet' #\r\n",
 					"key_columns =  'guid'\r\n",
 					"# src_type = 'azure_sql'\r\n",
 					"# src_address = 'nmdemosqldb.database.windows.net'\r\n",
@@ -124,7 +124,7 @@
 					"tgt_extract_name = 'txmybw00' \r\n",
 					"# load_type = 'incr' "
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -157,7 +157,7 @@
 					"delta_table_path = f'abfss://{layer}@nmdemostorage1.dfs.core.windows.net/{tgt_lakehouse}/Tables/{tgt_extract_name}'\r\n",
 					""
 				],
-				"execution_count": 14
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -175,7 +175,7 @@
 				"source": [
 					"print('Loading ' + input_file_path_full)"
 				],
-				"execution_count": 15
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -190,7 +190,7 @@
 					"df = spark.read.load(input_file_path_full, format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 16
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -219,33 +219,16 @@
 					}
 				},
 				"source": [
-					"print('Writing to ', delta_table_path)"
-				],
-				"execution_count": 17
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
 					"try:\r\n",
 					"    mssparkutils.fs.ls(delta_table_path)\r\n",
 					"    print('Delta Files exist')\r\n",
 					"except:\r\n",
 					"    print('Creating initial table')\r\n",
 					"    # write out table as delta\r\n",
+					"    print('Writing to ', delta_table_path)\r\n",
 					"    df.write.format('delta').mode(\"overwrite\").save(delta_table_path)"
 				],
-				"execution_count": 18
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -281,7 +264,7 @@
 					"CREATE DATABASE IF NOT EXISTS {tgt_lakehouse}\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 19
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -310,7 +293,7 @@
 					"--     [ COMMENT table_comment ]\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 20
+				"execution_count": 8
 			},
 			{
 				"cell_type": "code",
@@ -329,7 +312,7 @@
 					"# register incremental view\r\n",
 					"df.createOrReplaceTempView('incr_tbl')"
 				],
-				"execution_count": 21
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -355,7 +338,8 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
 					"display(spark.sql(f\"\"\"\r\n",
@@ -368,7 +352,7 @@
 					"  THEN INSERT *\r\n",
 					"  \"\"\"))"
 				],
-				"execution_count": 22
+				"execution_count": 10
 			},
 			{
 				"cell_type": "markdown",
@@ -400,7 +384,7 @@
 				"source": [
 					"new_watermark = spark.sql(f\"\"\"SELECT STRING(MAX({src_incr_col})) as I FROM incr_tbl\"\"\").first()[\"I\"]"
 				],
-				"execution_count": 27
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -413,7 +397,8 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
 					"display(spark.sql(f\"\"\"\r\n",
@@ -422,7 +407,7 @@
 					"WHERE src_db = '{src_db}' AND src_schema = '{src_schema}' AND src_table = '{src_table}'\r\n",
 					"\"\"\"))"
 				],
-				"execution_count": 30
+				"execution_count": 13
 			}
 		]
 	}
