@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "69ff4a24-03c8-4df7-b08a-e9d0e74695ab"
+				"spark.autotune.trackingId": "1d2eb825-efd8-4244-a113-a20142d6a74f"
 			}
 		},
 		"metadata": {
@@ -358,7 +358,7 @@
 					}
 				},
 				"source": [
-					"spark.sql(f\"\"\"\r\n",
+					"display(spark.sql(f\"\"\"\r\n",
 					"MERGE INTO {tgt_lakehouse}.{tgt_extract_name} tgt\r\n",
 					"USING incr_tbl src\r\n",
 					"ON tgt.{key_columns} = src.{key_columns}\r\n",
@@ -366,7 +366,7 @@
 					"  UPDATE SET *\r\n",
 					"WHEN NOT MATCHED\r\n",
 					"  THEN INSERT *\r\n",
-					"  \"\"\")"
+					"  \"\"\"))"
 				],
 				"execution_count": 22
 			},
@@ -416,11 +416,11 @@
 					}
 				},
 				"source": [
-					"spark.sql(f\"\"\"\r\n",
+					"display(spark.sql(f\"\"\"\r\n",
 					"UPDATE control.elt_metadata\r\n",
 					"SET watermark = '{new_watermark}' \r\n",
 					"WHERE src_db = '{src_db}' AND src_schema = '{src_schema}' AND src_table = '{src_table}'\r\n",
-					"\"\"\")"
+					"\"\"\"))"
 				],
 				"execution_count": 30
 			}
