@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "1d2eb825-efd8-4244-a113-a20142d6a74f"
+				"spark.autotune.trackingId": "113b90b9-3e7a-4de7-b5c9-89703e1df874"
 			}
 		},
 		"metadata": {
@@ -124,7 +124,7 @@
 					"tgt_extract_name = 'txmybw00' \r\n",
 					"# load_type = 'incr' "
 				],
-				"execution_count": 13
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",
