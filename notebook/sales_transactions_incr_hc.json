@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "0c573a6c-e7ed-4e62-8d71-ec210c4556fd"
+				"spark.autotune.trackingId": "d2be115c-3480-4c87-96bc-2efb59598379"
 			}
 		},
 		"metadata": {
@@ -284,7 +284,8 @@
 					},
 					"microsoft": {
 						"language": "sparksql"
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
 					"%%sql\r\n",
@@ -322,7 +323,7 @@
 					"%%sql \r\n",
 					"DESCRIBE HISTORY salesrusdb1_enriched.sales_transactions"
 				],
-				"execution_count": 22
+				"execution_count": 24
 			}
 		]
 	}
