@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "6b1e0439-b7fe-43be-9ce8-a86b30df855d"
+				"spark.autotune.trackingId": "68f3d9ad-4f2f-4cf8-9846-1e966e1b2e6b"
 			}
 		},
 		"metadata": {
@@ -161,7 +161,7 @@
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": null
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -198,7 +198,7 @@
 					"    .mode(\"overwrite\")\\\r\n",
 					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/salesrusdb1_enriched/Tables/sales_transactions')"
 				],
-				"execution_count": null
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -237,7 +237,7 @@
 					"-- create the lake database if it does not exist\r\n",
 					"CREATE DATABASE IF NOT EXISTS salesrusdb1_enriched"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "code",
@@ -269,7 +269,7 @@
 					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/salesrusdb1_enriched/Tables/sales_transactions'\r\n",
 					"--      COMMENT table_comment "
 				],
-				"execution_count": null
+				"execution_count": 5
 			}
 		]
 	}
