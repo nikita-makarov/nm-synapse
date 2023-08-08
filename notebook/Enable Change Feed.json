@@ -2,7 +2,7 @@
 	"name": "Enable Change Feed",
 	"properties": {
 		"folder": {
-			"name": "E2E Lakehouse HC/1 - Bronze"
+			"name": "E2E Lakehouse Metadata/Bronze"
 		},
 		"nbformat": 4,
 		"nbformat_minor": 2,
@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "698009b0-08f7-4c5e-8639-43aef391250c"
+				"spark.autotune.trackingId": "d3072c8d-ce33-48b5-8de8-0f2382099509"
 			}
 		},
 		"metadata": {
