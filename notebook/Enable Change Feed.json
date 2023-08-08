@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "14882778-40a2-469d-a770-447a41f7be98"
+				"spark.autotune.trackingId": "cbc46f77-b853-4f0d-ae26-78658d682a9c"
 			}
 		},
 		"metadata": {
@@ -54,6 +54,15 @@
 			{
 				"cell_type": "code",
 				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
 					"microsoft": {
 						"language": "sparksql"
 					},
@@ -61,9 +70,24 @@
 				},
 				"source": [
 					"%%sql\r\n",
-					"ALTER TABLE bronze.txmybw00 SET TBLPROPERTIES (delta.enableChangeDataFeed = true)"
+					"SELECT * FROM salesrusdb1_raw.txmybw00 \r\n",
+					"ORDER BY lastmodifieddate DESC"
 				],
-				"execution_count": 1
+				"execution_count": 8
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"ALTER TABLE salesrusdb1_raw.txmybw00 SET TBLPROPERTIES (delta.enableChangeDataFeed = true)"
+				],
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -84,9 +108,32 @@
 				},
 				"source": [
 					"%%sql \r\n",
-					"DESCRIBE HISTORY bronze.txmybw00"
+					"DESCRIBE EXTENDED salesrusdb1_raw.txmybw00"
 				],
-				"execution_count": 5
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql \r\n",
+					"DESCRIBE HISTORY salesrusdb1_raw.txmybw00"
+				],
+				"execution_count": 14
 			}
 		]
 	}
