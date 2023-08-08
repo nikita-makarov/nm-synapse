@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "afa8428c-488a-4068-8d42-ac1432e6d92d"
+				"spark.autotune.trackingId": "cb828393-f810-4764-a663-b2cf83ee0eba"
 			}
 		},
 		"metadata": {
@@ -61,8 +61,8 @@
 					}
 				},
 				"source": [
-					"# Load full extract into Bronze in Delta Format\r\n",
-					"Hard-coded version for demonstration purposes\r\n",
+					"# Load Incremental extract into Bronze in Delta Format\r\n",
+					"Parameterized version\r\n",
 					"\r\n",
 					"Here is a good guide on how to use spark notebooks https://learn.microsoft.com/en-us/azure/synapse-analytics/spark/apache-spark-development-using-notebooks\r\n",
 					"______________________________________________"
@@ -112,7 +112,7 @@
 				},
 				"source": [
 					"layer = 'bronze' #\r\n",
-					"input_file_path = 'salesrusdb1_raw/Files/Incremental/txmybw00/txmybw00_07-25-2023_09-16-51.parquet' #\r\n",
+					"input_file_path = 'salesrusdb1_raw/Files/Incremental/txmybw00/txmybw00_08-08-2023_14-12-45.parquet' #\r\n",
 					"key_columns =  'guid'\r\n",
 					"# src_type = 'azure_sql'\r\n",
 					"# src_address = 'nmdemosqldb.database.windows.net'\r\n",
@@ -124,7 +124,7 @@
 					"tgt_extract_name = 'txmybw00' \r\n",
 					"# load_type = 'incr' "
 				],
-				"execution_count": 2
+				"execution_count": 1
 			},
 			{
 				"cell_type": "markdown",
@@ -157,7 +157,7 @@
 					"delta_table_path = f'abfss://{layer}@nmdemostorage1.dfs.core.windows.net/{tgt_lakehouse}/Tables/{tgt_extract_name}'\r\n",
 					""
 				],
-				"execution_count": 3
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
@@ -175,7 +175,7 @@
 				"source": [
 					"print('Loading ' + input_file_path_full)"
 				],
-				"execution_count": 4
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -190,7 +190,7 @@
 					"df = spark.read.load(input_file_path_full, format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 5
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -228,7 +228,7 @@
 					"    print('Writing to ', delta_table_path)\r\n",
 					"    df.write.format('delta').mode(\"overwrite\").save(delta_table_path)"
 				],
-				"execution_count": 6
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
@@ -264,7 +264,7 @@
 					"CREATE DATABASE IF NOT EXISTS {tgt_lakehouse}\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 7
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
@@ -293,7 +293,7 @@
 					"--     [ COMMENT table_comment ]\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 8
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -312,7 +312,7 @@
 					"# register incremental view\r\n",
 					"df.createOrReplaceTempView('incr_tbl')"
 				],
-				"execution_count": 9
+				"execution_count": 8
 			},
 			{
 				"cell_type": "markdown",
@@ -352,7 +352,7 @@
 					"  THEN INSERT *\r\n",
 					"  \"\"\"))"
 				],
-				"execution_count": 10
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -384,7 +384,7 @@
 				"source": [
 					"new_watermark = spark.sql(f\"\"\"SELECT STRING(MAX({src_incr_col})) as I FROM incr_tbl\"\"\").first()[\"I\"]"
 				],
-				"execution_count": 11
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -407,7 +407,7 @@
 					"WHERE src_db = '{src_db}' AND src_schema = '{src_schema}' AND src_table = '{src_table}'\r\n",
 					"\"\"\"))"
 				],
-				"execution_count": 13
+				"execution_count": 11
 			}
 		]
 	}
