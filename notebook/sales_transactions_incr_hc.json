@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "c1749d93-9052-4339-ba53-12ae2ba47eec"
+				"spark.autotune.trackingId": "0c573a6c-e7ed-4e62-8d71-ec210c4556fd"
 			}
 		},
 		"metadata": {
@@ -134,6 +134,43 @@
 					}
 				},
 				"source": [
+					"Read in latest rows into dataframe and create temporary view"
+				]
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"incr_df = spark.read.format(\"delta\") \\\r\n",
+					"            .option(\"readChangeFeed\", \"true\") \\\r\n",
+					"            .option(\"startingVersion\", latest_version) \\\r\n",
+					"            .table(\"salesrusdb1_raw.txmybw00\")\r\n",
+					"incr_df.createOrReplaceTempView(\"incr_tbl\")\r\n",
+					"display(incr_df)"
+				],
+				"execution_count": 17
+			},
+			{
+				"cell_type": "markdown",
+				"metadata": {
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					}
+				},
+				"source": [
 					"Write our transformation interactively"
 				]
 			},
@@ -162,11 +199,10 @@
 					"    , amt as DollarAmount\r\n",
 					"    , lastmodifieddate AS LastModifiedDate\r\n",
 					"    , guid as GUID\r\n",
-					"FROM salesrusdb1_raw.txmybw00\r\n",
-					"-- VERSION AS OF 9\r\n",
-					"-- ORDER BY lastmodifieddate DESC"
+					"FROM incr_tbl\r\n",
+					"ORDER BY lastmodifieddate DESC"
 				],
-				"execution_count": 2
+				"execution_count": 18
 			},
 			{
 				"cell_type": "markdown",
@@ -192,10 +228,11 @@
 						"transient": {
 							"deleting": false
 						}
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
-					"transformed_df = spark.sql(\r\n",
+					"transformed_incr_df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
 					"    SELECT\r\n",
 					"        trid AS TransactionID\r\n",
@@ -212,12 +249,13 @@
 					"        , amt as DollarAmount\r\n",
 					"        , lastmodifieddate AS LastModifiedDate\r\n",
 					"        , guid as GUID\r\n",
-					"    FROM salesrusdb1_raw.txmybw00\r\n",
-					"    VERSION AS OF 9\r\n",
+					"    FROM incr_tbl\r\n",
 					"    \"\"\"\r\n",
-					")"
+					")\r\n",
+					"transformed_incr_df.createOrReplaceTempView('transformed_incr_tbl')\r\n",
+					"display(transformed_incr_df)"
 				],
-				"execution_count": 6
+				"execution_count": 20
 			},
 			{
 				"cell_type": "markdown",
@@ -229,7 +267,7 @@
 					}
 				},
 				"source": [
-					"Write out the dataframe to a physical location on the data lake in delta parquet format. Writing this in subsequent runs will create a new version - it's not like trunc and replace, we just write the new version of the table on top. You can set the maximum version history you would like to keep."
+					"MERGE MERGE MERGE !!!!"
 				]
 			},
 			{
@@ -243,33 +281,25 @@
 						"transient": {
 							"deleting": false
 						}
+					},
+					"microsoft": {
+						"language": "sparksql"
 					}
 				},
 				"source": [
-					"# write out table as delta\r\n",
-					"transformed_df.write.format('delta')\\\r\n",
-					"    .partitionBy('TransactionYear', 'TransactionMonth')\\\r\n",
-					"    .option ('mergeSchema', 'true')\\\r\n",
-					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
-					"    .mode(\"overwrite\")\\\r\n",
-					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/salesrusdb1_enriched/Tables/sales_transactions')"
-				],
-				"execution_count": 7
-			},
-			{
-				"cell_type": "markdown",
-				"metadata": {
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					}
-				},
-				"source": [
-					"Now we need to expose these delta files in our lake database to easily query with Serverless and Spark SQL. We basically create metadata about the location of the delta files, and wrap it in familiar db.table reference.\r\n",
+					"%%sql\r\n",
 					"\r\n",
-					"More info here https://learn.microsoft.com/en-us/azure/synapse-analytics/metadata/table"
-				]
+					"MERGE INTO salesrusdb1_enriched.sales_transactions tgt\r\n",
+					"USING transformed_incr_tbl src\r\n",
+					"ON tgt.GUID = src.GUID\r\n",
+					"AND tgt.TransactionYear = src.TransactionYear\r\n",
+					"AND tgt.TransactionMonth = src.TransactionMonth\r\n",
+					"WHEN MATCHED THEN\r\n",
+					"  UPDATE SET *\r\n",
+					"WHEN NOT MATCHED\r\n",
+					"  THEN INSERT *"
+				],
+				"execution_count": 23
 			},
 			{
 				"cell_type": "code",
@@ -289,43 +319,10 @@
 					"collapsed": false
 				},
 				"source": [
-					"%%sql\r\n",
-					"-- create the lake database if it does not exist\r\n",
-					"CREATE DATABASE IF NOT EXISTS salesrusdb1_enriched"
+					"%%sql \r\n",
+					"DESCRIBE HISTORY salesrusdb1_enriched.sales_transactions"
 				],
-				"execution_count": 8
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					},
-					"collapsed": false
-				},
-				"source": [
-					"%%sql\r\n",
-					"-- create the delta reference\r\n",
-					"CREATE TABLE IF NOT EXISTS salesrusdb1_enriched.sales_transactions\r\n",
-					"    USING DELTA\r\n",
-					"--      OPTIONS ( key1=val1, key2=val2, ... ) \r\n",
-					"--      PARTITIONED BY ( col_name1, col_name2, ... ) \r\n",
-					"--      CLUSTERED BY ( col_name3, col_name4, ... ) \r\n",
-					"--          SORTED BY ( col_name  ASC | DESC , ... )  \r\n",
-					"--         INTO num_buckets BUCKETS \r\n",
-					"    LOCATION 'abfss://silver@nmdemostorage1.dfs.core.windows.net/salesrusdb1_enriched/Tables/sales_transactions'\r\n",
-					"--      COMMENT table_comment "
-				],
-				"execution_count": 9
+				"execution_count": 22
 			}
 		]
 	}
