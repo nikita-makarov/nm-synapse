@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d3072c8d-ce33-48b5-8de8-0f2382099509"
+				"spark.autotune.trackingId": "8ccf982b-45e5-4b40-a18f-a7845015cdd7"
 			}
 		},
 		"metadata": {
@@ -150,7 +150,7 @@
 				},
 				"source": [
 					"# -- %%sql\r\n",
-					"# -- SELECT * FROM table_changes('salesrusdb1_raw.txmybw00', 0)"
+					"# SELECT * FROM table_changes('salesrusdb1_raw.txmybw00', 0)"
 				],
 				"execution_count": 13
 			},

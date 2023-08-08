@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f5c3ec8c-e35e-4e35-b781-0e25fb4f305d"
+				"spark.autotune.trackingId": "c1749d93-9052-4339-ba53-12ae2ba47eec"
 			}
 		},
 		"metadata": {
@@ -119,9 +119,10 @@
 				},
 				"source": [
 					"# put the result above into \r\n",
-					"latest_version_df = spark.sql(\"\"\"DESCRIBE HISTORY salesrusdb1_raw.txmybw00 LIMIT 1\"\"\")"
+					"latest_version = spark.sql(\"\"\"DESCRIBE HISTORY salesrusdb1_raw.txmybw00 LIMIT 1\"\"\").first()['version']\r\n",
+					"print('latest version is ', latest_version)"
 				],
-				"execution_count": 8
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",

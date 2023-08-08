@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "68f3d9ad-4f2f-4cf8-9846-1e966e1b2e6b"
+				"spark.autotune.trackingId": "bec9f108-5f3b-43de-9d1f-2286bf2b118e"
 			}
 		},
 		"metadata": {
@@ -198,7 +198,7 @@
 					"    .mode(\"overwrite\")\\\r\n",
 					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/salesrusdb1_enriched/Tables/sales_transactions')"
 				],
-				"execution_count": 3
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
