@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2f3b2c93-95a9-4b9a-a591-2a62606362ef"
+				"spark.autotune.trackingId": "e09ed780-662e-40a2-b6c6-830abd1371e5"
 			}
 		},
 		"metadata": {
@@ -146,17 +146,37 @@
 						"transient": {
 							"deleting": false
 						}
-					},
-					"microsoft": {
-						"language": "sparksql"
 					}
 				},
 				"source": [
-					"%%sql\r\n",
-					"\r\n",
-					"SELECT * FROM table_changes('salesrusdb1_raw.txmybw00', 10)"
+					"# -- %%sql\r\n",
+					"# -- SELECT * FROM table_changes('salesrusdb1_raw.txmybw00', 0)"
 				],
-				"execution_count": 1
+				"execution_count": 13
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
+					"df = spark.read.format(\"delta\") \\\r\n",
+					"    .option(\"readChangeFeed\", \"true\") \\\r\n",
+					"    .option(\"startingVersion\", 10) \\\r\n",
+					"    .table(\"salesrusdb1_raw.txmybw00\")\r\n",
+					"\r\n",
+					"display(df)"
+				],
+				"execution_count": 18
 			}
 		]
 	}
