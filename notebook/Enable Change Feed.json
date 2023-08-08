@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e09ed780-662e-40a2-b6c6-830abd1371e5"
+				"spark.autotune.trackingId": "698009b0-08f7-4c5e-8639-43aef391250c"
 			}
 		},
 		"metadata": {
@@ -177,6 +177,30 @@
 					"display(df)"
 				],
 				"execution_count": 18
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"SELECT count(*) FROM salesrusdb1_raw.txmybw00 VERSION AS OF 9"
+				],
+				"execution_count": 22
 			}
 		]
 	}
