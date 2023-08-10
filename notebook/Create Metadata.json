@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "59611288-ee61-41ae-aba4-04d6c78ca099"
+				"spark.autotune.trackingId": "656f30df-b982-4998-a4e0-d56cc015c1d9"
 			}
 		},
 		"metadata": {
@@ -179,7 +179,7 @@
 					"DELETE FROM control.elt_metadata\r\n",
 					"WHERE src_table = 'txmybw00'"
 				],
-				"execution_count": 6
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -203,7 +203,7 @@
 					"INSERT INTO control.elt_metadata  VALUES\r\n",
 					"    ('azure_sql','nmdemosqldb.database.windows.net','salesrusdb1','dbo','txmybw00','lastmodifieddate','salesrusdb1_raw', 'txmybw00','guid','incr','2022-06-19 23:13:06.877');"
 				],
-				"execution_count": 7
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",
