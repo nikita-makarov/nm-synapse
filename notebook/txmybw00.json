@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "4d9384bc-a366-43e4-90b1-656751a64b33"
+				"spark.autotune.trackingId": "8c82debe-3d1d-4529-b8fb-4409d2fac20c"
 			}
 		},
 		"metadata": {
@@ -94,7 +94,7 @@
 					"df = spark.read.load('abfss://rawdata@nmdemostorage1.dfs.core.windows.net/landing/salesrusdb1/txmybw00.parquet', format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -125,7 +125,7 @@
 				"source": [
 					"df.createOrReplaceTempView(\"v_tmp\")"
 				],
-				"execution_count": 4
+				"execution_count": 3
 			},
 			{
 				"cell_type": "code",
@@ -141,14 +141,15 @@
 					},
 					"microsoft": {
 						"language": "sparksql"
-					}
+					},
+					"collapsed": false
 				},
 				"source": [
 					"%%sql\r\n",
 					"\r\n",
 					"SELECT * FROM v_tmp"
 				],
-				"execution_count": null
+				"execution_count": 4
 			},
 			{
 				"cell_type": "markdown",
@@ -224,7 +225,7 @@
 					"-- create the lake database if it does not exist\r\n",
 					"CREATE DATABASE IF NOT EXISTS bronze"
 				],
-				"execution_count": 9
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -256,7 +257,7 @@
 					"    LOCATION 'abfss://bronze@nmdemostorage1.dfs.core.windows.net/delta_files/salesrusdb1/txmybw00'\r\n",
 					"--     [ COMMENT table_comment ]"
 				],
-				"execution_count": 10
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
@@ -300,7 +301,7 @@
 					"WHEN NOT MATCHED\r\n",
 					"  THEN INSERT *"
 				],
-				"execution_count": 8
+				"execution_count": null
 			}
 		]
 	}

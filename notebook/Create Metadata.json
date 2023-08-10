@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "ca6ed1fd-d4ae-4f3c-9e48-f14edd4ae73d"
+				"spark.autotune.trackingId": "37b09fb9-a997-4991-97d0-0cb109eff7d0"
 			}
 		},
 		"metadata": {
@@ -66,11 +66,61 @@
 					"collapsed": false
 				},
 				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"DROP TABLE bronze.txmybw00;\r\n",
+					""
+				],
+				"execution_count": 6
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"DROP TABLE bronze.txmykw01;\r\n",
+					""
+				],
+				"execution_count": 7
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
 					"%%sql \r\n",
 					"\r\n",
 					"CREATE DATABASE IF NOT EXISTS control"
 				],
-				"execution_count": 1
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -93,7 +143,7 @@
 					"%%sql\r\n",
 					"DROP TABLE control.elt_metadata"
 				],
-				"execution_count": 8
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -131,7 +181,7 @@
 					"USING DELTA\r\n",
 					"LOCATION 'control_table/'"
 				],
-				"execution_count": 9
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -155,7 +205,7 @@
 					"INSERT INTO control.elt_metadata  VALUES\r\n",
 					"    ('azure_sql','nmdemosqldb.database.windows.net','salesrusdb1','dbo','txmykw01','',\t'salesrusdb1_raw', 'txmykw01','','full','2023-06-19 23:13:06.877');"
 				],
-				"execution_count": 11
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -179,7 +229,7 @@
 					"DELETE FROM control.elt_metadata\r\n",
 					"WHERE src_table = 'txmybw00'"
 				],
-				"execution_count": 1
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -203,7 +253,7 @@
 					"INSERT INTO control.elt_metadata  VALUES\r\n",
 					"    ('azure_sql','nmdemosqldb.database.windows.net','salesrusdb1','dbo','txmybw00','lastmodifieddate','salesrusdb1_raw', 'txmybw00','guid','incr','2022-06-19 23:13:06.877');"
 				],
-				"execution_count": 2
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -226,7 +276,7 @@
 					"%%sql\r\n",
 					"SELECT * FROM control.elt_metadata"
 				],
-				"execution_count": 3
+				"execution_count": null
 			},
 			{
 				"cell_type": "code",
@@ -250,7 +300,7 @@
 					"\r\n",
 					"SELECT DISTINCT  lastmodifieddate FROM bronze.txmybw00"
 				],
-				"execution_count": 8
+				"execution_count": null
 			}
 		]
 	}
