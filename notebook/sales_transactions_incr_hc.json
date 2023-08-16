@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "d2be115c-3480-4c87-96bc-2efb59598379"
+				"spark.autotune.trackingId": "f4696445-427e-4f94-b8d6-79025c9729e6"
 			}
 		},
 		"metadata": {
@@ -102,7 +102,7 @@
 					"%%sql\r\n",
 					"DESCRIBE HISTORY salesrusdb1_raw.txmybw00 LIMIT 4"
 				],
-				"execution_count": 6
+				"execution_count": 5
 			},
 			{
 				"cell_type": "code",
@@ -122,7 +122,7 @@
 					"latest_version = spark.sql(\"\"\"DESCRIBE HISTORY salesrusdb1_raw.txmybw00 LIMIT 1\"\"\").first()['version']\r\n",
 					"print('latest version is ', latest_version)"
 				],
-				"execution_count": 14
+				"execution_count": 6
 			},
 			{
 				"cell_type": "markdown",
@@ -159,7 +159,7 @@
 					"incr_df.createOrReplaceTempView(\"incr_tbl\")\r\n",
 					"display(incr_df)"
 				],
-				"execution_count": 17
+				"execution_count": 7
 			},
 			{
 				"cell_type": "markdown",
@@ -199,10 +199,12 @@
 					"    , amt as DollarAmount\r\n",
 					"    , lastmodifieddate AS LastModifiedDate\r\n",
 					"    , guid as GUID\r\n",
+					"    , _change_type\r\n",
 					"FROM incr_tbl\r\n",
+					"WHERE _change_type IN ('insert', 'update_postimage')\r\n",
 					"ORDER BY lastmodifieddate DESC"
 				],
-				"execution_count": 18
+				"execution_count": 9
 			},
 			{
 				"cell_type": "markdown",
@@ -250,12 +252,13 @@
 					"        , lastmodifieddate AS LastModifiedDate\r\n",
 					"        , guid as GUID\r\n",
 					"    FROM incr_tbl\r\n",
+					"    WHERE _change_type IN ('insert', 'update_postimage')\r\n",
 					"    \"\"\"\r\n",
 					")\r\n",
 					"transformed_incr_df.createOrReplaceTempView('transformed_incr_tbl')\r\n",
 					"display(transformed_incr_df)"
 				],
-				"execution_count": 20
+				"execution_count": 10
 			},
 			{
 				"cell_type": "markdown",
@@ -300,7 +303,7 @@
 					"WHEN NOT MATCHED\r\n",
 					"  THEN INSERT *"
 				],
-				"execution_count": 23
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -323,7 +326,31 @@
 					"%%sql \r\n",
 					"DESCRIBE HISTORY salesrusdb1_enriched.sales_transactions"
 				],
-				"execution_count": 24
+				"execution_count": 12
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"\r\n",
+					"SELECT * FROM salesrusdb1_enriched.sales_transactions ORDER BY lastmodifieddate DESC"
+				],
+				"execution_count": 13
 			}
 		]
 	}
