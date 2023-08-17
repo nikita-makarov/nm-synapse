@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f4696445-427e-4f94-b8d6-79025c9729e6"
+				"spark.autotune.trackingId": "cad7aac9-455f-4197-ba99-a69111351ae1"
 			}
 		},
 		"metadata": {
@@ -102,7 +102,7 @@
 					"%%sql\r\n",
 					"DESCRIBE HISTORY salesrusdb1_raw.txmybw00 LIMIT 4"
 				],
-				"execution_count": 5
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -122,7 +122,7 @@
 					"latest_version = spark.sql(\"\"\"DESCRIBE HISTORY salesrusdb1_raw.txmybw00 LIMIT 1\"\"\").first()['version']\r\n",
 					"print('latest version is ', latest_version)"
 				],
-				"execution_count": 6
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -159,7 +159,7 @@
 					"incr_df.createOrReplaceTempView(\"incr_tbl\")\r\n",
 					"display(incr_df)"
 				],
-				"execution_count": 7
+				"execution_count": null
 			},
 			{
 				"cell_type": "markdown",
