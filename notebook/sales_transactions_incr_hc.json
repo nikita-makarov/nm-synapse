@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "cad7aac9-455f-4197-ba99-a69111351ae1"
+				"spark.autotune.trackingId": "b917ba8a-b244-41cb-881f-d3a43f0a16d0"
 			}
 		},
 		"metadata": {
@@ -159,7 +159,7 @@
 					"incr_df.createOrReplaceTempView(\"incr_tbl\")\r\n",
 					"display(incr_df)"
 				],
-				"execution_count": null
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
