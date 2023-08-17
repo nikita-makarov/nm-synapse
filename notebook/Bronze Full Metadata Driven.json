@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "e6339c9b-05f2-45ad-b1a0-dbbead0691c9"
+				"spark.autotune.trackingId": "ce5d90ed-3d72-466b-9838-1398a21dff25"
 			}
 		},
 		"metadata": {
@@ -112,7 +112,7 @@
 				},
 				"source": [
 					"layer = 'bronze' #\r\n",
-					"input_file_path = 'salesrusdb1_raw/Files/txmykw01/txmykw01_07-16-2023_16-43-57.parquet' #\r\n",
+					"input_file_path = 'salesrusdb1_raw/Files/txmykw01/txmykw_01_08-17-2023_10-28-12.parquet' #\r\n",
 					"# src_type = 'azure_sql'\r\n",
 					"# src_address = 'nmdemosqldb.database.windows.net'\r\n",
 					"# src_db = 'salesrusdb1'\r\n",
@@ -126,7 +126,7 @@
 					"# watermark = ''\r\n",
 					""
 				],
-				"execution_count": 1
+				"execution_count": 11
 			},
 			{
 				"cell_type": "markdown",
@@ -155,11 +155,11 @@
 					}
 				},
 				"source": [
-					"input_file_path_full = f'abfss://{layer}@nmdemostorage1.dfs.core.windows.net//{input_file_path}'\r\n",
+					"input_file_path_full = f'abfss://{layer}@nmdemostorage1.dfs.core.windows.net/{input_file_path}'\r\n",
 					"delta_table_path = f'abfss://{layer}@nmdemostorage1.dfs.core.windows.net/{tgt_lakehouse}/Tables/{tgt_extract_name}'\r\n",
 					""
 				],
-				"execution_count": 13
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
@@ -177,7 +177,7 @@
 				"source": [
 					"print('Loading ' + input_file_path_full)"
 				],
-				"execution_count": 11
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -192,7 +192,7 @@
 					"df = spark.read.load(input_file_path_full, format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 12
+				"execution_count": 14
 			},
 			{
 				"cell_type": "markdown",
