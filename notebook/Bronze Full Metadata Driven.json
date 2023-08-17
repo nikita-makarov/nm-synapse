@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "2ab856a1-304e-408c-b62f-51e161b7b0f2"
+				"spark.autotune.trackingId": "e6282c5c-f607-4d5b-a93d-2df69549e3e0"
 			}
 		},
 		"metadata": {
@@ -112,7 +112,7 @@
 				},
 				"source": [
 					"layer = 'bronze' #\r\n",
-					"input_file_path = 'salesrusdb1_raw/Files/Full/txmykw01/txmykw01_08-17-2023_10-28-12.parquet' #\r\n",
+					"input_file_path = 'salesrusdb1_raw/Files/Full/txmybw00/txmybw00_08-17-2023_10-28-12.parquet' #\r\n",
 					"# src_type = 'azure_sql'\r\n",
 					"# src_address = 'nmdemosqldb.database.windows.net'\r\n",
 					"# src_db = 'salesrusdb1'\r\n",
@@ -120,13 +120,13 @@
 					"# src_table = 'txmykw01'\r\n",
 					"# src_incr_col = ''\r\n",
 					"tgt_lakehouse = 'salesrusdb1_raw' \r\n",
-					"tgt_extract_name = 'txmykw01' \r\n",
+					"tgt_extract_name = 'txmybw00' \r\n",
 					"# key_columns = ''\r\n",
 					"# load_type = 'full' \r\n",
 					"# watermark = ''\r\n",
 					""
 				],
-				"execution_count": 19
+				"execution_count": 27
 			},
 			{
 				"cell_type": "markdown",
@@ -159,7 +159,7 @@
 					"delta_table_path = f'abfss://{layer}@nmdemostorage1.dfs.core.windows.net/{tgt_lakehouse}/Tables/{tgt_extract_name}'\r\n",
 					""
 				],
-				"execution_count": 20
+				"execution_count": 28
 			},
 			{
 				"cell_type": "code",
@@ -177,7 +177,7 @@
 				"source": [
 					"print('Loading ' + input_file_path_full)"
 				],
-				"execution_count": 21
+				"execution_count": 29
 			},
 			{
 				"cell_type": "code",
@@ -192,7 +192,7 @@
 					"df = spark.read.load(input_file_path_full, format='parquet')\r\n",
 					"display(df.limit(3))"
 				],
-				"execution_count": 22
+				"execution_count": 30
 			},
 			{
 				"cell_type": "markdown",
@@ -223,7 +223,7 @@
 				"source": [
 					"print('Writing to ', delta_table_path)"
 				],
-				"execution_count": 14
+				"execution_count": 31
 			},
 			{
 				"cell_type": "code",
@@ -242,7 +242,7 @@
 					"# write out table as delta\r\n",
 					"df.write.format('delta').mode(\"overwrite\").save(delta_table_path)"
 				],
-				"execution_count": 15
+				"execution_count": 32
 			},
 			{
 				"cell_type": "markdown",
@@ -278,7 +278,7 @@
 					"CREATE DATABASE IF NOT EXISTS {tgt_lakehouse}\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 16
+				"execution_count": 33
 			},
 			{
 				"cell_type": "code",
@@ -307,7 +307,7 @@
 					"--     [ COMMENT table_comment ]\r\n",
 					"\"\"\")"
 				],
-				"execution_count": 17
+				"execution_count": 34
 			}
 		]
 	}
