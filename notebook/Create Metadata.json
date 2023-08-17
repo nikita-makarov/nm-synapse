@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "97fdea32-b855-4bfa-ba47-dcca1049a55b"
+				"spark.autotune.trackingId": "dbc7b321-7fa1-477c-8fe0-61bbb0067249"
 			}
 		},
 		"metadata": {
@@ -227,9 +227,9 @@
 				"source": [
 					"%%sql\r\n",
 					"DELETE FROM control.elt_metadata\r\n",
-					"WHERE src_table = 'txmybw00'"
+					"WHERE src_table IN ('txmybw00', 'txmykw01')"
 				],
-				"execution_count": null
+				"execution_count": 7
 			},
 			{
 				"cell_type": "code",
@@ -302,6 +302,28 @@
 					"SELECT * FROM control.elt_metadata"
 				],
 				"execution_count": 5
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					}
+				},
+				"source": [
+					"%%sql\r\n",
+					"TRUNCATE TABLE control.elt_metadata"
+				],
+				"execution_count": 6
 			},
 			{
 				"cell_type": "code",
