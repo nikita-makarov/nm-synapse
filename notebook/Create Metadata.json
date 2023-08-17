@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "f686dca6-1730-401a-b49a-5387e67e524c"
+				"spark.autotune.trackingId": "4685f447-d035-4e9a-b6fb-d189a4e97913"
 			}
 		},
 		"metadata": {
@@ -251,10 +251,10 @@
 				"source": [
 					"%%sql\r\n",
 					"UPDATE control.elt_metadata\r\n",
-					"SET load_type = 'full'\r\n",
+					"SET load_type = 'incr'\r\n",
 					"WHERE src_table = 'txmybw00'"
 				],
-				"execution_count": 11
+				"execution_count": 13
 			},
 			{
 				"cell_type": "code",
@@ -301,7 +301,7 @@
 					"%%sql\r\n",
 					"SELECT * FROM control.elt_metadata"
 				],
-				"execution_count": 12
+				"execution_count": 18
 			},
 			{
 				"cell_type": "code",
@@ -372,7 +372,7 @@
 				"source": [
 					"new_watermark = spark.sql(f\"\"\"SELECT STRING(MAX(lastmodifieddate)) as I FROM salesrusdb1_raw.txmybw00\"\"\").first()[\"I\"]"
 				],
-				"execution_count": 3
+				"execution_count": 15
 			},
 			{
 				"cell_type": "code",
@@ -388,13 +388,32 @@
 					}
 				},
 				"source": [
+					"new_watermark"
+				],
+				"execution_count": 16
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"collapsed": false
+				},
+				"source": [
 					"display(spark.sql(f\"\"\"\r\n",
 					"UPDATE control.elt_metadata\r\n",
 					"SET watermark = '{new_watermark}' \r\n",
 					"WHERE src_db = 'salesrusdb1' AND src_schema = 'dbo' AND src_table = 'txmybw00'\r\n",
 					"\"\"\"))"
 				],
-				"execution_count": null
+				"execution_count": 17
 			}
 		]
 	}
