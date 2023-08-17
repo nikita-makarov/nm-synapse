@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "35fdd824-3403-4ace-986f-4f80066c5509"
+				"spark.autotune.trackingId": "11d2fa47-ae0e-42e4-bfb3-79a4999f60ed"
 			}
 		},
 		"metadata": {
@@ -133,7 +133,7 @@
 					"%%sql \r\n",
 					"DESCRIBE HISTORY salesrusdb1_raw.txmybw00"
 				],
-				"execution_count": 6
+				"execution_count": 1
 			},
 			{
 				"cell_type": "code",
@@ -176,7 +176,7 @@
 					"\r\n",
 					"display(df)"
 				],
-				"execution_count": 7
+				"execution_count": 2
 			},
 			{
 				"cell_type": "code",

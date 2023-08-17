@@ -17,7 +17,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "dbc7b321-7fa1-477c-8fe0-61bbb0067249"
+				"spark.autotune.trackingId": "f686dca6-1730-401a-b49a-5387e67e524c"
 			}
 		},
 		"metadata": {
@@ -205,7 +205,7 @@
 					"INSERT INTO control.elt_metadata  VALUES\r\n",
 					"    ('azure_sql','nmdemosqldb.database.windows.net','salesrusdb1','dbo','txmykw01','',\t'salesrusdb1_raw', 'txmykw01','','full','2023-06-19 23:13:06.877');"
 				],
-				"execution_count": null
+				"execution_count": 10
 			},
 			{
 				"cell_type": "code",
@@ -254,7 +254,7 @@
 					"SET load_type = 'full'\r\n",
 					"WHERE src_table = 'txmybw00'"
 				],
-				"execution_count": 4
+				"execution_count": 11
 			},
 			{
 				"cell_type": "code",
@@ -278,7 +278,7 @@
 					"INSERT INTO control.elt_metadata  VALUES\r\n",
 					"    ('azure_sql','nmdemosqldb.database.windows.net','salesrusdb1','dbo','txmybw00','lastmodifieddate','salesrusdb1_raw', 'txmybw00','guid','incr','2022-06-19 23:13:06.877');"
 				],
-				"execution_count": null
+				"execution_count": 9
 			},
 			{
 				"cell_type": "code",
@@ -301,29 +301,7 @@
 					"%%sql\r\n",
 					"SELECT * FROM control.elt_metadata"
 				],
-				"execution_count": 5
-			},
-			{
-				"cell_type": "code",
-				"metadata": {
-					"jupyter": {
-						"source_hidden": false,
-						"outputs_hidden": false
-					},
-					"nteract": {
-						"transient": {
-							"deleting": false
-						}
-					},
-					"microsoft": {
-						"language": "sparksql"
-					}
-				},
-				"source": [
-					"%%sql\r\n",
-					"TRUNCATE TABLE control.elt_metadata"
-				],
-				"execution_count": 6
+				"execution_count": 12
 			},
 			{
 				"cell_type": "code",
