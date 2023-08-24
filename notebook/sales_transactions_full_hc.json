@@ -20,7 +20,7 @@
 				"spark.dynamicAllocation.enabled": "false",
 				"spark.dynamicAllocation.minExecutors": "2",
 				"spark.dynamicAllocation.maxExecutors": "2",
-				"spark.autotune.trackingId": "bec9f108-5f3b-43de-9d1f-2286bf2b118e"
+				"spark.autotune.trackingId": "ff3bf9f6-6f74-444f-92d7-388d17235486"
 			}
 		},
 		"metadata": {
@@ -106,11 +106,12 @@
 					"    , amt as DollarAmount\r\n",
 					"    , lastmodifieddate AS LastModifiedDate\r\n",
 					"    , guid as GUID\r\n",
+					"    , \"test\" as test_col\r\n",
 					"FROM salesrusdb1_raw.txmybw00\r\n",
-					"VERSION AS OF 9\r\n",
+					"-- VERSION AS OF 9\r\n",
 					"-- ORDER BY lastmodifieddate DESC"
 				],
-				"execution_count": 1
+				"execution_count": 2
 			},
 			{
 				"cell_type": "markdown",
@@ -141,27 +142,27 @@
 				"source": [
 					"transformed_df = spark.sql(\r\n",
 					"    \"\"\"\r\n",
-					"    SELECT\r\n",
-					"        trid AS TransactionID\r\n",
-					"        , bb1 as Email\r\n",
-					"        , TO_DATE(trdt, 'mm/dd/yyyy') as TransactionDate\r\n",
-					"        , YEAR(TO_DATE(trdt, 'mm/dd/yyyy')) AS TransactionYear\r\n",
-					"        , MONTH(TO_DATE(trdt, 'mm/dd/yyyy')) AS TransactionMonth\r\n",
-					"        , cust AS CustomerName\r\n",
-					"        , ctry AS Country\r\n",
-					"        , region AS Region\r\n",
-					"        , city AS City\r\n",
-					"        , INT(prtp) AS ProductID\r\n",
-					"        , clrs as ProductColor\r\n",
-					"        , amt as DollarAmount\r\n",
-					"        , lastmodifieddate AS LastModifiedDate\r\n",
-					"        , guid as GUID\r\n",
-					"    FROM salesrusdb1_raw.txmybw00\r\n",
-					"    VERSION AS OF 9\r\n",
+					"SELECT\r\n",
+					"    trid AS TransactionID\r\n",
+					"    , bb1 as Email\r\n",
+					"    , TO_DATE(trdt, 'mm/dd/yyyy') as TransactionDate\r\n",
+					"    , YEAR(TO_DATE(trdt, 'mm/dd/yyyy')) AS TransactionYear\r\n",
+					"    , MONTH(TO_DATE(trdt, 'mm/dd/yyyy')) AS TransactionMonth\r\n",
+					"    , cust AS CustomerName\r\n",
+					"    , ctry AS Country\r\n",
+					"    , region AS Region\r\n",
+					"    , city AS City\r\n",
+					"    , INT(prtp) AS ProductID\r\n",
+					"    , clrs as ProductColor\r\n",
+					"    , amt as DollarAmount\r\n",
+					"    , lastmodifieddate AS LastModifiedDate\r\n",
+					"    , guid as GUID\r\n",
+					"    , \"test\" as test_col\r\n",
+					"FROM salesrusdb1_raw.txmybw00\r\n",
 					"    \"\"\"\r\n",
 					")"
 				],
-				"execution_count": 2
+				"execution_count": 3
 			},
 			{
 				"cell_type": "markdown",
@@ -194,11 +195,12 @@
 					"transformed_df.write.format('delta')\\\r\n",
 					"    .partitionBy('TransactionYear', 'TransactionMonth')\\\r\n",
 					"    .option ('mergeSchema', 'true')\\\r\n",
-					"    .option(\"overwriteSchema\", \"True\")\\\r\n",
 					"    .mode(\"overwrite\")\\\r\n",
-					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/salesrusdb1_enriched/Tables/sales_transactions')"
+					"    .save('abfss://silver@nmdemostorage1.dfs.core.windows.net/salesrusdb1_enriched/Tables/sales_transactions')\r\n",
+					"\r\n",
+					"        # .option(\"overwriteSchema\", \"True\")\\"
 				],
-				"execution_count": 7
+				"execution_count": 5
 			},
 			{
 				"cell_type": "markdown",
