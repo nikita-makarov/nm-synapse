@@ -1,0 +1,17 @@
+{
+	"name": "SQL script 17",
+	"properties": {
+		"content": {
+			"query": "SELECT TOP (100) * FROM [salesrusdb1_enriched].[dbo].[sales_transactions]",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "salesrusdb1_enriched",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}

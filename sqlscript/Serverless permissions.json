@@ -1,0 +1,17 @@
+{
+	"name": "Serverless permissions",
+	"properties": {
+		"content": {
+			"query": "CREATE USER [nakone@microsoft.com] FROM EXTERNAL PROVIDER;\nGO\nALTER ROLE db_datareader ADD MEMBER [nakone@microsoft.com];\n\nCREATE LOGIN [nakone@microsoft.com] FROM EXTERNAL PROVIDER;\n\n\n\nCREATE LOGIN [nakone@microsoft.com] FROM EXTERNAL PROVIDER;\n-- GRANT CONNECT ANY DATABASE TO [nakone@microsoft.com];\n-- GRANT SELECT ALL USER SECURABLES TO [nakone@microsoft.com];",
+			"metadata": {
+				"language": "sql"
+			},
+			"currentConnection": {
+				"databaseName": "salesrusdb1_enriched",
+				"poolName": "Built-in"
+			},
+			"resultLimit": 5000
+		},
+		"type": "SqlQuery"
+	}
+}
