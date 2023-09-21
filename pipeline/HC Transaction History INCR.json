@@ -82,11 +82,6 @@
 						"referenceName": "TransactionHistory Delta Incremental Load",
 						"type": "NotebookReference"
 					},
-					"parameters": {
-						"": {
-							"value": ""
-						}
-					},
 					"snapshot": true,
 					"sparkPool": {
 						"referenceName": "sparkpool1",
