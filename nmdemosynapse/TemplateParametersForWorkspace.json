@@ -8,10 +8,19 @@
 		"AzureDatabricks1_accessToken": {
 			"value": ""
 		},
+		"AzureSqlDatabase1_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=@{linkedService().fqdn};Initial Catalog=@{linkedService().db_name}"
+		},
 		"DedicatedPoolDF_connectionString": {
 			"value": ""
 		},
 		"OnPremSqlServer_connectionString": {
+			"value": ""
+		},
+		"ServerlessConnctionV2_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=nmdemosynapse-ondemand.sql.azuresynapse.net;Initial Catalog=@{linkedService().db}"
+		},
+		"demodb2_connectionString": {
 			"value": ""
 		},
 		"demodb4_connectionString": {
@@ -23,10 +32,10 @@
 		"nmdemosynapse-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:nmdemosynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
-		"nmsynapse-WorkspaceDefaultSqlServer_connectionString": {
-			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:nmsynapse.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
-		},
 		"nmsynapseserverless_connectionString": {
+			"value": ""
+		},
+		"salesrusdb1_connectionString": {
 			"value": ""
 		},
 		"CognitiveService1_properties_typeProperties_subscriptionId": {
