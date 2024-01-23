@@ -1,0 +1,20 @@
+{
+	"name": "Json1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "nmdemosynapse-WorkspaceDefaultStorage",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Json",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "VolcanoData.json",
+				"folderPath": "demo_files_all",
+				"fileSystem": "fabricdemo"
+			}
+		},
+		"schema": {}
+	}
+}
